@@ -1,0 +1,7 @@
+{
+  "rewrites": [{ "source": "/api/imd/:path*", "destination": "/api/imd?path=:path*" }],
+  "headers": [{ "source": "/(.*)", "headers": [
+    { "key": "X-Frame-Options", "value": "DENY" },
+    { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+  ] }]
+}
