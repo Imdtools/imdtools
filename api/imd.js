@@ -139,8 +139,8 @@ export default async function handler(req, res) {
       if (c.status < 200 || c.status >= 300) return res.status(c.status).send(c.body);
       const body = JSON.parse(c.body);
       const list = Array.isArray(body.owners) ? body.owners : [];
-      body.tokenOffset = list.length ? await verifiedOffset(list).catch(() => null) : null; // tokenId = index + tokenOffset
-      return res.status(200).json(body);
+      const tokenOffset = list.length ? await verifiedOffset(list).catch(() => null) : null; // tokenId = index + tokenOffset
+      return res.status(200).json({ tokenOffset, ...body });
     }
     if (req.method === 'GET') {
       if (!READ.some((r) => r.test(path))) return res.status(404).json({ error: 'not_allowed' });
