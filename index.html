@@ -1958,6 +1958,16 @@ const liveOnly = `<div class="banner">${ICON.info}<div>Step-by-step details load
 
 const fmtBytes = (n) => (!Number.isFinite(n) ? '' : n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : n >= 1024 ? `${Math.round(n / 1024)} KB` : `${n} bytes`);
 const NODE_STATE = { ...JOB_STATE, accepted: ['Accepted', 'good'], implementing: ['Working', 'accent live'], verifying: ['Verifying', 'info'], ready: ['Queued', 'info'] };
+// IMD sometimes answers 503 for a single task or seat for a while. While a panel is open, its reads
+// are retried quietly with a growing pause, so the panel fills in by itself once IMD answers.
+async function keepTrying(body, load, attempts = 10, onFail) {
+  let last;
+  for (let i = 0; i < attempts; i++) {
+    if (i) { await sleep(Math.min(4000 + i * 2000, 12000)); if (!body.isConnected) throw last; }
+    try { return await load(i); } catch (e) { last = e; onFail?.(e); }
+  }
+  throw last;
+}
 async function openJob(id) {
   const j = TaskState.jobs.find((x) => x.id === id) || SNAP.jobs.find((x) => x.id === id) || { id };
   const ty = JOB_TYPES[jobType(j)];
@@ -1971,17 +1981,17 @@ async function openJob(id) {
     const files = res?.files || [];
     const repo = safeUrl(res?.delivery?.repoUrl || full?.delivery?.repoUrl);
     box.innerHTML = `
-      ${full === undefined && !fullErr ? `<div><div class="sub-h">Steps</div>${'<div class="skeleton" style="margin-bottom:10px"></div>'.repeat(2)}</div>` : ''}
+      ${full === undefined ? `<div><div class="sub-h">Steps</div>${'<div class="skeleton" style="margin-bottom:10px"></div>'.repeat(2)}</div>` : ''}
       ${nodes.length ? `<div><div class="sub-h">Steps</div><div class="contracts">${nodes.map((n) => `<div class="c"><span class="nm"><span>${esc(String(n.skill || n.key || 'step').replace(/_/g, ' '))}</span>${n.role ? `<span class="tag">${esc(n.role)}</span>` : ''}</span><span style="display:flex;gap:8px;align-items:center">${n.seat?.tokenId ? `<a href="#" data-open-seat="${esc(n.seat.tokenId)}" class="mono muted">seat #${esc(n.seat.tokenId)}</a>` : ''}${statePill(n.state || n.verdict?.status, NODE_STATE)}</span></div>`).join('')}</div></div>` : ''}
-      ${fullErr ? `<div class="banner">${ICON.info}<div>IMD can't return this task's step list right now (${esc(fullErr.status || fullErr.message)}). Results below are current, and the steps appear once IMD answers again.</div></div>` : ''}
+      ${fullErr ? `<div class="banner">${ICON.info}<div>${full === undefined ? `IMD is slow to return this task's step list right now${fullErr.status ? ` (${esc(fullErr.status)})` : ''}. Retrying automatically, it fills in here as soon as IMD answers.` : `IMD isn't returning this task's step list right now${fullErr.status ? ` (${esc(fullErr.status)})` : ''}. Results below are current. <a href="#" data-open-job="${esc(id)}">Try again</a>`}</div></div>` : ''}
       ${files.length ? `<div><div class="sub-h">Files produced</div><div class="links" style="flex-direction:column;gap:8px;align-items:flex-start">${files.map((f) => extLink(f.url ? (/^https:\/\//.test(f.url) ? f.url : `${IMD_API}${f.url}`) : null, `${f.name || f.path} · ${fmtBytes(f.bytes)}`, ICON.doc) || `<span>${esc(f.path)}</span>`).join('')}</div></div>` : ''}
       ${repo ? `<div class="links">${extLink(repo, 'Delivered to GitHub', ICON.github)}</div>` : ''}
       <div class="links">${extLink(jobLink(id), 'Open on IMD Explorer')}</div>`;
   };
   paint();
   await Promise.all([
-    Data.get(`/jobs/${id}`).then((v) => { full = v; }, (e) => { full = null; fullErr = e; }).finally(paint),
-    Data.get(`/jobs/${id}/result`).then((v) => { res = v; }, () => { res = null; }).finally(paint),
+    keepTrying(body, () => Data.get(`/jobs/${id}`), 10, (e) => { fullErr = e; paint(); }).then((v) => { full = v; fullErr = null; }, (e) => { full = null; fullErr = e; }).finally(paint),
+    keepTrying(body, () => Data.get(`/jobs/${id}/result`), 6).then((v) => { res = v; }, () => { res = null; }).finally(paint),
   ]);
 }
 function summaryKv(j) {
@@ -2079,12 +2089,17 @@ async function openSeat(id) {
   if (!Data.live && String(id) !== '42') return;
   // Each source is read on its own: the live status shows at once, and the seat's full record
   // (recent work, collaborators) is added when IMD returns it. One failing route never blanks the panel.
-  const detail = Data.get(`/seats/${id}?work=8&reviews=0`);
-  const [st, owners] = await Promise.all([
-    Data.live ? Data.get(`/seats/${id}/standing?queue=0`).catch(() => null) : Promise.resolve(null),
-    getOwners().catch(() => null),
-  ]);
+  // IMD sometimes answers 503 for a seat for a while. While the panel is open, both sources are retried
+  // quietly (and the full record also in a lighter form) until IMD answers, so it fills in by itself.
+  const tries = [`/seats/${id}?work=8&reviews=0`, `/seats/${id}?work=4&reviews=0`, `/seats/${id}`];
+  const persist = (load, attempts, onFail) => keepTrying(body, load, attempts, onFail);
+  const detail = persist((i) => Data.get(tries[i % tries.length]), 10, (e) => { if (cur[1] === 'loading' || cur[1]?.retrying) paint(cur[0], { retrying: true, status: e?.status, message: e?.message }); });
+  let st = null; let stDone = !Data.live;
+  const standing = Data.live ? persist(() => Data.get(`/seats/${id}/standing?queue=0`), 8) : Promise.reject(null);
+  const owners = await getOwners().catch(() => null);
+  let cur = [{}, 'loading'];
   const paint = (f, state) => {
+    cur = [f, state];
     const box = body.querySelector('#sd'); if (!box) return;
     const p = st?.presence || {}; const sd = st?.standing || {};
     const owner = isAddr(f.owner) ? f.owner : owners?.ownerOf(id) || null;
@@ -2092,7 +2107,7 @@ async function openSeat(id) {
     const rt = (f.runtimes || p.runtimes || []).map((r) => [r.id, r.premiumModel?.model].filter(Boolean).join(' · ')).join(', ');
     box.innerHTML = `
       <dl class="kv">
-        <dt>Status</dt><dd>${online == null ? '<span class="pill">Unknown</span>' : online ? '<span class="pill good">Online</span>' : '<span class="pill">Offline</span>'}${p.acceptingWork === false ? ' <span class="pill warn">Not taking work</span>' : ''}${sd.pausedUntil ? ` <span class="pill bad">Paused until ${esc(stamp(sd.pausedUntil))}</span>` : ''}${s.working ? ' <span class="pill accent live">Working</span>' : ''}</dd>
+        <dt>Status</dt><dd>${online == null ? (stDone ? '<span class="pill">Unknown</span>' : '<span class="pill">Checking…</span>') : online ? '<span class="pill good">Online</span>' : '<span class="pill">Offline</span>'}${p.acceptingWork === false ? ' <span class="pill warn">Not taking work</span>' : ''}${sd.pausedUntil ? ` <span class="pill bad">Paused until ${esc(stamp(sd.pausedUntil))}</span>` : ''}${s.working ? ' <span class="pill accent live">Working</span>' : ''}</dd>
         ${isAddr(owner) ? `<dt>Owner</dt><dd><a href="#" data-wallet="${esc(owner)}" class="mono">${esc(short(owner, 8, 6))}</a>${isTreasury(owner) ? ' <span class="tag">Treasury</span>' : ''}</dd>` : ''}
         ${rt ? `<dt>Runs</dt><dd>${esc(rt)}</dd>` : ''}
         ${f.daemonVersion || p.daemonVersion ? `<dt>Agent version</dt><dd class="mono">${esc(f.daemonVersion || p.daemonVersion)}</dd>` : ''}
@@ -2101,12 +2116,14 @@ async function openSeat(id) {
         ${sd.consecutiveFailures ? `<dt>Failures in a row</dt><dd>${fmt(sd.consecutiveFailures)}</dd>` : ''}
         ${f.collaboratorJobs ? `<dt>Shared jobs</dt><dd>${fmt(f.collaboratorJobs)} with other seats</dd>` : ''}
       </dl>
-      ${state === 'loading' ? `<div><div class="sub-h">Recent work</div>${'<div class="skeleton" style="margin-bottom:10px"></div>'.repeat(3)}</div>` : ''}
-      ${state && state !== 'loading' ? `<div class="banner">${ICON.info}<div>IMD can't return this seat's work history right now (${esc(state.status || state.message)}). Everything above is current, and the history appears here once IMD answers again.</div></div>` : ''}
+      ${state?.retrying ? `<div class="banner">${ICON.info}<div>IMD is slow to return this seat's work history right now${state.status ? ` (${esc(state.status)})` : ''}. Retrying automatically, it fills in here as soon as IMD answers.</div></div>` : ''}
+      ${state === 'loading' || state?.retrying ? `<div><div class="sub-h">Recent work</div>${'<div class="skeleton" style="margin-bottom:10px"></div>'.repeat(3)}</div>` : ''}
+      ${state && state !== 'loading' && !state.retrying ? `<div class="banner">${ICON.info}<div>IMD isn't returning this seat's work history right now${state.status ? ` (${esc(state.status)})` : ''}. Everything above is current. <a href="#" data-open-seat="${esc(id)}">Try again</a></div></div>` : ''}
       ${(f.work || []).length ? `<div><div class="sub-h">Recent work</div><div class="contracts">${f.work.map((w) => `<a href="#" data-open-job="${esc(w.jobId)}"><span class="nm"><span>${esc(jobTitle({ id: w.jobId, objective: w.objective }))}</span></span>${statePill(w.status, { accepted: ['Accepted', 'good'], rejected: ['Rejected', 'bad'], pending: ['Pending', 'info'], failed: ['Failed', 'bad'] })}</a>`).join('')}</div></div>` : ''}
       ${(f.collaborators || []).length ? `<div><div class="sub-h">Works most with</div><div class="chips">${f.collaborators.slice(0, 6).map((c) => `<button type="button" class="chip" data-open-seat="${esc(c.tokenId)}">#${esc(c.tokenId)}<span class="n">${fmt(c.sharedJobs)}</span></button>`).join('')}</div></div>` : ''}`;
   };
   paint({}, 'loading');
+  standing.then((v) => { st = v; }, () => {}).finally(() => { stDone = true; paint(...cur); });
   detail.then((f) => paint(f || {}, null), (e) => paint({}, e));
 }
 
