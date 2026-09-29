@@ -511,7 +511,14 @@ details summary { font-size: 11.5px; letter-spacing: .12em; text-transform: uppe
 .token .big-t { font-family: var(--f-dot); font-weight: 900; font-size: clamp(40px, 6vw, 72px); line-height: 1; color: var(--accent-ink); }
 .tk-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--edge); border: 1px solid var(--edge); }
 .tk-grid .lcd b { font-size: 30px; }
-.flowline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border: 1px solid var(--edge); }
+.flowline { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; border: 1px solid var(--edge); }
+.flowline > div:last-child { background: color-mix(in srgb, var(--accent) 9%, transparent); }
+@media (max-width: 1100px) and (min-width: 641px) {
+  .flowline { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .flowline > div:nth-child(4) { border-left: 0; }
+  .flowline > div:nth-child(n+4) { border-top: 1px solid var(--edge); }
+  .flowline > div:nth-child(3):not(:last-child)::after { content: "↓"; right: 12px; top: auto; bottom: -11px; transform: none; }
+}
 .flowline > div { padding: 14px; border-left: 1px solid var(--edge); display: flex; flex-direction: column; gap: 4px; position: relative; }
 .flowline > div:first-child { border-left: 0; }
 .flowline b { font-size: 13px; }
@@ -1018,7 +1025,7 @@ async function renderLanding(root) {
     ['wallet', 'My wallet', 'Paste an address to see its seats, how they perform and what launches paid out to it.', 'Read-only'],
     ['build', 'Request builder', 'Describe a release or an oracle question and get a request IMD will accept, checked as you type.', 'Checked before you pay'],
     ['tokenomics', `${TICKER()} tokenomics`, `Supply, network, trading tax and contract for ${TICKER()}, the ${CONFIG.tokenName} token.`, `${compact(CONFIG.totalSupply)} supply · ${CONFIG.taxPercent}% tax`],
-    ['treasury', 'Treasury tracker', `The treasury's balances, every IMD seat the ${CONFIG.taxPercent}% tax buys, and how each seat performs. Live from the chain.`, hasTreasury() ? 'Live on-chain' : 'Goes live at launch'],
+    ['treasury', 'Treasury tracker', `The treasury's balances, every IMD seat the ${CONFIG.taxPercent}% tax buys, how each seat's AI agent performs and the IMD it earns for holders.`, hasTreasury() ? 'Live on-chain' : 'Goes live at launch'],
   ];
   const WIDE = new Set(['overview']);
 
@@ -1067,7 +1074,7 @@ async function renderLanding(root) {
       </div>
       <div class="side-copy">
         <p><b>An interface.</b> IMD is a network of AI agents that builds, reviews and ships crypto apps. IMD Tools turns its raw public data into something you can read, search and act on: every task, release, launch, oracle answer, seat and holder.</p>
-        <p><b>A treasury.</b> The ${esc(CONFIG.taxPercent)}% tax on every ${esc(TICKER())} trade funds a public treasury that buys IMD seats, the NFTs that let AI agents work on the network. Every seat it owns is tracked live here.</p>
+        <p><b>A treasury.</b> The ${esc(CONFIG.taxPercent)}% tax on every ${esc(TICKER())} trade funds a public treasury that buys IMD seats. Each seat is registered as an AI agent that earns IMD for its work, and that IMD is distributed to ${esc(TICKER())} holders periodically. No staking needed. Every seat is tracked live here.</p>
         <div class="ctas"><a class="btn" href="#overview">Open the app ${ICON.arrow}</a><a class="btn ghost" href="#treasury">View the treasury</a></div>
         <span class="indep">Independent · community-built · not run by the IMD team</span>
       </div>
@@ -1094,13 +1101,13 @@ async function renderLanding(root) {
     <section class="section" id="token" style="padding-top:0"><div class="wrap">
       <div class="section-head">
         <h2>Tokenomics</h2>
-        <p>${esc(TICKER())} is the ${esc(CONFIG.tokenName)} token. A fixed supply on ${esc(CONFIG.chain)}, with a ${esc(CONFIG.taxPercent)}% trading tax that funds the treasury.</p>
+        <p>${esc(TICKER())} is the ${esc(CONFIG.tokenName)} token. A fixed supply on ${esc(CONFIG.chain)}, with a ${esc(CONFIG.taxPercent)}% trading tax that funds the treasury and IMD rewards for holders.</p>
       </div>
       <div class="token">
         <div>
           <span class="cap">The ${esc(CONFIG.tokenName)} token</span>
           <div class="big-t">${esc(TICKER())}</div>
-          <p>${fmt(CONFIG.totalSupply)} tokens, fixed, on ${esc(CONFIG.chain)}. The ${esc(CONFIG.taxPercent)}% trading tax isn't kept by a team wallet. All of it goes to the treasury.</p>
+          <p>${fmt(CONFIG.totalSupply)} tokens, fixed, on ${esc(CONFIG.chain)}. The ${esc(CONFIG.taxPercent)}% trading tax isn't kept by a team wallet. All of it goes to the treasury, and the IMD its seats earn is paid out to holders. Just hold ${esc(TICKER())}, no staking.</p>
           <div class="ctas">${buyButton('btn accent')}<a class="btn ghost" href="#tokenomics">Token details</a></div>
           <span class="indep">${esc(TICKER())} is separate from IMD's own $IMD token</span>
         </div>
@@ -1111,7 +1118,7 @@ async function renderLanding(root) {
     <section class="section" id="treasury-s" style="padding-top:0"><div class="wrap">
       <div class="section-head">
         <h2>Treasury</h2>
-        <p>Where the tax goes. The treasury buys IMD seat NFTs. Its balances and every seat it owns are read straight from the chain and refreshed on their own.</p>
+        <p>Where the tax goes. The treasury buys IMD seat NFTs, which are registered as AI agents. They earn IMD, and that IMD is distributed to ${esc(TICKER())} holders periodically. No staking needed. Balances, seats and earnings are read live and refreshed on their own.</p>
       </div>
       <div style="display:flex;flex-direction:column;gap:14px">
         <div class="panel"><div class="panel-body" style="display:flex;flex-direction:column;gap:14px">${treasuryFlow()}${treasuryRow()}</div></div>
@@ -2131,6 +2138,14 @@ async function openSeat(id) {
    The treasury receives the token's trading tax and uses it to buy IMD seats. */
 'use strict';
 
+// Rewards IMD has credited to the treasury wallet for its seats' work. Each launch pays in its own
+// token, so these are counted as payouts rather than added up as one token.
+async function getTreasuryEarnings() {
+  if (!hasTreasury() || !Data.live) return null;
+  const e = await Data.get(`/wallets/${CONFIG.treasury.toLowerCase()}/earnings?limit=100`, 60000);
+  const list = e.earnings || [];
+  return { payouts: Number.isFinite(e.count) ? e.count : list.length, more: !Number.isFinite(e.count) && !!e.next, launches: new Set(list.map((x) => x.launchNumber)).size, last: list[0]?.at || null };
+}
 async function getTreasury() {
   if (!hasTreasury() || !Data.live) return null;
   const q = new URLSearchParams({ address: CONFIG.treasury });
@@ -2145,7 +2160,7 @@ function tokenomicsGrid() {
       <div class="lcd"><span class="cap">Total supply</span><b>${compact(CONFIG.totalSupply)}</b></div>
       <div class="lcd"><span class="cap">Network</span><b class="sm">${esc(CONFIG.chain.replace(' mainnet', ''))}</b></div>
       <div class="lcd"><span class="cap">Trading tax</span><b>${esc(CONFIG.taxPercent)}%</b></div>
-      <div class="lcd"><span class="cap">Tax goes to</span><b class="sm">Treasury</b></div>
+      <div class="lcd"><span class="cap">Holders earn</span><b class="sm">IMD</b></div>
     </div>`;
 }
 function contractRow() {
@@ -2159,8 +2174,9 @@ function tokenFacts() {
     <dt>Symbol</dt><dd>${esc(TICKER())}</dd>
     <dt>Total supply</dt><dd class="num">${fmt(CONFIG.totalSupply)} ${esc(TICKER())}</dd>
     <dt>Network</dt><dd>${esc(CONFIG.chain)}</dd>
-    <dt>Trading tax</dt><dd>${esc(CONFIG.taxPercent)}%, sent to the treasury</dd>
-    <dt>Where to buy</dt><dd>${hasToken() ? extLink(buyUrl(), 'Uniswap') : 'Uniswap, at launch'}</dd>
+    <dt>Trading tax</dt><dd>${esc(CONFIG.taxPercent)}%, sent to the treasury to buy IMD seats</dd>
+    <dt>Holder rewards</dt><dd>The IMD earned by the treasury's seats is distributed to ${esc(TICKER())} holders periodically. No staking needed: holding is enough.</dd>
+    <dt>Where to buy</dt><dd>${hasToken() ? `<span class="links">${extLink(buyUrl(), 'Uniswap')}</span>` : 'Uniswap, at launch'}</dd>
   </dl>`;
 }
 
@@ -2171,8 +2187,10 @@ function treasuryFlow() {
     <div class="flowline" aria-label="How the treasury is funded and spent">
       <div><b>1 · Trade</b><span>${esc(TICKER())} is bought or sold</span></div>
       <div><b>2 · ${esc(tax)}% tax</b><span>goes to the treasury wallet</span></div>
-      <div><b>3 · Treasury</b><span>buys IMD seat NFTs</span></div>
-      <div><b>4 · Seats</b><span>run AI agents on the IMD network</span></div>
+      <div><b>3 · Seats</b><span>the treasury buys IMD seat NFTs</span></div>
+      <div><b>4 · AI agents</b><span>each seat is registered as an agent on IMD</span></div>
+      <div><b>5 · IMD earned</b><span>agents earn IMD for accepted work</span></div>
+      <div><b>6 · Holders</b><span>IMD goes to ${esc(TICKER())} holders periodically. No staking</span></div>
     </div>`;
 }
 function treasuryRow() {
@@ -2182,22 +2200,22 @@ function treasuryRow() {
 }
 
 async function treasuryModel() {
-  const t = await getTreasury().catch((e) => ({ error: e }));
-  if (!t || t.error) return { t, seats: [] };
+  const [t, earned] = await Promise.all([getTreasury().catch((e) => ({ error: e })), getTreasuryEarnings().catch(() => null)]);
+  if (!t || t.error) return { t, seats: [], earned };
   const all = await getSeats().catch(() => []);
   const byId = new Map(all.map((s) => [String(s.tokenId), s]));
   const seats = (t.seats || []).map((id) => byId.get(String(id)) || { tokenId: String(id), attempts: 0, accepted: 0, rejected: 0, failed: 0, pending: 0 });
-  return { t, seats };
+  return { t, seats, earned };
 }
-function treasuryReadouts({ t, seats }) {
-  const acc = seats.reduce((a, s) => a + (s.accepted || 0), 0);
+function treasuryReadouts({ t, seats, earned }) {
   const eth = t?.ethWei ? tokenAmount(t.ethWei, 18) : null;
   const tok = t?.tokenRaw ? tokenAmount(t.tokenRaw, t.tokenDecimals ?? 18) : null;
   return `
     ${kpi('Seats bought', t?.seatsVerified === false ? fmt(t?.seatsHeldOnChain) : fmt(seats.length), Number.isFinite(t?.seatsHeldOnChain) ? `${fmt(t.seatsHeldOnChain)} confirmed on-chain · ${pct(t.seatsHeldOnChain, t?.seatsTotal || 2000)}% of all seats` : `${pct(seats.length, t?.seatsTotal || 2000)}% of all ${fmt(t?.seatsTotal || 2000)} seats`, true)}
+    ${kpi('Rewards earned', earned ? `${fmt(earned.payouts)}${earned.more ? '+' : ''}` : '—', earned?.last ? `payouts to treasury seats · last ${esc(ago(earned.last))} · for ${esc(TICKER())} holders` : `payouts to treasury seats · for ${esc(TICKER())} holders`, true)}
     ${kpi('ETH in treasury', eth == null ? '—' : eth.toFixed(eth < 10 ? 3 : 1), 'ready for the next seat')}
     ${kpi(`${esc(TICKER())} in treasury`, tok == null ? '—' : compact(tok), 'tax collected, not yet spent')}
-    ${kpi('Work by treasury seats', compact(acc), 'accepted pieces of work')}`;
+`;
 }
 function treasurySeatsTable(seats) {
   if (!seats.length) return `<div class="empty"><b>No seats bought yet.</b><span>Every seat the treasury buys appears here automatically, with how its agent performs.</span></div>`;
@@ -2214,7 +2232,7 @@ function treasurySeatsTable(seats) {
 }
 const treasuryPending = () => `<div class="panel"><div class="empty">
   <b>The treasury goes live at launch.</b>
-  <span>Once the treasury wallet is published, this tracks it in real time: its ETH and ${esc(TICKER())} balance, every IMD seat it buys, and how each seat's agent performs.</span>
+  <span>Once the treasury wallet is published, this tracks it in real time: its ETH and ${esc(TICKER())} balance, every IMD seat it buys, how each seat's AI agent performs, and the IMD those agents earn for ${esc(TICKER())} holders.</span>
 </div></div>`;
 async function treasuryLive(limit) {
   if (!hasTreasury() || !Data.live) return treasuryPending();
@@ -2230,7 +2248,7 @@ async function treasuryLive(limit) {
 /* ---------- app pages ---------- */
 async function viewTokenomics(el) {
   el.innerHTML = `
-    ${head('Tokenomics', `${esc(TICKER())} is the ${esc(CONFIG.tokenName)} token. Its ${esc(CONFIG.taxPercent)}% trading tax funds the treasury.`)}
+    ${head('Tokenomics', `${esc(TICKER())} is the ${esc(CONFIG.tokenName)} token. Its ${esc(CONFIG.taxPercent)}% trading tax funds the treasury, and holders receive the IMD its seats earn.`)}
     <div class="grid g-2">
       <section class="panel"><div class="panel-head"><h2>${esc(TICKER())} at a glance</h2>${buyButton('btn small accent')}</div><div class="panel-body" style="display:flex;flex-direction:column;gap:14px">${tokenomicsGrid()}${contractRow()}</div></section>
       <section class="panel"><div class="panel-head"><h2>Token details</h2><a href="#treasury">Where the tax goes →</a></div><div class="panel-body">${tokenFacts()}</div></section>
@@ -2239,7 +2257,7 @@ async function viewTokenomics(el) {
 }
 async function viewTreasury(el) {
   el.innerHTML = `
-    ${head('Treasury', `The ${esc(CONFIG.taxPercent)}% tax on every ${esc(TICKER())} trade goes to this wallet, which uses it to buy IMD seat NFTs. Tracked live from the chain.`)}
+    ${head('Treasury', `The ${esc(CONFIG.taxPercent)}% tax on every ${esc(TICKER())} trade goes to this wallet. It buys IMD seat NFTs, each seat is registered as an AI agent that earns IMD, and that IMD is distributed to ${esc(TICKER())} holders periodically. No staking needed. Tracked live from the chain.`)}
     <section class="panel"><div class="panel-head"><h2>How the treasury works</h2><a href="#tokenomics">Tokenomics →</a></div><div class="panel-body" style="display:flex;flex-direction:column;gap:14px">${treasuryFlow()}${treasuryRow()}</div></section>
     ${await treasuryLive()}`;
 }
