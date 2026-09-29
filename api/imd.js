@@ -25,6 +25,10 @@ async function cachedUpstream(key, url, ttlSec) {
   return entry;
 }
 const NO_CDN = 'no-store, max-age=0';
+// IMD's own edge keeps stale copies (and sometimes stored errors) of a few plain addresses.
+// Adding a parameter that changes every 5 seconds makes IMD compute them fresh.
+const FRESH = new Set(['swarm', 'seats/owners', 'seats/records', 'health', 'workers', 'contributors']);
+const freshen = (path, q) => (FRESH.has(path) ? [q, `_t=${Math.floor(Date.now() / 5000)}`].filter(Boolean).join('&') : q);
 const HEADERS = { Accept: 'application/json', 'User-Agent': 'IMD-Tools/1.1 (community front end; +https://imd.fun/docs/)' };
 
 // One upstream call, retried once on rate limits, server errors and network failures.
@@ -92,7 +96,7 @@ async function treasury(address, token) {
     rpc('eth_getBalance', [address, 'latest']).catch(() => null),
     token ? rpc('eth_call', [{ to: token, data: '0x70a08231' + pad(address) }, 'latest']).catch(() => null) : null,
     token ? rpc('eth_call', [{ to: token, data: '0x313ce567' }, 'latest']).catch(() => null) : null,
-    cachedUpstream('seats/owners', `${IMD}/seats/owners`, CACHE['seats/owners']).then((c) => (c.status === 200 ? JSON.parse(c.body) : null)).catch(() => null),
+    cachedUpstream('seats/owners', `${IMD}/seats/owners?${freshen('seats/owners', '')}`, CACHE['seats/owners']).then((c) => (c.status === 200 ? JSON.parse(c.body) : null)).catch(() => null),
   ]);
   const list = Array.isArray(owners?.owners) ? owners.owners : [];
   const off = list.length ? await verifiedOffset(list).catch(() => null) : null;
@@ -130,7 +134,7 @@ export default async function handler(req, res) {
       return res.status(200).json(body);
     }
     if (req.method === 'GET' && path === 'seats/owners') {
-      const c = await cachedUpstream('seats/owners', `${IMD}/seats/owners`, CACHE['seats/owners']);
+      const c = await cachedUpstream('seats/owners', `${IMD}/seats/owners?${freshen('seats/owners', '')}`, CACHE['seats/owners']);
       res.setHeader('Cache-Control', NO_CDN);
       if (c.status < 200 || c.status >= 300) return res.status(c.status).send(c.body);
       const body = JSON.parse(c.body);
@@ -142,7 +146,8 @@ export default async function handler(req, res) {
       if (!READ.some((r) => r.test(path))) return res.status(404).json({ error: 'not_allowed' });
       const q = params.toString();
       const ttl = CACHE[path] ?? (/attestation$/.test(path) ? 3600 : 10);
-      const c = await cachedUpstream(`${path}?${q}`, `${IMD}/${path}${q ? `?${q}` : ''}`, ttl);
+      const uq = freshen(path, q);
+      const c = await cachedUpstream(`${path}?${q}`, `${IMD}/${path}${uq ? `?${uq}` : ''}`, ttl);
       if (c.retryAfter) res.setHeader('Retry-After', c.retryAfter);
       res.setHeader('Cache-Control', NO_CDN);
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
