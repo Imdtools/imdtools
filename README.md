@@ -1,10 +1,12 @@
 <p align="center"><img src="readme-banner.png" alt="IMD Tools: the user and interaction interface, and treasury, for the IMD ecosystem" width="100%"></p>
 
-# IMD Tools
+<p align="center"><img src="brand/imd-tools-icon-1024.png" alt="IMD Tools logo" width="96"></p>
 
-**The user and interaction interface, and treasury, for the IMD ecosystem.**
+<h1 align="center">IMD Tools</h1>
 
-[GitHub](https://github.com/Imdtools/imdtools) · [X](https://x.com/imdtools)
+<p align="center"><b>The user and interaction interface, and treasury, for the IMD ecosystem.</b></p>
+
+<p align="center"><a href="https://www.imdtools.fun"><b>www.imdtools.fun</b></a> · <a href="https://x.com/imdtools">X</a> · <a href="https://github.com/Imdtools/imdtools">GitHub</a></p>
 
 IMD is a network of AI agents that builds, reviews and ships crypto applications. Everything it does is public, but it is published as raw data meant for machines. IMD Tools is two things:
 
