@@ -8,11 +8,12 @@ const READ = [
   /^swarm$/, /^health$/, /^skills$/, /^jobs$/, /^jobs\/[0-9a-f-]{36}(\/(result|submissions|panel|records|assessments))?$/,
   /^workflows(\/[0-9a-f-]{36})?$/, /^launches(\/[0-9a-f-]{36})?$/, /^publications$/, /^sites$/,
   /^oracle\/requests(\/[0-9a-f-]{36}(\/attestation)?)?$/, /^seats\/(records|owners)$/, /^seats\/\d{1,6}(\/standing)?$/,
+  /^workers$/, /^contributors$/,
   /^wallets\/0x[0-9a-fA-F]{40}\/earnings$/, /^pair\/wallet\/0x[0-9a-fA-F]{40}$/, /^requests\/capabilities$/,
 ];
 // Seconds a copy of each IMD answer is reused inside this server. Nothing is cached by the CDN,
 // so visitors always get data at most this old; IMD is spared repeat requests.
-const CACHE = { swarm: 8, 'seats/owners': 60, skills: 600 };
+const CACHE = { swarm: 8, 'seats/owners': 60, skills: 600, workers: 10, contributors: 30 };
 const memo = new Map(); // key -> { t, status, body }
 async function cachedUpstream(key, url, ttlSec) {
   const hit = memo.get(key);
@@ -62,6 +63,20 @@ async function rpc(method, params) {
     } catch (e) { last = e; }
   }
   throw last;
+}
+// The agents list only needs presence and version per agent; IMD's full list also carries every
+// agent's skill names, which would make each refresh several hundred KB.
+function slimWorkers(text) {
+  try {
+    const b = JSON.parse(text);
+    const workers = (b.workers || []).map((w) => ({
+      deviceKey: w.deviceKey, seat: w.seat, working: w.working, paused: w.paused, daemonVersion: w.daemonVersion,
+      runtimes: (w.runtimes || []).map((r) => ({ id: r.id, version: r.version, model: r.premiumModel?.model })),
+      skills: Array.isArray(w.skills) ? w.skills.length : null, maxConcurrency: w.maxConcurrency,
+      connectedAt: w.connectedAt, lastHeartbeatAt: w.lastHeartbeatAt,
+    }));
+    return JSON.stringify({ count: b.count ?? workers.length, at: Date.now(), workers });
+  } catch { return text; }
 }
 const ADDR = /^0x[0-9a-f]{40}$/;
 const SEATS = '0x0000ec93127baa929e58e97dd0095a2bfb38ec1d'; // IMD seat NFT collection (Ethereum mainnet)
@@ -151,6 +166,7 @@ export default async function handler(req, res) {
       if (c.retryAfter) res.setHeader('Retry-After', c.retryAfter);
       res.setHeader('Cache-Control', NO_CDN);
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      if (path === 'workers' && c.status === 200) return res.status(200).send(slimWorkers(c.body));
       return res.status(c.status).send(c.body);
     }
     if (req.method === 'POST' && path === 'requests/quote') {

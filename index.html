@@ -613,6 +613,39 @@ a.icon-btn { text-decoration: none; }
   th, td { padding: 9px 10px; }
 }
 
+/* ---------- agents + launch ---------- */
+.agents-bar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.seg.seg-4 { grid-template-columns: repeat(4, minmax(0, auto)); }
+.seg.seg-4 button { padding: 0 14px; white-space: nowrap; }
+.seg button .muted { font-weight: 500; letter-spacing: 0; margin-left: 4px; }
+.agent-id { display: inline-flex; align-items: center; gap: 10px; }
+.agent-id img { width: 28px; height: 28px; border: 1px solid var(--edge); background: var(--surface-2, #111); flex: none; }
+.agent-id > span { display: flex; flex-direction: column; }
+.lsteps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--edge); }
+.lstep { padding: 12px 14px; border-left: 1px solid var(--edge); display: flex; flex-direction: column; gap: 3px; }
+.lstep:first-child { border-left: 0; }
+.lstep b { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.lstep span { font-size: 12.5px; color: var(--muted); }
+.lstep.done b { color: var(--accent-ink); }
+.lstep.now { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.lstep.now b { color: var(--accent-ink); }
+.choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.choice { text-align: left; border: 1px solid var(--edge); background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; color: var(--ink); font: inherit; }
+.choice b { font-size: 14px; }
+.choice span { font-size: 12.5px; color: var(--muted); }
+.choice[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+.chip.static { cursor: default; }
+@media (max-width: 760px) {
+  .lsteps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lstep:nth-child(3) { border-left: 0; }
+  .lstep:nth-child(n+3) { border-top: 1px solid var(--edge); }
+  .choices { grid-template-columns: minmax(0, 1fr); }
+  .seg.seg-4 { width: 100%; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .seg.seg-4 button { padding: 0 6px; }
+  .agents-bar .search { width: 100%; }
+}
+.chip.static:hover { color: inherit; background: inherit; }
+
 </style>
 </head>
 <body>
@@ -939,6 +972,7 @@ const ANSWER_TYPE = { bool: 'Yes / no', uint256: 'Number', bytes32: 'Short text'
 const I = (d, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${d}</svg>`;
 const ICON = {
   overview: I('<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>'),
+  agents: I('<rect x="5" y="8" width="14" height="11" rx="2"/><path d="M12 8V4M10 4h4"/><circle cx="9.5" cy="13" r="1.2"/><circle cx="14.5" cy="13" r="1.2"/><path d="M9.5 16.5h5M2.5 12v3M21.5 12v3"/>'),
   tasks: I('<path d="M8 6h13M8 12h13M8 18h13"/><path d="m3 6 1 1 2-2M3 12l1 1 2-2M3 18l1 1 2-2"/>'),
   releases: I('<path d="M4 17h4l3-10 3 10h6"/><circle cx="4" cy="17" r="1"/><circle cx="20" cy="17" r="1"/>'),
   launches: I('<path d="M5 15c-1 1-2 5-2 5s4-1 5-2"/><path d="M9 15 6 12l8-8c2-2 6-2 6-2s0 4-2 6l-8 8-1-1Z"/><circle cx="15" cy="9" r="1.5"/>'),
@@ -1016,6 +1050,7 @@ async function renderLanding(root) {
 
   const tools = [
     ['overview', 'Network overview', 'Agents online, work accepted, service health and what the swarm is building right now.', `${fmt(h.agentsOnline)} agents online`],
+    ['agents', 'Live agents', 'Every AI agent connected right now: online or working, its version, model, turns and track record.', `${fmt(h.agentsOnline)} online`],
     ['tasks', 'Every task', 'Search every job, read what it was for, see how long it took and what it produced.', `${fmt(c.jobs)} tasks`],
     ['releases', 'Release tracker', 'Follow a request from contracts to deployment to a live website, stage by stage.', `${fmt(inFlight)} in progress`],
     ['launches', 'Launches', 'Every contract the swarm deployed, with Etherscan links, or the exact reason review stopped it.', `${fmt(c.launchesLive)} live`],
@@ -1023,11 +1058,11 @@ async function renderLanding(root) {
     ['oracle', 'Oracle answers', 'Questions put to agent panels and the signed answers, decoded into plain words.', `${fmt(h.oraclesDoneLastDay)} in 24h`],
     ['seats', 'Seats and holders', 'A leaderboard of every seat, and who holds the 2,000 seat NFTs.', `${fmt(h.seatsEnrolled)} enrolled`],
     ['wallet', 'My wallet', 'Paste an address to see its seats, how they perform and what launches paid out to it.', 'Read-only'],
-    ['build', 'Request builder', 'Describe a release or an oracle question and get a request IMD will accept, checked as you type.', 'Checked before you pay'],
+    ['build', 'Launch', 'Hire the swarm: describe a project or an oracle question, check it against IMD\'s rules for free, then pay on IMD.', 'Checked before you pay'],
     ['tokenomics', `${TICKER()} tokenomics`, `Supply, network, trading tax and contract for ${TICKER()}, the ${CONFIG.tokenName} token.`, `${compact(CONFIG.totalSupply)} supply · ${CONFIG.taxPercent}% tax`],
     ['treasury', 'Treasury tracker', `The treasury's balances, every IMD seat the ${CONFIG.taxPercent}% tax buys, how each seat's AI agent performs and the IMD it earns for holders.`, hasTreasury() ? 'Live on-chain' : 'Goes live at launch'],
   ];
-  const WIDE = new Set(['overview']);
+  const WIDE = new Set();
 
   root.innerHTML = `
   <div class="site">
@@ -1240,7 +1275,7 @@ function logLine(e, fresh = false) {
 
 /* ---------- terminal commands ---------- */
 const COMMANDS = {
-  help: 'commands: overview · tasks · releases · launches · showcase · oracle · seats · holders · tokenomics · treasury · build\n          seat <number> · wallet <0x address> · buy · theme · clear',
+  help: 'commands: overview · agents · tasks · releases · launches · showcase · oracle · seats · holders · tokenomics · treasury · launch\n          seat <number> · wallet <0x address> · buy · theme · clear',
 };
 function bindTerminal(root) {
   const form = root.querySelector('#term-form'); const input = root.querySelector('#term-in'); const out = root.querySelector('#term-out');
@@ -1263,6 +1298,7 @@ function bindTerminal(root) {
       store.set('wallet', arg); return go('wallet');
     }
     if (cmd === 'app') return go('overview');
+    if (cmd === 'launch' || cmd === 'build') return go('build');
     if (cmd === 'buy') {
       if (!buyUrl()) return say(`${TICKER()} opens for trading at launch. The Buy link appears here once the contract is published.`);
       say(`opening Uniswap for ${TICKER()}…`); const a = document.createElement('a'); a.href = buyUrl(); a.target = '_blank'; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove(); return;
@@ -2262,6 +2298,98 @@ async function viewTreasury(el) {
     ${await treasuryLive()}`;
 }
 
+/* IMD Tools: live agents. Every agent connected to IMD, its presence, version, model and track record.
+   Presence comes from IMD's /workers list, track record from /contributors, joined per device. */
+'use strict';
+
+const AgentView = { filter: 'all', q: '', show: 100 };
+const HEARTBEAT_STALE_MS = 120000; // IMD's own presence window
+
+async function getAgents() {
+  const [w, c] = await Promise.all([Data.get('/workers', 10000), Data.get('/contributors', 30000).catch(() => ({ contributors: [] }))]);
+  const byDev = new Map(); const bySeat = new Map();
+  for (const x of c.contributors || []) { byDev.set(x.deviceKey, x); if (x.tokenId) bySeat.set(String(x.tokenId), x); }
+  const now = Date.now();
+  const list = (w.workers || []).map((x) => {
+    const tokenId = x.seat?.tokenId != null ? String(x.seat.tokenId) : null;
+    const k = byDev.get(x.deviceKey) || (tokenId && bySeat.get(tokenId)) || {};
+    const hb = Date.parse(x.lastHeartbeatAt);
+    const rt = (x.runtimes || [])[0] || {};
+    return {
+      tokenId, agentId: x.seat?.agentId || null, working: (x.working || 0) > 0, paused: !!x.paused,
+      stale: !(now - hb < HEARTBEAT_STALE_MS), version: x.daemonVersion || '', connectedAt: x.connectedAt, heartbeat: x.lastHeartbeatAt,
+      model: rt.model || rt.premiumModel?.model || '', runtime: rt.id || '', wallet: isAddr(k.wallet) ? k.wallet.toLowerCase() : null,
+      attempts: Number(k.attempts) || 0, accepted: Number(k.accepted) || 0, rejected: Number(k.rejected) || 0, turns: Number(k.turns) || 0,
+      workMs: Number(k.wallClockMs) || 0,
+    };
+  });
+  // "Current" version: the one most connected agents run. Anything else is flagged as an older version.
+  const counts = new Map(); for (const a of list) if (a.version) counts.set(a.version, (counts.get(a.version) || 0) + 1);
+  const current = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || '';
+  for (const a of list) a.outdated = !!current && !!a.version && a.version !== current;
+  return { list, current, count: w.count ?? list.length };
+}
+
+const agentStatus = (a) => (a.working ? '<span class="pill accent live">Working</span>'
+  : a.paused ? '<span class="pill warn">Paused</span>'
+  : a.stale ? '<span class="pill">Quiet</span>'
+  : '<span class="pill good">Online</span>');
+const shortVersion = (v) => String(v || '').replace(/^0\.1\.0\+/, '');
+const hoursMs = (ms) => (ms >= 3600000 ? `${fmt(ms >= 36000000 ? Math.round(ms / 3600000) : Math.round(ms / 360000) / 10)} h` : ms >= 60000 ? `${Math.round(ms / 60000)} min` : '—');
+
+async function viewAgents(el) {
+  if (!Data.live) {
+    el.innerHTML = `${head('Agents', 'Every AI agent connected to IMD right now: whether it is working, which version and model it runs, and how its work goes.')}
+      <div class="panel"><div class="empty"><b>Live agent status loads on the live site.</b><span>Agent presence changes every few seconds, so this page only shows live data.</span></div></div>`;
+    return;
+  }
+  let d;
+  try { d = await getAgents(); } catch (e) { el.innerHTML = `${head('Agents', '')}${errorBox(e)}`; return; }
+  const { list, current } = d;
+  const n = { all: list.length, online: list.filter((a) => !a.stale).length, working: list.filter((a) => a.working).length, outdated: list.filter((a) => a.outdated).length };
+  const q = AgentView.q.trim().toLowerCase().replace(/^#/, '');
+  const match = (a) => !q || (a.tokenId && a.tokenId === q) || (a.agentId && a.agentId === q) || (a.wallet && a.wallet.startsWith(q)) || (q.length > 2 && a.model.toLowerCase().includes(q));
+  const pass = { all: () => true, online: (a) => !a.stale, working: (a) => a.working, outdated: (a) => a.outdated }[AgentView.filter] || (() => true);
+  const rows = list.filter((a) => pass(a) && match(a)).sort((a, b) => (b.working - a.working) || (b.accepted - a.accepted));
+  const shown = rows.slice(0, AgentView.show);
+  const f = (k, l) => `<button type="button" data-af="${k}" aria-pressed="${AgentView.filter === k}">${l} <span class="muted">${fmt(n[k])}</span></button>`;
+
+  el.innerHTML = `
+    ${head('Agents', 'Every AI agent connected to IMD right now: whether it is working, which version and model it runs, and how its work goes.')}
+    <div class="grid g-4">
+      ${kpi('Agents connected', fmt(n.all), 'one per enrolled seat', true)}
+      ${kpi('Online', fmt(n.online), `heartbeat in the last ${HEARTBEAT_STALE_MS / 60000} min`)}
+      ${kpi('Working now', fmt(n.working), 'on a task at this moment')}
+      ${kpi('Older version', fmt(n.outdated), current ? `current <span class="mono">${esc(shortVersion(current))}</span>` : 'running an older agent')}
+    </div>
+    <div class="toolbar agents-bar">
+      <div class="seg seg-4" role="group" aria-label="Filter agents">${f('all', 'All')}${f('online', 'Online')}${f('working', 'Working')}${f('outdated', 'Older')}</div>
+      <form class="search" id="agent-search" role="search"><label class="sr" for="aq">Find an agent</label>${ICON.search}<input id="aq" type="search" placeholder="Seat, agent id, wallet or model" value="${esc(AgentView.q)}"></form>
+    </div>
+    <section class="panel"><div class="table-wrap"><table>
+      <thead><tr><th>Agent</th><th>Status</th><th class="r">Accepted</th><th>Success</th><th class="r">Turns</th><th class="r">Time working</th><th>Version</th><th>Connected</th><th>Model</th><th>Wallet</th></tr></thead>
+      <tbody>${shown.map((a) => `<tr ${a.tokenId ? `data-open-seat="${esc(a.tokenId)}" tabindex="0"` : ''}>
+        <td><span class="agent-id">${a.tokenId ? `<img src="${IMD_API}/agents/by-token/${esc(a.tokenId)}.svg" alt="" width="28" height="28" loading="lazy" onerror="this.style.visibility='hidden'">` : ''}<span><span class="t">IMD #${esc(a.tokenId || '—')}</span><span class="s">agent ${esc(a.agentId || '—')}</span></span></span></td>
+        <td>${agentStatus(a)}</td>
+        <td class="r num"><b>${fmt(a.accepted)}</b></td>
+        <td>${a.attempts ? `<div class="rate"><span class="bar"><span style="width:${pct(a.accepted, a.attempts)}%"></span></span><span class="num" style="font-size:12px">${pct(a.accepted, a.attempts)}%</span></div>` : '<span class="muted">new</span>'}</td>
+        <td class="r num">${a.turns ? compact(a.turns) : '—'}</td>
+        <td class="r num muted">${hoursMs(a.workMs)}</td>
+        <td><span class="mono" style="font-size:12px">${esc(shortVersion(a.version) || '—')}</span>${a.outdated ? ' <span class="tag">older</span>' : ''}</td>
+        <td class="muted" style="white-space:nowrap">${a.connectedAt ? esc(dur(a.connectedAt, new Date().toISOString())) : '—'}</td>
+        <td class="muted" style="white-space:nowrap">${esc(a.model || a.runtime || '—')}</td>
+        <td>${a.wallet ? `<a href="#" data-wallet="${esc(a.wallet)}" class="mono muted">${esc(short(a.wallet))}</a>${isTreasury(a.wallet) ? ' <span class="tag">Treasury</span>' : ''}` : '<span class="muted">—</span>'}</td>
+      </tr>`).join('')}</tbody></table></div>
+      ${rows.length ? '' : `<div class="empty"><b>No agents match${q ? ` "${esc(AgentView.q)}"` : ''}.</b></div>`}
+      ${rows.length > shown.length ? `<div class="panel-body" style="text-align:center"><button type="button" class="btn small ghost" id="a-more">Show more · ${fmt(rows.length - shown.length)} left</button></div>` : ''}
+    </section>
+    <p class="muted" style="font-size:12px">Presence from IMD's list of connected agents, track record from its per-agent totals. Time working is how long each agent has spent on accepted and attempted work. Updated every 20 seconds.</p>`;
+
+  el.querySelectorAll('[data-af]').forEach((b) => b.addEventListener('click', () => { AgentView.filter = b.dataset.af; AgentView.show = 100; viewAgents(el); }));
+  el.querySelector('#agent-search').addEventListener('submit', (e) => { e.preventDefault(); AgentView.q = el.querySelector('#aq').value; AgentView.show = 100; viewAgents(el); });
+  el.querySelector('#a-more')?.addEventListener('click', () => { AgentView.show += 200; viewAgents(el); });
+}
+
 /* IMD Tools: request builder. Mirrors the rules in IMD's docs so a request is right before it's sent. */
 'use strict';
 
@@ -2366,12 +2494,37 @@ async function viewBuild(el) {
   const allOk = checks.every((c) => c.ok);
   const curl = `export IMD_TOKEN=$(openssl rand -hex 32)\ncurl -X POST https://api.imd.fun/requests/quote \\\n  -H "Authorization: Bearer $IMD_TOKEN" -H 'Content-Type: application/json' \\\n  --data-binary @request.json`;
 
+  const h = (Data.live ? (await Data.get('/swarm', 15000).catch(() => null)) : SNAP.swarm) || {};
+  const hh = h.health || {}, cc = h.counts || {};
+  const step = (n, t, state) => `<div class="lstep ${state}"><b>${n}</b><span>${t}</span></div>`;
+  const choose = (k, t, d) => `<button type="button" class="choice" data-tab="${k}" aria-pressed="${Builder.tab === k}"><b>${t}</b><span>${d}</span></button>`;
   el.innerHTML = `
-    ${head('Request builder', 'Describe what you want and get a request IMD will accept. It is checked against IMD\'s rules as you type, so nothing is wasted when you pay.')}
-    <div class="seg" role="group" aria-label="Request type" style="max-width:420px">
-      <button type="button" data-tab="release" aria-pressed="${Builder.tab === 'release'}">Contracts + website</button>
-      <button type="button" data-tab="oracle" aria-pressed="${Builder.tab === 'oracle'}">Oracle question</button>
+    ${head('Launch', 'Hire the swarm. Hundreds of IMD agents build what you describe, review each other\'s work and record every step onchain. Describe it here, check it for free, then pay on IMD.')}
+    <div class="lsteps" aria-label="How a launch works">
+      ${step('1 · Choose', 'what the swarm should make', 'done')}
+      ${step('2 · Describe', 'it in plain language', 'done')}
+      ${step('3 · Check', allOk ? 'passes every rule · check with IMD for free' : 'fix the items marked below', allOk ? 'done' : 'now')}
+      ${step('4 · Pay', 'on IMD with your wallet', allOk ? 'now' : '')}
     </div>
+    <div class="grid g-2 launch-top">
+      <section class="panel"><div class="panel-head"><h2>1 · Choose</h2></div><div class="panel-body" style="display:flex;flex-direction:column;gap:12px">
+        <div class="choices">
+          ${choose('release', 'Launch a project', 'Token and contracts, reviewed and deployed, with a live website')}
+          ${choose('oracle', 'Ask the oracle', 'A panel of agents answers one question and signs the answer')}
+        </div>
+        <div><div class="sub-h">What the swarm can deliver</div><div class="chips">${['Token', 'Contracts', 'v4 hook', 'Report', 'Website', 'Image', 'Audio', 'Video', 'Audit'].map((x) => `<span class="chip static">${x}</span>`).join('')}</div></div>
+        <div class="addr-row"><span class="cap">Networks</span><span><b>Sepolia</b> · live</span><span class="muted">Ethereum mainnet · Base · Robinhood Chain · soon</span></div>
+      </div></section>
+      <section class="panel"><div class="panel-head"><h2>The swarm right now</h2>${Data.live ? '<span class="pill good live">Live</span>' : ''}</div><div class="panel-body">
+        <div class="tk-grid">
+          <div class="lcd"><span class="cap">Agents online</span><b>${fmt(hh.agentsOnline)}</b></div>
+          <div class="lcd"><span class="cap">Working now</span><b>${fmt(hh.workingNow)}</b></div>
+          <div class="lcd"><span class="cap">Tasks in progress</span><b>${fmt(cc.tasksInProgress)}</b></div>
+          <div class="lcd"><span class="cap">Steps accepted · 24h</span><b>${compact(hh.acceptedLastDay)}</b></div>
+        </div>
+      </div></section>
+    </div>
+    <div class="sub-h" style="margin:4px 0 -4px">2 · Describe &nbsp;·&nbsp; 3 · Check</div>
     <div class="builder">
       <form class="panel" id="bform"><div class="panel-body form">
       ${Builder.tab === 'release' ? `
@@ -2416,8 +2569,15 @@ async function viewBuild(el) {
               <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px;font-size:14px;color:var(--ink-2)">
                 <p>Save the JSON as <span class="mono">request.json</span> and ask IMD for a quote. Quoting is free and runs IMD's own checks.</p>
                 <pre class="code">${esc(curl)}</pre>
-                <p>Paying the 0.5 IMD then takes two wallet signatures, following IMD's paid-request flow. Signing from IMD Tools is on the way.</p>
+                <p>Or pay on IMD's Launch page, step 4.</p>
               </div></details>
+          </div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><h2>4 · Pay</h2>${allOk ? '<span class="pill good">Ready</span>' : '<span class="pill">After the checks</span>'}</div>
+          <div class="panel-body" style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:var(--ink-2)">
+            <p>Once IMD accepts the check, payment is made on IMD's own Launch page with your wallet. The swarm starts as soon as it's paid, and you can follow every step in <a href="#tasks">Tasks</a> and <a href="#releases">Releases</a>.</p>
+            <div class="links"><a class="btn small ${allOk ? 'accent' : 'ghost'}" href="https://explorer.imd.fun/launch" target="_blank" rel="noopener">Pay on IMD ${ICON.ext}</a></div>
           </div>
         </section>
       </div>
@@ -2464,13 +2624,13 @@ async function viewBuild(el) {
 'use strict';
 
 const NAV = [
-  ['Network', [['overview', 'Overview'], ['tasks', 'Tasks'], ['releases', 'Releases'], ['launches', 'Launches'], ['showcase', 'Showcase'], ['oracle', 'Oracle']]],
+  ['Network', [['overview', 'Overview'], ['agents', 'Agents'], ['tasks', 'Tasks'], ['releases', 'Releases'], ['launches', 'Launches'], ['showcase', 'Showcase'], ['oracle', 'Oracle']]],
   ['Seats', [['seats', 'Seats'], ['holders', 'Holders'], ['wallet', 'My wallet']]],
   ['$IMDT', [['tokenomics', 'Tokenomics'], ['treasury', 'Treasury']]],
-  ['Create', [['build', 'Request builder']]],
+  ['Create', [['build', 'Launch']]],
 ];
 const VIEWS = {
-  overview: viewOverview, tasks: viewTasks, releases: viewReleases, launches: viewLaunches, showcase: viewShowcase,
+  overview: viewOverview, agents: viewAgents, tasks: viewTasks, releases: viewReleases, launches: viewLaunches, showcase: viewShowcase,
   oracle: viewOracle, seats: viewSeats, holders: viewHolders, wallet: viewWallet, build: viewBuild, treasury: viewTreasury, tokenomics: viewTokenomics,
 };
 const TITLES = Object.fromEntries(NAV.flatMap(([, items]) => items));
@@ -2546,7 +2706,7 @@ document.addEventListener('click', (e) => { if (e.target.closest('[data-retry]')
 
 // ---------- continuous updates ----------
 // Every page re-reads IMD on its own cadence and redraws in place, keeping filters, scroll and open panels.
-const CADENCE = { treasury: 30, overview: 15, tasks: 15, releases: 20, launches: 30, showcase: 60, oracle: 20, seats: 20, holders: 120 };
+const CADENCE = { agents: 20, treasury: 30, overview: 15, tasks: 15, releases: 20, launches: 30, showcase: 60, oracle: 20, seats: 20, holders: 120 };
 let refreshing = false;
 async function refreshView(force = false) {
   const r = (location.hash || '#home').slice(1) || 'home';
