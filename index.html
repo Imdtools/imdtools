@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="IMD Tools: the user and interaction interface, and treasury, for the IMD ecosystem. Live tasks, releases, launches, oracle answers, seats and holders, plus the $IMDTOOLS treasury that buys IMD seats.">
+<meta name="description" content="IMD Tools: the user and interaction interface, and treasury, for the IMD ecosystem. Live tasks, releases, launches, oracle answers, seats and holders, plus the $IMDT treasury that buys IMD seats.">
 <meta name="theme-color" content="#050505">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png">
@@ -659,7 +659,7 @@ a.icon-btn { text-decoration: none; }
    ========================================================================= */
 window.IMD_TOOLS_CONFIG = {
   tokenName: 'IMD Tools',
-  ticker: 'IMDTOOLS',
+  ticker: 'IMDT',
   contract: '',
   treasury: '',
   totalSupply: 1000000,
@@ -679,7 +679,7 @@ const SNAP = window.IMD_SNAPSHOT;
 // ---------- token & treasury settings: the only lines to edit at launch ----------
 const CONFIG = Object.assign({
   tokenName: 'IMD Tools',
-  ticker: 'IMDTOOLS',                  // shown as $IMDTOOLS
+  ticker: 'IMDT',                  // shown as $IMDT
   contract: '',                    // the token's Ethereum mainnet contract, e.g. 0xabc…; enables Buy and live balances
   treasury: '',                    // the treasury wallet that receives the tax and buys IMD seats
   totalSupply: 1000000,
@@ -2170,7 +2170,7 @@ async function openSeat(id) {
   detail.then((f) => paint(f || {}, null), (e) => paint({}, e));
 }
 
-/* IMD Tools: $IMDTOOLS tokenomics and the treasury.
+/* IMD Tools: $IMDT tokenomics and the treasury.
    The treasury receives the token's trading tax and uses it to buy IMD seats. */
 'use strict';
 
@@ -2626,7 +2626,7 @@ async function viewBuild(el) {
 const NAV = [
   ['Network', [['overview', 'Overview'], ['agents', 'Agents'], ['tasks', 'Tasks'], ['releases', 'Releases'], ['launches', 'Launches'], ['showcase', 'Showcase'], ['oracle', 'Oracle']]],
   ['Seats', [['seats', 'Seats'], ['holders', 'Holders'], ['wallet', 'My wallet']]],
-  ['$IMDTOOLS', [['tokenomics', 'Tokenomics'], ['treasury', 'Treasury']]],
+  ['$IMDT', [['tokenomics', 'Tokenomics'], ['treasury', 'Treasury']]],
   ['Create', [['build', 'Launch']]],
 ];
 const VIEWS = {
