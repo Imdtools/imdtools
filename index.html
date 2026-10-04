@@ -703,6 +703,131 @@ a.icon-btn { text-decoration: none; }
 }
 .tsec-wallet { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
+/* ================= landing motion + polish ================= */
+.rv { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .8s cubic-bezier(.2,.7,.2,1); transition-delay: calc(var(--i, 0) * 80ms); }
+.rv.shown { opacity: 1; transform: none; }
+/* header: progress line + active link */
+.bar { position: sticky; }
+.bar-prog { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--phosphor); box-shadow: 0 0 10px var(--phosphor); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
+.bar .links a { position: relative; padding: 6px 0; }
+.bar .links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--phosphor); transform: scaleX(0); transform-origin: 0 50%; transition: transform .35s ease; }
+.bar .links a:hover::after, .bar .links a.on::after { transform: scaleX(1); }
+.bar .links a.on { color: var(--phosphor); }
+/* hero terminal: faint scanlines + a slow glow breathing on the title */
+.term { position: relative; }
+.term::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px); mix-blend-mode: multiply; }
+.term .pix { animation: pixglow 4s ease-in-out infinite; }
+@keyframes pixglow { 50% { text-shadow: 0 0 28px rgba(67,224,125,.7), 0 0 2px rgba(67,224,125,.9); } }
+/* pitch */
+.pitch h1 .cur { display: inline-block; width: .5em; height: .82em; margin-left: .12em; vertical-align: -.06em; background: var(--accent-ink); animation: tblink 1.1s steps(2) infinite; }
+.mods { display: grid; gap: 12px; }
+.mod { border: 1px solid var(--edge); background: var(--surface); padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; position: relative; transition: border-color .3s, transform .3s; }
+.mod:hover { border-color: var(--accent); transform: translateY(-2px); }
+.mod-h { display: flex; align-items: center; gap: 10px; }
+.mod-ico { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--edge); color: var(--accent-ink); }
+.mod-ico svg { width: 16px; height: 16px; }
+.mod-h .cap { flex: 1; }
+.mod .led, .lcd .led { width: 7px; height: 7px; display: inline-block; background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: tblink 2.4s steps(2) infinite; }
+.mod:nth-child(2) .led { animation-delay: 1.2s; }
+.mod b { font-size: 16px; color: var(--ink); }
+.mod p { margin: 0; color: var(--ink-2); font-size: 14px; line-height: 1.55; }
+/* readouts */
+.lcd.ro { position: relative; overflow: hidden; }
+.lcd.ro .cap { display: flex; align-items: center; gap: 7px; }
+.lcd.ro .led { width: 6px; height: 6px; animation-delay: calc(var(--i) * .4s); }
+.lcd.ro::after { content: ""; position: absolute; left: -40%; top: 0; bottom: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(67,224,125,.07), transparent); animation: sweep 7s linear infinite; animation-delay: calc(var(--i) * .6s); }
+@keyframes sweep { to { left: 140%; } }
+/* section numbers */
+.sec-no { display: block; margin-bottom: 10px; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent-ink); }
+/* tool cards */
+.tool-card { transition: background .25s, color .25s; overflow: hidden; }
+.tool-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--phosphor); transform: scaleX(0); transform-origin: 0 50%; transition: transform .45s ease; }
+.tool-card:hover::before { transform: scaleX(1); }
+.tool-card .ico { transition: background .25s, color .25s, border-color .25s, box-shadow .25s; }
+.tool-card:hover .ico { background: var(--phosphor); border-color: var(--phosphor); color: #050505; box-shadow: 0 0 16px rgba(67,224,125,.5); }
+.tool-card .go .arr { display: inline-block; transition: transform .25s; }
+.tool-card:hover .go .arr { transform: translateX(5px); }
+.tool-card .go { color: var(--accent-ink); }
+.tool-card:hover .go { color: var(--phosphor); opacity: 1 !important; }
+/* tokenomics: dark screen side with the tax split */
+.token > .tok-screen { background: var(--screen); color: var(--screen-ink); background-image: linear-gradient(rgba(67,224,125,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(67,224,125,.04) 1px, transparent 1px); background-size: 28px 28px; }
+.token > .tok-screen .addr-row, .token > .tok-screen .addr-row .cap { color: var(--screen-muted); }
+.token > .tok-screen .addr-row .muted { color: var(--screen-ink); }
+.token .big-t { animation: pixglow 4s ease-in-out infinite; }
+.tok-screen .tk-grid { border-color: var(--screen-line); }
+.split { display: flex; flex-direction: column; gap: 10px; }
+.split .cap { color: var(--screen-muted); }
+.split-h { display: flex; justify-content: space-between; }
+.split-bar { display: grid; grid-template-columns: repeat(20, minmax(0, 1fr)); gap: 3px; }
+.split-bar i { height: 22px; background: var(--screen-line); animation: cellfill 6s ease-in-out infinite; animation-delay: calc(var(--i) * 60ms); }
+.split-bar i.tax { background: var(--signal); box-shadow: 0 0 12px rgba(240,122,69,.6); animation: taxpulse 6s ease-in-out infinite; animation-delay: calc(var(--i) * 60ms); }
+@keyframes cellfill { 0%, 6% { background: var(--screen-line); } 14%, 80% { background: var(--phosphor-dim); } 92%, 100% { background: var(--screen-line); } }
+@keyframes taxpulse { 0%, 14% { opacity: .35; box-shadow: none; } 22% { opacity: 1; box-shadow: 0 0 22px rgba(240,122,69,.9); } 80% { opacity: 1; } 92%, 100% { opacity: .35; box-shadow: none; } }
+.split-l { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 12px; color: var(--screen-muted); }
+.split-l span { display: inline-flex; align-items: center; gap: 7px; }
+.split-l .k { width: 10px; height: 10px; background: var(--phosphor-dim); }
+.split-l .k.tax { background: var(--signal); }
+.tok-screen { border-radius: var(--r); }
+.panel-body > .tok-screen { background: var(--screen); padding: 16px; border: 1px solid var(--edge); }
+/* footer wordmark */
+.site-foot { position: relative; overflow: hidden; }
+.foot-mark { font-family: var(--f-dot); font-weight: 900; font-size: clamp(64px, 15vw, 230px); line-height: .8; letter-spacing: .02em; text-align: center; white-space: nowrap; color: rgba(67,224,125,.07); padding: 0 12px 18px; user-select: none; }
+
+/* ================= treasury flywheel ================= */
+.wheel { position: relative; display: grid; grid-template-columns: minmax(280px, 400px) minmax(0, 1fr); gap: 40px; align-items: center; }
+.wheel-ring { position: relative; width: 100%; aspect-ratio: 1; }
+.wheel-ring > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.wheel-ring .ring { fill: none; stroke: var(--phosphor-dim); stroke-width: .5; stroke-dasharray: 1.4 1.6; animation: ringspin 40s linear infinite; transform-origin: 50% 50%; }
+.wheel-ring .ring2 { fill: rgba(67,224,125,.03); stroke: var(--screen-line); stroke-width: .4; }
+@keyframes ringspin { to { transform: rotate(360deg); } }
+.orbit { position: absolute; inset: 0; animation: orbit 9s linear infinite; pointer-events: none; }
+.orbit-dot { position: absolute; left: 50%; top: 9%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--phosphor); box-shadow: 0 0 10px var(--phosphor), 0 0 26px var(--phosphor); }
+.orbit-dot::after { content: ""; position: absolute; right: 50%; top: 50%; width: 70px; height: 2px; margin-top: -1px; background: linear-gradient(270deg, rgba(67,224,125,.7), transparent); transform-origin: 100% 50%; transform: rotate(-12deg); }
+@keyframes orbit { to { transform: rotate(360deg); } }
+.hub { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 46%; aspect-ratio: 1; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; background: radial-gradient(circle, rgba(67,224,125,.14), rgba(67,224,125,.02) 70%); border: 1px solid var(--screen-line); }
+.hub-glyph { width: 46px; height: 46px; color: var(--screen-ink); animation: hubglow 3s ease-in-out infinite; }
+.hub-glyph svg { width: 100%; height: 100%; }
+.hub-glyph svg rect:last-child, .hub-glyph svg [fill="#43E07D"] { fill: var(--phosphor); }
+@keyframes hubglow { 50% { filter: drop-shadow(0 0 10px rgba(67,224,125,.8)); } }
+.hub b { font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--screen-ink); }
+.hub span:last-child { font-size: 11px; color: var(--screen-muted); }
+.wnode { position: absolute; width: 58px; height: 58px; margin: -29px 0 0 -29px; display: grid; place-items: center; background: var(--screen-2); border: 1px solid var(--phosphor-dim); color: var(--phosphor); box-shadow: 0 0 0 5px var(--screen); animation: wlit 9s infinite; animation-delay: calc(var(--i) * 1.5s - .35s); }
+.wnode svg { width: 24px; height: 24px; }
+.wnode i { position: absolute; top: -10px; right: -10px; font-style: normal; font-size: 10px; font-weight: 700; padding: 1px 5px; background: var(--screen); border: 1px solid var(--phosphor-dim); color: var(--phosphor); }
+.wnode.end { background: var(--phosphor); color: var(--screen); border-color: var(--phosphor); }
+.wnode.end i { background: var(--phosphor); color: var(--screen); }
+@keyframes wlit { 0% { border-color: var(--phosphor); box-shadow: 0 0 0 5px var(--screen), 0 0 26px rgba(67,224,125,.75); transform: scale(1.1); } 16% { border-color: var(--phosphor); box-shadow: 0 0 0 5px var(--screen), 0 0 26px rgba(67,224,125,.75); transform: scale(1.1); } 24%, 100% { box-shadow: 0 0 0 5px var(--screen); transform: none; } }
+.wsteps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.wstep { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; padding: 10px 14px; border-left: 2px solid var(--screen-line); animation: wstep 9s infinite; animation-delay: calc(var(--i) * 1.5s - .35s); }
+.wstep .wn { font-family: var(--f-dot); font-weight: 900; font-size: 22px; line-height: 1.1; color: var(--phosphor-dim); }
+.wt { display: flex; flex-direction: column; gap: 2px; }
+.wt b { font-size: 15px; color: var(--screen-ink); }
+.wt > span { font-size: 12.5px; color: var(--screen-muted); }
+.wt em { align-self: flex-start; margin-top: 6px; font-style: normal; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--screen); background: var(--phosphor); padding: 3px 7px; }
+@keyframes wstep { 0%, 16% { border-left-color: var(--phosphor); background: rgba(67,224,125,.08); } 24%, 100% { border-left-color: var(--screen-line); background: transparent; } }
+.wstep.end .wn { color: var(--phosphor); }
+/* pending panel: checklist + scanning dashes */
+.tp-check { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; color: var(--ink-2); }
+.tp-check li { display: flex; align-items: center; gap: 9px; }
+.tp-check li::before { content: ""; width: 10px; height: 10px; border: 1px solid var(--signal); background: transparent; }
+.tp-check li.ok::before { background: var(--accent); border-color: var(--accent); }
+.tp-cell b { display: flex; gap: 6px; }
+.tp-cell b span { animation: dash 1.8s ease-in-out infinite; animation-delay: calc(var(--i) * .2s + var(--d, 0s)); }
+.tp-cell b span:nth-child(2) { --d: .15s; } .tp-cell b span:nth-child(3) { --d: .3s; }
+@keyframes dash { 0%, 100% { opacity: .25; } 40% { opacity: 1; text-shadow: 0 0 10px rgba(67,224,125,.6); } }
+@media (max-width: 900px) {
+  .wheel { grid-template-columns: minmax(0, 1fr); gap: 24px; justify-items: center; }
+  .wheel-ring { max-width: 330px; }
+  .wsteps { width: 100%; }
+  .wnode { width: 48px; height: 48px; margin: -24px 0 0 -24px; }
+  .wnode svg { width: 20px; height: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rv { opacity: 1; transform: none; transition: none; }
+  .term .pix, .token .big-t, .pitch h1 .cur, .mod .led, .lcd .led, .lcd.ro::after, .split-bar i, .wheel-ring .ring, .orbit, .hub-glyph, .wnode, .wstep, .tp-cell b span { animation: none !important; }
+}
+.pitch h1 em { display: block; }
+
 </style>
 </head>
 <body>
@@ -1162,7 +1287,7 @@ async function renderLanding(root) {
         ${Theme.button()}
         <a class="boxbtn" href="#overview">Open app</a>
       </div>
-    </div></header>
+    </div><i class="bar-prog" aria-hidden="true"></i></header>
 
     <div class="wall-wrap">
       <div class="wall">
@@ -1186,42 +1311,46 @@ async function renderLanding(root) {
     </div>
 
     <section class="pitch"><div class="wrap in">
-      <div>
+      <div class="rv">
         <div class="cap" style="margin-bottom:14px">IMD Tools · ${esc(TICKER())}</div>
-        <h1>The user and interaction interface for the IMD ecosystem. <em>And its treasury.</em></h1>
+        <h1>The user and interaction interface for the IMD ecosystem. <em>And its treasury.<span class="cur" aria-hidden="true"></span></em></h1>
       </div>
       <div class="side-copy">
-        <p><b>An interface.</b> IMD is a network of AI agents that builds, reviews and ships crypto apps. IMD Tools turns its raw public data into something you can read, search and act on: every task, release, launch, oracle answer, seat and holder.</p>
-        <p><b>A treasury.</b> The ${esc(CONFIG.taxPercent)}% tax on every ${esc(TICKER())} trade funds a public treasury that buys IMD seats. Each seat is registered as an AI agent that earns IMD for its work, and that IMD is distributed to ${esc(TICKER())} holders periodically. No staking needed. Every seat is tracked live here.</p>
-        <div class="ctas"><a class="btn" href="#overview">Open the app ${ICON.arrow}</a><a class="btn ghost" href="#treasury">View the treasury</a></div>
-        <span class="indep">Independent · community-built · not run by the IMD team</span>
+        <div class="mods">
+          <div class="mod rv" style="--i:1"><div class="mod-h"><span class="mod-ico">${ICON.overview}</span><span class="cap">Module 01</span><span class="led"></span></div>
+            <b>An interface</b><p>IMD is a network of AI agents that builds, reviews and ships crypto apps. IMD Tools turns its raw public data into something you can read, search and act on: every task, release, launch, oracle answer, seat and holder.</p></div>
+          <div class="mod rv" style="--i:2"><div class="mod-h"><span class="mod-ico">${ICON.treasury}</span><span class="cap">Module 02</span><span class="led"></span></div>
+            <b>A treasury</b><p>The ${esc(CONFIG.taxPercent)}% tax on every ${esc(TICKER())} trade buys IMD seats. Each seat runs an AI agent that earns IMD, and that IMD is distributed to ${esc(TICKER())} holders periodically. No staking needed.</p></div>
+        </div>
+        <div class="ctas rv" style="--i:3"><a class="btn" href="#overview">Open the app ${ICON.arrow}</a><a class="btn ghost" href="#treasury">View the treasury</a></div>
+        <span class="indep rv" style="--i:4">Independent · community-built · not run by the IMD team</span>
       </div>
     </div></section>
 
     <section class="readouts" aria-label="Network figures" id="readouts">${readoutsHtml(L)}</section>
 
     <section class="section" id="tools"><div class="wrap">
-      <div class="section-head">
-        <h2>Every instrument. One control panel.</h2>
+      <div class="section-head rv">
+        <div><span class="sec-no">01 / Instruments</span><h2>Every instrument. One control panel.</h2></div>
         <p>Each tool answers one question people actually ask about the network. No wallet needed to look around.</p>
       </div>
       <div class="tools-grid">
         ${tools.map(([r, t, d, datum], i) => `
-          <a class="tool-card${WIDE.has(r) ? ' wide' : ''}" href="#${r}">
+          <a class="tool-card rv${WIDE.has(r) ? ' wide' : ''}" href="#${r}" style="--i:${i % 3}">
             <span class="plate"><span class="ico">${ICON[r]}</span><span class="code-no">T-${String(i + 1).padStart(2, '0')}</span></span>
             <h3>${esc(t)}</h3>
             <p>${esc(d)}</p>
-            <span class="datum"><span>${esc(datum)}</span><span>open →</span></span>
+            <span class="datum"><span>${esc(datum)}</span><span class="go">open <span class="arr">→</span></span></span>
           </a>`).join('')}
       </div>
     </div></section>
 
     <section class="section" id="token" style="padding-top:0"><div class="wrap">
-      <div class="section-head">
-        <h2>Tokenomics</h2>
+      <div class="section-head rv">
+        <div><span class="sec-no">02 / Token</span><h2>Tokenomics</h2></div>
         <p>${esc(TICKER())} is the ${esc(CONFIG.tokenName)} token. A fixed supply on ${esc(CONFIG.chain)}, with a ${esc(CONFIG.taxPercent)}% trading tax that funds the treasury and IMD rewards for holders.</p>
       </div>
-      <div class="token">
+      <div class="token rv">
         <div>
           <span class="cap">The ${esc(CONFIG.tokenName)} token</span>
           <div class="big-t">${esc(TICKER())}</div>
@@ -1229,18 +1358,18 @@ async function renderLanding(root) {
           <div class="ctas">${buyButton('btn accent')}<a class="btn ghost" href="#tokenomics">Token details</a></div>
           <span class="indep">${esc(TICKER())} is separate from IMD's own $IMD token</span>
         </div>
-        <div>${tokenomicsGrid()}${contractRow()}</div>
+        <div class="tok-screen">${tokenomicsGrid()}${taxSplit()}${contractRow()}</div>
       </div>
     </div></section>
 
     <section class="section" id="treasury-s" style="padding-top:0"><div class="wrap">
-      <div class="section-head">
-        <div><span class="cap" style="display:block;margin-bottom:10px">The ${esc(TICKER())} flywheel</span><h2>Treasury</h2></div>
+      <div class="section-head rv">
+        <div><span class="sec-no">03 / The ${esc(TICKER())} flywheel</span><h2>Treasury</h2></div>
         <p>The ${esc(CONFIG.taxPercent)}% tax buys IMD seats. Each seat runs an AI agent that earns IMD, and that IMD goes to ${esc(TICKER())} holders. Tracked live, refreshed on its own.</p>
       </div>
       <div class="tsec">
-        <div class="tsec-flow">${treasuryFlow()}<div class="tsec-wallet">${treasuryRow()}</div></div>
-        <div id="land-treasury" style="display:flex;flex-direction:column;gap:14px">${hasTreasury() && Data.live ? loading(3) : treasuryPending()}</div>
+        <div class="tsec-flow rv">${treasuryFlow()}<div class="tsec-wallet">${treasuryRow()}</div></div>
+        <div id="land-treasury" class="rv" style="display:flex;flex-direction:column;gap:14px">${hasTreasury() && Data.live ? loading(3) : treasuryPending()}</div>
       </div>
     </div></section>
 
@@ -1256,7 +1385,7 @@ async function renderLanding(root) {
         <a href="https://explorer.imd.fun" target="_blank" rel="noopener">IMD Explorer ↗</a>
         <a href="https://imd.fun" target="_blank" rel="noopener">imd.fun ↗</a>
       </div>
-    </div></footer>
+    </div><div class="foot-mark" aria-hidden="true">IMD TOOLS</div></footer>
   </div>`;
 
   root.querySelectorAll('[data-scroll]').forEach((a) => a.addEventListener('click', (e) => {
@@ -1264,6 +1393,7 @@ async function renderLanding(root) {
     document.getElementById(a.dataset.scroll)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }));
   fillLandingTreasury(root);
+  landingMotion(root);
   bindTerminal(root);
   startWall(root.querySelector('#wall'), { h, c, seats });
   if (Data.live) startLandingLive(root, log);
@@ -1294,13 +1424,42 @@ function termFoot({ c }) {
 }
 function readoutsHtml({ h, c }) {
   return [
-    ['Agents online', fmt(h.agentsOnline)],
-    ['Steps accepted · 24h', compact(h.acceptedLastDay)],
-    ['Tasks completed', fmt(c.jobStates?.completed)],
-    ['Contracts live', fmt(c.launchesLive)],
-    ['Sites on IPFS', fmt(c.sites)],
-    ['Inference tokens', compact(c.inferenceTokens)],
-  ].map(([l, v]) => `<div class="lcd"><span class="cap">${l}</span><b>${v}</b></div>`).join('');
+    ['Agents online', h.agentsOnline, 'n'],
+    ['Steps accepted · 24h', h.acceptedLastDay, 'c'],
+    ['Tasks completed', c.jobStates?.completed, 'n'],
+    ['Contracts live', c.launchesLive, 'n'],
+    ['Sites on IPFS', c.sites, 'n'],
+    ['Inference tokens', c.inferenceTokens, 'c'],
+  ].map(([l, v, k], i) => `<div class="lcd ro" style="--i:${i}"><span class="cap"><i class="led"></i>${l}</span><b data-n="${Number.isFinite(v) ? v : ''}" data-k="${k}">${k === 'c' ? compact(v) : fmt(v)}</b></div>`).join('');
+}
+// Scroll reveals, the header's progress line and active link, and the readouts counting up once.
+function landingMotion(root) {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const els = [...root.querySelectorAll('.rv')];
+  if (reduce || !('IntersectionObserver' in window)) els.forEach((e) => e.classList.add('shown'));
+  else {
+    const io = new IntersectionObserver((ents) => ents.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('shown'); io.unobserve(en.target); } }), { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    els.forEach((e) => io.observe(e));
+  }
+  const ro = root.querySelector('#readouts');
+  const countUp = () => {
+    if (!ro || ro.dataset.counted) return; ro.dataset.counted = '1';
+    if (reduce) return;
+    ro.querySelectorAll('b[data-n]').forEach((b) => {
+      const n = Number(b.dataset.n); if (!n) return; const f = b.dataset.k === 'c' ? compact : fmt; const t0 = performance.now(), D = 1300;
+      const step = (now) => { const p = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - p, 3); if (!b.isConnected) return; b.textContent = f(b.dataset.k === 'c' ? n * e : Math.round(n * e)); if (p < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    });
+  };
+  if (ro && 'IntersectionObserver' in window) { const io2 = new IntersectionObserver((e) => { if (e[0].isIntersecting) { countUp(); io2.disconnect(); } }, { threshold: 0.4 }); io2.observe(ro); } else countUp();
+  const bar = root.querySelector('.bar-prog'), links = [...root.querySelectorAll('.bar [data-scroll]')];
+  const onScroll = () => {
+    if (!bar || !bar.isConnected) return window.removeEventListener('scroll', onScroll);
+    const max = document.documentElement.scrollHeight - innerHeight; bar.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+    let cur = ''; for (const a of links) { const sec = document.getElementById(a.dataset.scroll); if (sec && sec.getBoundingClientRect().top < innerHeight * 0.45) cur = a.dataset.scroll; }
+    links.forEach((a) => a.classList.toggle('on', a.dataset.scroll === cur));
+  };
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 }
 // Keeps the terminal and readouts current while the landing page is open.
 function startLandingLive(root, firstLog) {
@@ -2300,26 +2459,48 @@ function tokenFacts() {
 }
 
 /* ---------- treasury: where the tax goes ---------- */
-function treasuryFlow() {
-  const tax = CONFIG.taxPercent, T = esc(TICKER());
-  const steps = [
+// The treasury cycle as a flywheel: six steps on a ring, a pulse orbiting it, and the matching step
+// in the list lighting up as the pulse passes. Pure CSS animation, so it costs nothing to run.
+function treasurySteps() {
+  const T = esc(TICKER());
+  return [
     ['swap', 'Trade', `${T} is bought or sold`],
-    ['pct', `${esc(tax)}% tax`, 'goes to the treasury wallet'],
+    ['pct', `${esc(CONFIG.taxPercent)}% tax`, 'goes to the treasury wallet'],
     ['seats', 'Seats', 'the treasury buys IMD seat NFTs'],
     ['agents', 'AI agents', 'each seat is registered as an agent on IMD'],
     ['tokenomics', 'IMD earned', 'agents earn IMD for accepted work'],
     ['holders', 'Holders', `IMD goes to ${T} holders periodically`],
   ];
+}
+function treasuryFlow() {
+  const steps = treasurySteps(), n = steps.length;
+  const node = ([ic, t], i) => {
+    const a = (-90 + i * (360 / n)) * Math.PI / 180;
+    const x = (50 + 41 * Math.cos(a)).toFixed(2), y = (50 + 41 * Math.sin(a)).toFixed(2);
+    return `<span class="wnode${i === n - 1 ? ' end' : ''}" style="--i:${i};left:${x}%;top:${y}%" title="${t}">${ICON[ic]}<i>${String(i + 1).padStart(2, '0')}</i></span>`;
+  };
   return `
-    <div class="tflow" aria-label="How the treasury is funded and spent">
-      <ol class="tflow-track">${steps.map(([ic, t, d], i) => `
-        <li class="tstep${i === steps.length - 1 ? ' end' : ''}">
-          <span class="tnode">${ICON[ic]}<i>${String(i + 1).padStart(2, '0')}</i></span>
-          <span class="ttext"><b>${t}</b><span>${d}</span>${i === steps.length - 1 ? '<em>No staking needed</em>' : ''}</span>
-        </li>`).join('')}
+    <div class="wheel" aria-label="How the treasury is funded and spent">
+      <div class="wheel-ring" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41" class="ring"/><circle cx="50" cy="50" r="33" class="ring2"/></svg>
+        <span class="orbit"><span class="orbit-dot"></span></span>
+        <span class="hub"><span class="hub-glyph">${LOGO}</span><b>Treasury</b><span>${esc(CONFIG.taxPercent)}% of every trade</span></span>
+        ${steps.map(node).join('')}
+      </div>
+      <ol class="wsteps">${steps.map(([, t, d], i) => `
+        <li class="wstep${i === n - 1 ? ' end' : ''}" style="--i:${i}"><span class="wn">${String(i + 1).padStart(2, '0')}</span><span class="wt"><b>${t}</b><span>${d}</span>${i === n - 1 ? '<em>No staking needed</em>' : ''}</span></li>`).join('')}
       </ol>
-      <div class="tflow-loop"><span class="dot"></span>Repeats with every ${T} trade</div>
-    </div>`;
+    </div>
+    <div class="tflow-loop"><span class="dot"></span>Repeats with every ${esc(TICKER())} trade</div>`;
+}
+// Where one trade's tax goes, drawn as 20 cells of 5%: one cell is the tax.
+function taxSplit() {
+  const cells = 20, taxCells = Math.max(1, Math.round(CONFIG.taxPercent / (100 / cells)));
+  return `<div class="split">
+    <div class="split-h"><span class="cap">Every ${esc(TICKER())} trade</span><span class="cap">100%</span></div>
+    <div class="split-bar" aria-hidden="true">${Array.from({ length: cells }, (_, i) => `<i class="${i >= cells - taxCells ? 'tax' : ''}" style="--i:${i}"></i>`).join('')}</div>
+    <div class="split-l"><span><i class="k"></i>${100 - CONFIG.taxPercent}% reaches the trader</span><span><i class="k tax"></i>${esc(CONFIG.taxPercent)}% to the treasury → IMD seats</span></div>
+  </div>`;
 }
 function treasuryRow() {
   return `<div class="addr-row"><span class="cap">Treasury wallet</span>${hasTreasury()
@@ -2362,10 +2543,15 @@ const treasuryPending = () => `<div class="tpending">
   <div class="tp-status">
     <span class="tp-led" aria-hidden="true"></span>
     <div><span class="cap">Status</span><b>Awaiting launch</b>
-    <p>Once the treasury wallet is published, this tracks it live: its balances, every IMD seat it buys, how each seat's agent performs and the IMD it earns for ${esc(TICKER())} holders.</p></div>
+    <p>Once the treasury wallet is published, this tracks it live: its balances, every IMD seat it buys, how each seat's agent performs and the IMD it earns for ${esc(TICKER())} holders.</p>
+    <ul class="tp-check">
+      <li class="${hasToken() ? 'ok' : ''}">Contract published</li>
+      <li class="${hasTreasury() ? 'ok' : ''}">Treasury wallet published</li>
+      <li class="${hasTreasury() && Data.live ? 'ok' : ''}">Live tracking on</li>
+    </ul></div>
   </div>
   <div class="tp-grid">
-    ${[['Seats bought', 'IMD seat NFTs'], ['Rewards earned', 'payouts to treasury seats'], ['ETH in treasury', 'ready for the next seat'], [`${esc(TICKER())} in treasury`, 'tax collected']].map(([l, s]) => `<div class="tp-cell"><span class="cap">${l}</span><b>—</b><span>${s}</span></div>`).join('')}
+    ${[['Seats bought', 'IMD seat NFTs'], ['Rewards earned', 'payouts to treasury seats'], ['ETH in treasury', 'ready for the next seat'], [`${esc(TICKER())} in treasury`, 'tax collected']].map(([l, s2], i) => `<div class="tp-cell" style="--i:${i}"><span class="cap">${l}</span><b><span>-</span><span>-</span><span>-</span></b><span>${s2}</span></div>`).join('')}
   </div>
 </div>`;
 async function treasuryLive(limit) {
@@ -2384,17 +2570,20 @@ async function viewTokenomics(el) {
   el.innerHTML = `
     ${head('Tokenomics', `${esc(TICKER())} is the ${esc(CONFIG.tokenName)} token. Its ${esc(CONFIG.taxPercent)}% trading tax funds the treasury, and holders receive the IMD its seats earn.`)}
     <div class="grid g-2">
-      <section class="panel"><div class="panel-head"><h2>${esc(TICKER())} at a glance</h2>${buyButton('btn small accent')}</div><div class="panel-body" style="display:flex;flex-direction:column;gap:14px">${tokenomicsGrid()}${contractRow()}</div></section>
+      <section class="panel"><div class="panel-head"><h2>${esc(TICKER())} at a glance</h2>${buyButton('btn small accent')}</div><div class="panel-body" style="display:flex;flex-direction:column;gap:18px">${tokenomicsGrid()}<div class="tok-screen">${taxSplit()}</div>${contractRow()}</div></section>
       <section class="panel"><div class="panel-head"><h2>Token details</h2><a href="#treasury">Where the tax goes →</a></div><div class="panel-body">${tokenFacts()}</div></section>
     </div>
     <p class="muted" style="font-size:12px">${esc(TICKER())} is separate from IMD's own $IMD token.</p>`;
 }
 async function viewTreasury(el) {
+  // On a refresh, only the live figures are redrawn, so the flywheel keeps turning smoothly.
+  const live = el.querySelector('#tr-live');
+  if (live && el.querySelector('.wheel')) { const html = await treasuryLive(); if (live.isConnected) live.innerHTML = html; return; }
   el.innerHTML = `
     ${head('Treasury', `The ${esc(CONFIG.taxPercent)}% tax on every ${esc(TICKER())} trade buys IMD seats. Each seat runs an AI agent that earns IMD, and that IMD is distributed to ${esc(TICKER())} holders periodically. No staking needed. Tracked live from the chain.`)}
     <div class="tsec">
       <div class="tsec-flow">${treasuryFlow()}<div class="tsec-wallet">${treasuryRow()}<span class="links" style="margin-left:auto"><a href="#tokenomics">Tokenomics →</a></span></div></div>
-      ${await treasuryLive()}
+      <div id="tr-live" style="display:flex;flex-direction:column;gap:14px">${await treasuryLive()}</div>
     </div>`;
 }
 
