@@ -704,7 +704,7 @@ a.icon-btn { text-decoration: none; }
 .tsec-wallet { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
 /* ================= landing motion + polish ================= */
-.rv { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .8s cubic-bezier(.2,.7,.2,1); transition-delay: calc(var(--i, 0) * 80ms); }
+.rv { opacity: 0; transform: translateY(12px); transition: opacity .4s ease, transform .45s cubic-bezier(.2,.7,.2,1); transition-delay: calc(var(--i, 0) * 45ms); }
 .rv.shown { opacity: 1; transform: none; }
 /* header: progress line + active link */
 .bar { position: sticky; }
@@ -827,6 +827,7 @@ a.icon-btn { text-decoration: none; }
   .term .pix, .token .big-t, .pitch h1 .cur, .mod .led, .lcd .led, .lcd.ro::after, .split-bar i, .wheel-ring .ring, .orbit, .hub-glyph, .wnode, .wstep, .tp-cell b span { animation: none !important; }
 }
 .pitch h1 em { display: block; }
+.pitch .in { align-items: start; }
 
 </style>
 </head>
@@ -1385,7 +1386,7 @@ async function renderLanding(root) {
         <a href="https://explorer.imd.fun" target="_blank" rel="noopener">IMD Explorer ↗</a>
         <a href="https://imd.fun" target="_blank" rel="noopener">imd.fun ↗</a>
       </div>
-    </div><div class="foot-mark" aria-hidden="true">IMD TOOLS</div></footer>
+    </div></footer>
   </div>`;
 
   root.querySelectorAll('[data-scroll]').forEach((a) => a.addEventListener('click', (e) => {
@@ -1438,7 +1439,7 @@ function landingMotion(root) {
   const els = [...root.querySelectorAll('.rv')];
   if (reduce || !('IntersectionObserver' in window)) els.forEach((e) => e.classList.add('shown'));
   else {
-    const io = new IntersectionObserver((ents) => ents.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('shown'); io.unobserve(en.target); } }), { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    const io = new IntersectionObserver((ents) => ents.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('shown'); io.unobserve(en.target); } }), { rootMargin: '0px 0px 20% 0px', threshold: 0 });
     els.forEach((e) => io.observe(e));
   }
   const ro = root.querySelector('#readouts');
