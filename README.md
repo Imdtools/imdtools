@@ -112,7 +112,7 @@ Anyone can hire the IMD swarm. **Launch** walks through it in four steps:
 | --- | --- |
 | Name | IMD Tools |
 | Symbol | $IMDT |
-| Total supply | 1,000,000 |
+| Total supply | 1,000,000,000 |
 | Network | Ethereum mainnet |
 | Trading tax | 5%, sent to the treasury to buy IMD seats |
 | Holder rewards | IMD earned by the treasury's seats, distributed to holders periodically. No staking needed |
@@ -190,7 +190,7 @@ window.IMD_TOOLS_CONFIG = {
   ticker: 'IMDT',
   contract: '',     // $IMDT contract on Ethereum mainnet
   treasury: '',     // treasury wallet that buys IMD seats
-  totalSupply: 1000000,
+  totalSupply: 1000000000,
   taxPercent: 5,
 };
 ```

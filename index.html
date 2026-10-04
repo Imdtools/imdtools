@@ -646,6 +646,63 @@ a.icon-btn { text-decoration: none; }
 }
 .chip.static:hover { color: inherit; background: inherit; }
 
+/* ---------- treasury flywheel ---------- */
+.tsec { display: flex; flex-direction: column; gap: 16px; }
+.tsec-flow { position: relative; background: var(--screen); border: 1px solid var(--edge); border-radius: var(--r); padding: 34px 28px 20px; color: var(--screen-ink); overflow: hidden;
+  background-image: linear-gradient(rgba(67,224,125,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(67,224,125,.045) 1px, transparent 1px); background-size: 32px 32px; }
+.tsec-flow::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 85% 30%, rgba(67,224,125,.09), transparent 70%); pointer-events: none; }
+.tsec-wallet { position: relative; margin-top: 22px; padding-top: 16px; border-top: 1px dashed var(--screen-line); }
+.tsec-wallet .addr-row, .tsec-wallet .cap { color: var(--screen-muted); }
+.tsec-wallet .muted { color: var(--screen-ink); }
+.tflow { position: relative; }
+.tflow-track { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; position: relative; }
+/* the rail through the nodes, with a pulse running along it */
+.tflow-track::before { content: ""; position: absolute; left: 30px; right: calc((100% - 70px) / 6 - 30px); top: 29px; height: 2px; background: repeating-linear-gradient(90deg, var(--phosphor-dim) 0 6px, transparent 6px 11px); }
+.tflow-track::after { content: ""; position: absolute; top: 26px; left: 30px; width: 70px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, transparent, var(--phosphor), transparent); box-shadow: 0 0 14px var(--phosphor); animation: tpulse 4.5s linear infinite; }
+@keyframes tpulse { from { left: 30px; opacity: 0 } 8% { opacity: 1 } 92% { opacity: 1 } to { left: calc(100% - (100% - 70px) / 6 - 70px); opacity: 0 } }
+.tstep { position: relative; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.tnode { position: relative; z-index: 1; flex: none; width: 60px; height: 60px; display: grid; place-items: center; background: var(--screen-2); border: 1px solid var(--phosphor-dim); color: var(--phosphor); border-radius: 2px; box-shadow: 0 0 0 4px var(--screen); }
+.tnode svg { width: 26px; height: 26px; }
+.tnode i { position: absolute; top: -9px; right: -9px; font-style: normal; font-size: 10.5px; font-weight: 700; letter-spacing: .04em; padding: 1px 5px; background: var(--screen); border: 1px solid var(--phosphor-dim); color: var(--phosphor); }
+.ttext { display: flex; flex-direction: column; gap: 4px; }
+.ttext b { font-size: 14px; color: var(--screen-ink); letter-spacing: .01em; }
+.ttext > span { font-size: 12.5px; line-height: 1.5; color: var(--screen-muted); }
+.ttext em { align-self: flex-start; margin-top: 6px; font-style: normal; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--screen); background: var(--phosphor); padding: 3px 7px; }
+.tstep.end .tnode { background: var(--phosphor); color: var(--screen); border-color: var(--phosphor); box-shadow: 0 0 0 4px var(--screen), 0 0 24px rgba(67,224,125,.55); }
+.tstep.end .tnode i { background: var(--phosphor); color: var(--screen); }
+.tflow-loop { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--screen-muted); }
+.tflow-loop .dot { width: 8px; height: 8px; background: var(--phosphor); box-shadow: 0 0 10px var(--phosphor); animation: tblink 1.6s steps(2) infinite; }
+@keyframes tblink { 50% { opacity: .25 } }
+/* pending state */
+.tpending { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr); border: 1px solid var(--edge); border-radius: var(--r); background: var(--surface); }
+.tp-status { display: flex; gap: 16px; padding: 22px; border-right: 1px solid var(--edge); }
+.tp-status b { display: block; font-size: 18px; margin: 4px 0 8px; }
+.tp-status p { margin: 0; font-size: 13px; color: var(--ink-2); line-height: 1.55; }
+.tp-led { flex: none; width: 12px; height: 12px; margin-top: 4px; background: var(--signal); box-shadow: 0 0 12px var(--signal); animation: tblink 1.2s steps(2) infinite; }
+.tp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.tp-cell { padding: 22px 18px; border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; background: var(--screen); }
+.tp-cell:first-child { border-left: 0; }
+.tp-cell .cap { color: var(--screen-muted); }
+.tp-cell b { font-family: var(--f-dot); font-weight: 800; font-size: 34px; line-height: 1; color: var(--phosphor-dim); }
+.tp-cell > span:last-child { font-size: 12px; color: var(--screen-muted); }
+@media (prefers-reduced-motion: reduce) { .tflow-track::after, .tflow-loop .dot, .tp-led { animation: none; } }
+@media (max-width: 1100px) {
+  .tpending { grid-template-columns: minmax(0, 1fr); }
+  .tp-status { border-right: 0; border-bottom: 1px solid var(--edge); }
+}
+@media (max-width: 900px) {
+  .tsec-flow { padding: 26px 18px 18px; }
+  .tflow-track { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .tflow-track::before { left: 29px; right: auto; top: 30px; bottom: 30px; width: 2px; height: auto; background: repeating-linear-gradient(180deg, var(--phosphor-dim) 0 6px, transparent 6px 11px); }
+  .tflow-track::after { display: none; }
+  .tstep { flex-direction: row; align-items: flex-start; gap: 16px; }
+  .ttext { padding-top: 6px; }
+  .tp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tp-cell:nth-child(3) { border-left: 0; }
+  .tp-cell:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+.tsec-wallet { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
 </style>
 </head>
 <body>
@@ -662,7 +719,7 @@ window.IMD_TOOLS_CONFIG = {
   ticker: 'IMDT',
   contract: '',
   treasury: '',
-  totalSupply: 1000000,
+  totalSupply: 1000000000,
   taxPercent: 5,
 };
 </script>
@@ -682,7 +739,7 @@ const CONFIG = Object.assign({
   ticker: 'IMDT',                  // shown as $IMDT
   contract: '',                    // the token's Ethereum mainnet contract, e.g. 0xabc…; enables Buy and live balances
   treasury: '',                    // the treasury wallet that receives the tax and buys IMD seats
-  totalSupply: 1000000,
+  totalSupply: 1000000000,
   taxPercent: 5,
   chain: 'Ethereum mainnet',
 }, window.IMD_TOOLS_CONFIG || {});
@@ -710,14 +767,34 @@ const Data = {
   cache: new Map(),
   lastError: null,
 
+  // Last good answers kept in this browser, so a return visit paints at once and then refreshes.
+  store: {
+    MAX_AGE: 15 * 60000, MAX_BYTES: 400000,
+    read(path) { try { const o = JSON.parse(localStorage.getItem('imdtools.c:' + path) || 'null'); return o && Date.now() - o.t < this.MAX_AGE ? o : null; } catch { return null; } },
+    write(path, v) { try { const s = JSON.stringify({ t: Date.now(), v }); if (s.length < this.MAX_BYTES) localStorage.setItem('imdtools.c:' + path, s); } catch {} },
+  },
+  revalidate(path) {
+    if (this.cache.get(path)?.pending) return;
+    const hit = this.cache.get(path);
+    const pending = this.fetchJson(path).then((v) => { this.cache.set(path, { t: Date.now(), v }); this.store.write(path, v); return v; })
+      .catch(() => { if (hit && 'v' in hit) this.cache.set(path, hit); });
+    this.cache.set(path, { ...(hit || { t: 0 }), pending });
+    return pending;
+  },
+
   async boot() {
+    // A recent copy in this browser: show it immediately, refresh in the background.
+    const kept = this.store.read('/swarm');
+    if (kept?.v?.health) {
+      this.mode = 'live'; this.cache.set('/swarm', { t: kept.t, v: kept.v });
+      if (Number.isFinite(kept.v.at)) this.at = new Date(kept.v.at).toISOString();
+      this.revalidate('/swarm');
+      return;
+    }
     try {
-      const j = await this.fetchJson('/swarm', 6000, 1);
-      if (j && j.health) {
-        this.mode = 'live';
-        this.cache.set('/swarm', { t: Date.now(), v: j });
-      }
-    } catch (e) { /* stay on the snapshot */ }
+      const j = await this.fetchJson('/swarm', 5000, 1);
+      if (j && j.health) { this.mode = 'live'; this.cache.set('/swarm', { t: Date.now(), v: j }); this.store.write('/swarm', j); }
+    } catch (e) { /* show the snapshot for now; main keeps retrying and switches to live */ }
   },
 
   // One request through the relay. Retries network errors, rate limits and server errors.
@@ -749,11 +826,15 @@ const Data = {
   // Cached read. If IMD fails, the last good answer is served instead, so pages never go blank.
   async get(path, ttl = 15000) {
     if (this.mode !== 'live') return snapshotGet(path);
-    const hit = this.cache.get(path);
-    if (hit && Date.now() - hit.t < ttl) return hit.v;
+    let hit = this.cache.get(path);
+    if (!hit) { // nothing in memory yet: use this browser's recent copy and refresh it quietly
+      const kept = this.store.read(path);
+      if (kept) { hit = { t: kept.t, v: kept.v }; this.cache.set(path, hit); if (Date.now() - kept.t >= ttl) this.revalidate(path); return kept.v; }
+    }
+    if (hit && 'v' in hit && Date.now() - hit.t < ttl) return hit.v;
     if (hit?.pending) return hit.pending;
     const pending = this.fetchJson(path)
-      .then((v) => { this.cache.set(path, { t: Date.now(), v }); return v; })
+      .then((v) => { this.cache.set(path, { t: Date.now(), v }); this.store.write(path, v); return v; })
       .catch((e) => {
         if (hit && 'v' in hit) { this.cache.set(path, { t: hit.t, v: hit.v }); return hit.v; }
         this.cache.delete(path);
@@ -972,6 +1053,8 @@ const ANSWER_TYPE = { bool: 'Yes / no', uint256: 'Number', bytes32: 'Short text'
 const I = (d, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${d}</svg>`;
 const ICON = {
   overview: I('<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>'),
+  swap: I('<path d="M4 8h13l-3-3M20 16H7l3 3"/>'),
+  pct: I('<path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>'),
   agents: I('<rect x="5" y="8" width="14" height="11" rx="2"/><path d="M12 8V4M10 4h4"/><circle cx="9.5" cy="13" r="1.2"/><circle cx="14.5" cy="13" r="1.2"/><path d="M9.5 16.5h5M2.5 12v3M21.5 12v3"/>'),
   tasks: I('<path d="M8 6h13M8 12h13M8 18h13"/><path d="m3 6 1 1 2-2M3 12l1 1 2-2M3 18l1 1 2-2"/>'),
   releases: I('<path d="M4 17h4l3-10 3 10h6"/><circle cx="4" cy="17" r="1"/><circle cx="20" cy="17" r="1"/>'),
@@ -1152,11 +1235,11 @@ async function renderLanding(root) {
 
     <section class="section" id="treasury-s" style="padding-top:0"><div class="wrap">
       <div class="section-head">
-        <h2>Treasury</h2>
-        <p>Where the tax goes. The treasury buys IMD seat NFTs, which are registered as AI agents. They earn IMD, and that IMD is distributed to ${esc(TICKER())} holders periodically. No staking needed. Balances, seats and earnings are read live and refreshed on their own.</p>
+        <div><span class="cap" style="display:block;margin-bottom:10px">The ${esc(TICKER())} flywheel</span><h2>Treasury</h2></div>
+        <p>The ${esc(CONFIG.taxPercent)}% tax buys IMD seats. Each seat runs an AI agent that earns IMD, and that IMD goes to ${esc(TICKER())} holders. Tracked live, refreshed on its own.</p>
       </div>
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div class="panel"><div class="panel-body" style="display:flex;flex-direction:column;gap:14px">${treasuryFlow()}${treasuryRow()}</div></div>
+      <div class="tsec">
+        <div class="tsec-flow">${treasuryFlow()}<div class="tsec-wallet">${treasuryRow()}</div></div>
         <div id="land-treasury" style="display:flex;flex-direction:column;gap:14px">${hasTreasury() && Data.live ? loading(3) : treasuryPending()}</div>
       </div>
     </div></section>
@@ -2218,15 +2301,24 @@ function tokenFacts() {
 
 /* ---------- treasury: where the tax goes ---------- */
 function treasuryFlow() {
-  const tax = CONFIG.taxPercent;
+  const tax = CONFIG.taxPercent, T = esc(TICKER());
+  const steps = [
+    ['swap', 'Trade', `${T} is bought or sold`],
+    ['pct', `${esc(tax)}% tax`, 'goes to the treasury wallet'],
+    ['seats', 'Seats', 'the treasury buys IMD seat NFTs'],
+    ['agents', 'AI agents', 'each seat is registered as an agent on IMD'],
+    ['tokenomics', 'IMD earned', 'agents earn IMD for accepted work'],
+    ['holders', 'Holders', `IMD goes to ${T} holders periodically`],
+  ];
   return `
-    <div class="flowline" aria-label="How the treasury is funded and spent">
-      <div><b>1 · Trade</b><span>${esc(TICKER())} is bought or sold</span></div>
-      <div><b>2 · ${esc(tax)}% tax</b><span>goes to the treasury wallet</span></div>
-      <div><b>3 · Seats</b><span>the treasury buys IMD seat NFTs</span></div>
-      <div><b>4 · AI agents</b><span>each seat is registered as an agent on IMD</span></div>
-      <div><b>5 · IMD earned</b><span>agents earn IMD for accepted work</span></div>
-      <div><b>6 · Holders</b><span>IMD goes to ${esc(TICKER())} holders periodically. No staking</span></div>
+    <div class="tflow" aria-label="How the treasury is funded and spent">
+      <ol class="tflow-track">${steps.map(([ic, t, d], i) => `
+        <li class="tstep${i === steps.length - 1 ? ' end' : ''}">
+          <span class="tnode">${ICON[ic]}<i>${String(i + 1).padStart(2, '0')}</i></span>
+          <span class="ttext"><b>${t}</b><span>${d}</span>${i === steps.length - 1 ? '<em>No staking needed</em>' : ''}</span>
+        </li>`).join('')}
+      </ol>
+      <div class="tflow-loop"><span class="dot"></span>Repeats with every ${T} trade</div>
     </div>`;
 }
 function treasuryRow() {
@@ -2266,10 +2358,16 @@ function treasurySeatsTable(seats) {
       <td>${s.working ? '<span class="pill accent live">Working</span>' : s.attempts ? '<span class="pill good">Active</span>' : '<span class="pill">Idle</span>'}</td>
     </tr>`).join('')}</tbody></table></div>`;
 }
-const treasuryPending = () => `<div class="panel"><div class="empty">
-  <b>The treasury goes live at launch.</b>
-  <span>Once the treasury wallet is published, this tracks it in real time: its ETH and ${esc(TICKER())} balance, every IMD seat it buys, how each seat's AI agent performs, and the IMD those agents earn for ${esc(TICKER())} holders.</span>
-</div></div>`;
+const treasuryPending = () => `<div class="tpending">
+  <div class="tp-status">
+    <span class="tp-led" aria-hidden="true"></span>
+    <div><span class="cap">Status</span><b>Awaiting launch</b>
+    <p>Once the treasury wallet is published, this tracks it live: its balances, every IMD seat it buys, how each seat's agent performs and the IMD it earns for ${esc(TICKER())} holders.</p></div>
+  </div>
+  <div class="tp-grid">
+    ${[['Seats bought', 'IMD seat NFTs'], ['Rewards earned', 'payouts to treasury seats'], ['ETH in treasury', 'ready for the next seat'], [`${esc(TICKER())} in treasury`, 'tax collected']].map(([l, s]) => `<div class="tp-cell"><span class="cap">${l}</span><b>—</b><span>${s}</span></div>`).join('')}
+  </div>
+</div>`;
 async function treasuryLive(limit) {
   if (!hasTreasury() || !Data.live) return treasuryPending();
   const m = await treasuryModel();
@@ -2293,9 +2391,11 @@ async function viewTokenomics(el) {
 }
 async function viewTreasury(el) {
   el.innerHTML = `
-    ${head('Treasury', `The ${esc(CONFIG.taxPercent)}% tax on every ${esc(TICKER())} trade goes to this wallet. It buys IMD seat NFTs, each seat is registered as an AI agent that earns IMD, and that IMD is distributed to ${esc(TICKER())} holders periodically. No staking needed. Tracked live from the chain.`)}
-    <section class="panel"><div class="panel-head"><h2>How the treasury works</h2><a href="#tokenomics">Tokenomics →</a></div><div class="panel-body" style="display:flex;flex-direction:column;gap:14px">${treasuryFlow()}${treasuryRow()}</div></section>
-    ${await treasuryLive()}`;
+    ${head('Treasury', `The ${esc(CONFIG.taxPercent)}% tax on every ${esc(TICKER())} trade buys IMD seats. Each seat runs an AI agent that earns IMD, and that IMD is distributed to ${esc(TICKER())} holders periodically. No staking needed. Tracked live from the chain.`)}
+    <div class="tsec">
+      <div class="tsec-flow">${treasuryFlow()}<div class="tsec-wallet">${treasuryRow()}<span class="links" style="margin-left:auto"><a href="#tokenomics">Tokenomics →</a></span></div></div>
+      ${await treasuryLive()}
+    </div>`;
 }
 
 /* IMD Tools: live agents. Every agent connected to IMD, its presence, version, model and track record.
@@ -2738,7 +2838,15 @@ function tickClock() { const u = document.getElementById('upd'); if (u) u.textCo
 setInterval(tickClock, 5000);
 
 Theme.init();
-Data.boot().then(route);
+Data.boot().then(() => {
+  route();
+  // Started on the snapshot because IMD was slow to answer: keep trying, and switch to live data once it does.
+  if (!Data.live) {
+    const retry = setInterval(async () => {
+      try { const j = await Data.fetchJson('/swarm', 8000, 1); if (j?.health) { clearInterval(retry); Data.mode = 'live'; Data.cache.set('/swarm', { t: Date.now(), v: j }); Data.store.write('/swarm', j); route(); } } catch {}
+    }, 12000);
+  }
+});
 
 </script>
 </body>
