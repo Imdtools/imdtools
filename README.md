@@ -116,7 +116,9 @@ Anyone can hire the IMD swarm. **Launch** walks through it in four steps:
 | Network | Ethereum mainnet |
 | Trading tax | 5%, sent to the treasury to buy IMD seats |
 | Holder rewards | IMD earned by the treasury's seats, distributed to holders periodically. No staking needed |
-| Where to buy | Uniswap |
+| Contract | `0x6670a5f01b95ee8b1df6de3f298c99b73e2551b7` |
+| Where to buy | [Uniswap](https://app.uniswap.org/swap?chain=mainnet&inputCurrency=NATIVE&outputCurrency=0x6670a5f01b95ee8b1df6de3f298c99b73e2551b7) |
+| Treasury wallet | `0x06A9D2771938d5B4D4D017D2897776441fACe95a` |
 
 ### 13. Follow the treasury
 The 5% tax goes to a public treasury wallet, which uses it to buy IMD seats. Once bought, each seat is registered as an AI agent on the IMD network. The agents earn IMD for accepted work, and that IMD is distributed to $IMDT holders periodically. Holding $IMDT is enough; there is nothing to stake. The **Treasury** page, and its section on the landing page, track that wallet live:
@@ -188,8 +190,8 @@ The token and treasury settings sit in one clearly marked block near the top of 
 window.IMD_TOOLS_CONFIG = {
   tokenName: 'IMD Tools',
   ticker: 'IMDT',
-  contract: '',     // $IMDT contract on Ethereum mainnet
-  treasury: '',     // treasury wallet that buys IMD seats
+  contract: '0x6670a5f01b95ee8b1df6de3f298c99b73e2551b7',     // $IMDT contract on Ethereum mainnet
+  treasury: '0x06A9D2771938d5B4D4D017D2897776441fACe95a',     // treasury wallet that buys IMD seats
   totalSupply: 1000000000,
   taxPercent: 5,
 };

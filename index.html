@@ -829,6 +829,10 @@ a.icon-btn { text-decoration: none; }
 .pitch h1 em { display: block; }
 .pitch .in { align-items: start; }
 
+.term .ca-line { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; font-size: 12px; color: var(--screen-muted); }
+.term .ca-line > span { letter-spacing: .14em; color: var(--phosphor); font-weight: 700; }
+.term .ca-line .copy, .term .ca-line button { color: var(--screen-ink); font-size: 12px; overflow-wrap: anywhere; }
+
 </style>
 </head>
 <body>
@@ -843,8 +847,8 @@ a.icon-btn { text-decoration: none; }
 window.IMD_TOOLS_CONFIG = {
   tokenName: 'IMD Tools',
   ticker: 'IMDT',
-  contract: '',
-  treasury: '',
+  contract: '0x6670a5f01b95ee8b1df6de3f298c99b73e2551b7',
+  treasury: '0x06A9D2771938d5B4D4D017D2897776441fACe95a',
   totalSupply: 1000000000,
   taxPercent: 5,
 };
@@ -863,8 +867,8 @@ const SNAP = window.IMD_SNAPSHOT;
 const CONFIG = Object.assign({
   tokenName: 'IMD Tools',
   ticker: 'IMDT',                  // shown as $IMDT
-  contract: '',                    // the token's Ethereum mainnet contract, e.g. 0xabc…; enables Buy and live balances
-  treasury: '',                    // the treasury wallet that receives the tax and buys IMD seats
+  contract: '0x6670a5f01b95ee8b1df6de3f298c99b73e2551b7',                    // the token's Ethereum mainnet contract, e.g. 0xabc…; enables Buy and live balances
+  treasury: '0x06A9D2771938d5B4D4D017D2897776441fACe95a',                    // the treasury wallet that receives the tax and buys IMD seats
   totalSupply: 1000000000,
   taxPercent: 5,
   chain: 'Ethereum mainnet',
@@ -874,7 +878,7 @@ const hasToken = () => /^0x[0-9a-fA-F]{40}$/.test(CONFIG.contract);
 const hasTreasury = () => /^0x[0-9a-fA-F]{40}$/.test(CONFIG.treasury);
 const isTreasury = (a) => hasTreasury() && String(a || '').toLowerCase() === CONFIG.treasury.toLowerCase();
 const TICKER = () => '$' + CONFIG.ticker;
-const buyUrl = () => hasToken() ? `https://app.uniswap.org/swap?chain=mainnet&outputCurrency=${CONFIG.contract}` : null;
+const buyUrl = () => hasToken() ? `https://app.uniswap.org/swap?chain=mainnet&inputCurrency=NATIVE&outputCurrency=${CONFIG.contract}` : null;
 const buyButton = (cls = 'btn') => buyUrl()
   ? `<a class="${cls}" href="${esc(buyUrl())}" target="_blank" rel="noopener">Buy ${esc(TICKER())} ↗</a>`
   : `<span class="${cls} is-off" role="note" title="The Buy link opens on Uniswap once the contract is published">Buy ${esc(TICKER())} · soon</span>`;
@@ -1299,6 +1303,7 @@ async function renderLanding(root) {
             <h1 class="pix">IMD TOOLS</h1>
             <div class="tag-l">interface · interaction · treasury for the IMD ecosystem</div>
             <div class="hero-btns"><a class="tbtn solid" href="#overview">Open app</a>${buyButton('tbtn')}</div>
+            ${hasToken() ? `<div class="ca-line"><span>CA</span>${copyBtn(CONFIG.contract, CONFIG.contract)}</div>` : ''}
           </div>
           <div class="body">
             <div class="log" id="term-log">${log.map((e) => logLine(e)).join('')}</div>
@@ -2521,14 +2526,14 @@ function treasuryReadouts({ t, seats, earned }) {
   const eth = t?.ethWei ? tokenAmount(t.ethWei, 18) : null;
   const tok = t?.tokenRaw ? tokenAmount(t.tokenRaw, t.tokenDecimals ?? 18) : null;
   return `
-    ${kpi('Seats bought', t?.seatsVerified === false ? fmt(t?.seatsHeldOnChain) : fmt(seats.length), Number.isFinite(t?.seatsHeldOnChain) ? `${fmt(t.seatsHeldOnChain)} confirmed on-chain · ${pct(t.seatsHeldOnChain, t?.seatsTotal || 2000)}% of all seats` : `${pct(seats.length, t?.seatsTotal || 2000)}% of all ${fmt(t?.seatsTotal || 2000)} seats`, true)}
+    ${kpi('Seats bought', t?.seatsVerified === false ? fmt(t?.seatsHeldOnChain) : fmt(seats.length), Number.isFinite(t?.seatsHeldOnChain) ? `Identity.MD NFTs held · confirmed on-chain` : 'Identity.MD NFTs held', true)}
     ${kpi('Rewards earned', earned ? `${fmt(earned.payouts)}${earned.more ? '+' : ''}` : '—', earned?.last ? `payouts to treasury seats · last ${esc(ago(earned.last))} · for ${esc(TICKER())} holders` : `payouts to treasury seats · for ${esc(TICKER())} holders`, true)}
-    ${kpi('ETH in treasury', eth == null ? '—' : eth.toFixed(eth < 10 ? 3 : 1), 'ready for the next seat')}
+    ${kpi('ETH in treasury', eth == null ? '—' : eth.toFixed(eth < 1 ? 4 : eth < 10 ? 3 : 1), 'collected from the tax · for the next seats')}
     ${kpi(`${esc(TICKER())} in treasury`, tok == null ? '—' : compact(tok), 'tax collected, not yet spent')}
 `;
 }
 function treasurySeatsTable(seats) {
-  if (!seats.length) return `<div class="empty"><b>No seats bought yet.</b><span>Every seat the treasury buys appears here automatically, with how its agent performs.</span></div>`;
+  if (!seats.length) return `<div class="empty"><b>No seats bought yet.</b><span>Every Identity.MD seat NFT the treasury buys appears here automatically, with how its AI agent performs.</span></div>`;
   return `<div class="table-wrap"><table>
     <thead><tr><th>Seat</th><th class="r">Accepted</th><th>Acceptance</th><th class="r">Failed</th><th>Last active</th><th>Status</th></tr></thead>
     <tbody>${seats.sort((a, b) => Number(a.tokenId) - Number(b.tokenId)).map((s) => `<tr data-open-seat="${esc(s.tokenId)}" tabindex="0">
