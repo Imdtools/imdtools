@@ -833,6 +833,102 @@ a.icon-btn { text-decoration: none; }
 .term .ca-line > span { letter-spacing: .14em; color: var(--phosphor); font-weight: 700; }
 .term .ca-line .copy, .term .ca-line button { color: var(--screen-ink); font-size: 12px; overflow-wrap: anywhere; }
 
+/* ================= treasury vault + seat cards ================= */
+.vault { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr); border: 1px solid var(--edge); border-radius: var(--r); background: var(--screen); color: var(--screen-ink); overflow: hidden;
+  background-image: linear-gradient(rgba(67,224,125,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(67,224,125,.04) 1px, transparent 1px); background-size: 28px 28px; }
+.v-main { position: relative; padding: 26px; display: flex; flex-direction: column; gap: 10px; border-right: 1px solid var(--screen-line); background: radial-gradient(ellipse 90% 90% at 20% 30%, rgba(67,224,125,.12), transparent 70%); }
+.v-main .cap, .v-cell .cap { display: flex; align-items: center; gap: 8px; color: var(--screen-muted); }
+.v-main .led, .v-cell .led { width: 7px; height: 7px; display: inline-block; background: var(--phosphor); box-shadow: 0 0 8px var(--phosphor); animation: tblink 2.4s steps(2) infinite; }
+.v-main b { font-family: var(--f-dot); font-weight: 900; font-size: clamp(48px, 6vw, 76px); line-height: .95; color: var(--phosphor); text-shadow: 0 0 22px rgba(67,224,125,.45); font-variant-numeric: tabular-nums; animation: pixglow 4s ease-in-out infinite; }
+.v-main b small { font-family: var(--f-mono); font-size: 16px; font-weight: 700; margin-left: 10px; color: var(--screen-muted); text-shadow: none; letter-spacing: .1em; }
+.v-sub { font-size: 12.5px; color: var(--screen-muted); }
+.v-links { margin-top: auto; padding-top: 8px; }
+.v-links a { color: var(--screen-ink); }
+.v-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.v-cell { position: relative; padding: 22px; display: flex; flex-direction: column; gap: 8px; border-left: 1px solid var(--screen-line); }
+.v-cell:first-child { border-left: 0; }
+.v-cell .led { animation-delay: calc(var(--i) * .6s); }
+.v-cell b { font-family: var(--f-dot); font-weight: 900; font-size: 42px; line-height: 1; color: var(--phosphor); text-shadow: 0 0 14px rgba(67,224,125,.35); }
+.v-ico { position: absolute; top: 18px; right: 18px; width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--screen-line); color: var(--phosphor-dim); }
+.v-ico svg { width: 16px; height: 16px; }
+.seats-sec { display: flex; flex-direction: column; gap: 14px; }
+.seats-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.seats-head h2 { font-size: 20px; margin-top: 4px; }
+.seat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.seat-card { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; gap: 14px; padding: 16px; background: var(--screen); color: var(--screen-ink); border: 1px solid var(--screen-line); border-radius: var(--r); position: relative; overflow: hidden; transition: border-color .25s, transform .25s, box-shadow .25s; animation: cardin .5s ease both; animation-delay: calc(var(--i) * 60ms); }
+.seat-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--phosphor); transform: scaleX(0); transform-origin: 0 50%; transition: transform .4s ease; }
+.seat-card:hover, .seat-card:focus-visible { border-color: var(--phosphor-dim); transform: translateY(-3px); box-shadow: 0 10px 30px -12px rgba(67,224,125,.35); }
+.seat-card:hover::before, .seat-card:focus-visible::before { transform: scaleX(1); }
+@keyframes cardin { from { opacity: 0; transform: translateY(10px); } }
+.sc-top { display: flex; align-items: center; gap: 12px; }
+.sc-top img { width: 44px; height: 44px; border: 1px solid var(--screen-line); background: var(--screen-2); flex: none; }
+.sc-id { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.sc-id b { font-size: 15px; }
+.sc-id span { font-size: 12px; color: var(--screen-muted); }
+.sc-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.sc-stats > span { display: flex; flex-direction: column; gap: 3px; }
+.sc-stats i { font-style: normal; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--screen-muted); }
+.sc-stats b { font-family: var(--f-dot); font-weight: 900; font-size: 22px; line-height: 1; color: var(--phosphor); }
+.sc-bar { height: 4px; background: var(--screen-line); }
+.sc-bar > span { display: block; height: 100%; background: var(--phosphor); box-shadow: 0 0 8px var(--phosphor); }
+.sc-foot { display: flex; justify-content: space-between; gap: 8px; font-size: 11.5px; color: var(--screen-muted); border-top: 1px dashed var(--screen-line); padding-top: 10px; }
+.sc-foot .go { color: var(--phosphor); }
+.sc-foot .arr { display: inline-block; transition: transform .25s; }
+.seat-card:hover .sc-foot .arr { transform: translateX(4px); }
+.seat-slot { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 16px; min-height: 172px; border: 1px dashed var(--screen-line); border-radius: var(--r); background: repeating-linear-gradient(135deg, transparent 0 10px, rgba(67,224,125,.025) 10px 20px), var(--screen); color: var(--screen-muted); animation: cardin .5s ease both; animation-delay: calc(var(--i) * 60ms); }
+.seat-slot .cap { color: var(--screen-muted); }
+.slot-ico { width: 40px; height: 40px; display: grid; place-items: center; border: 1px dashed var(--screen-line); color: var(--screen-line); margin-top: auto; }
+.slot-ico svg { width: 20px; height: 20px; }
+.seat-slot b { font-size: 14px; color: var(--screen-ink); opacity: .55; }
+.seat-slot > span:last-child { font-size: 12px; }
+.seat-slot.next { border-color: var(--phosphor-dim); animation: cardin .5s ease both, slotpulse 2.6s ease-in-out infinite .5s; }
+.seat-slot.next .slot-ico { border-color: var(--phosphor-dim); color: var(--phosphor); }
+.seat-slot.next b { opacity: 1; color: var(--phosphor); }
+@keyframes slotpulse { 50% { box-shadow: 0 0 0 1px rgba(67,224,125,.25), 0 0 26px -6px rgba(67,224,125,.45); } }
+@media (max-width: 1000px) {
+  .vault { grid-template-columns: minmax(0, 1fr); }
+  .v-main { border-right: 0; border-bottom: 1px solid var(--screen-line); }
+}
+@media (max-width: 640px) {
+  .v-grid { grid-template-columns: minmax(0, 1fr); }
+  .v-cell { border-left: 0; border-top: 1px solid var(--screen-line); }
+  .v-cell:first-child { border-top: 0; }
+  .seat-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { .seat-card, .seat-slot, .seat-slot.next, .v-main b, .v-main .led, .v-cell .led { animation: none !important; } }
+
+/* ===== treasury v2: live seat states, 2x2 vault ===== */
+.v-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.v-cell { border-left: 1px solid var(--screen-line); border-top: 1px solid var(--screen-line); }
+.v-cell:nth-child(odd) { border-left: 0; }
+.v-cell:nth-child(-n+2) { border-top: 0; }
+.v-cell b small { font-size: 20px; color: var(--screen-muted); margin-left: 4px; text-shadow: none; }
+.fleet { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.fleet span { display: inline-flex; align-items: center; gap: 7px; }
+.fleet i { width: 8px; height: 8px; display: inline-block; }
+.f-working i { background: var(--signal); box-shadow: 0 0 8px var(--signal); animation: tblink 1.2s steps(2) infinite; }
+.f-online i { background: var(--phosphor); box-shadow: 0 0 8px var(--phosphor); animation: tblink 2.4s steps(2) infinite; }
+.f-offline i { background: var(--screen-line); }
+.seat-grid { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+.seat-card { padding: 18px; gap: 16px; }
+.sc-av { position: relative; flex: none; }
+.sc-av img { width: 52px; height: 52px; border: 1px solid var(--screen-line); background: var(--screen-2); display: block; }
+.sc-dot { position: absolute; right: -4px; bottom: -4px; width: 12px; height: 12px; border: 2px solid var(--screen); background: var(--screen-line); }
+.sc-top .pill { display: none; }
+.sc-live { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border: 1px solid var(--screen-line); background: var(--screen-2); }
+.sc-state { display: inline-flex; align-items: center; gap: 9px; font-family: var(--f-dot); font-weight: 900; font-size: 24px; line-height: 1; letter-spacing: .02em; color: var(--screen-muted); }
+.sc-state i { width: 10px; height: 10px; background: var(--screen-line); }
+.sc-sub { font-size: 12px; color: var(--screen-muted); }
+.seat-card.st-online .sc-state { color: var(--phosphor); text-shadow: 0 0 12px rgba(67,224,125,.45); }
+.seat-card.st-online .sc-state i, .seat-card.st-online .sc-dot { background: var(--phosphor); box-shadow: 0 0 10px var(--phosphor); animation: tblink 2.4s steps(2) infinite; }
+.seat-card.st-online .sc-live { border-color: rgba(67,224,125,.35); background: linear-gradient(90deg, rgba(67,224,125,.10), transparent); }
+.seat-card.st-working .sc-state { color: var(--signal); text-shadow: 0 0 12px rgba(240,122,69,.5); }
+.seat-card.st-working .sc-state i, .seat-card.st-working .sc-dot { background: var(--signal); box-shadow: 0 0 10px var(--signal); animation: tblink 1s steps(2) infinite; }
+.seat-card.st-working .sc-live { border-color: rgba(240,122,69,.45); background: linear-gradient(90deg, rgba(240,122,69,.12), transparent); }
+.seat-card.st-working { border-color: rgba(240,122,69,.4); }
+.seat-card.st-offline .sc-live { border-style: dashed; }
+@media (max-width: 640px) { .v-grid { grid-template-columns: minmax(0, 1fr); } .v-cell { border-left: 0 !important; border-top: 1px solid var(--screen-line) !important; } .v-cell:first-child { border-top: 0 !important; } }
+
 </style>
 </head>
 <body>
@@ -2519,32 +2615,76 @@ async function treasuryModel() {
   if (!t || t.error) return { t, seats: [], earned };
   const all = await getSeats().catch(() => []);
   const byId = new Map(all.map((s) => [String(s.tokenId), s]));
-  const seats = (t.seats || []).map((id) => byId.get(String(id)) || { tokenId: String(id), attempts: 0, accepted: 0, rejected: 0, failed: 0, pending: 0 });
+  const seats = (t.seats || []).map((id) => ({ ...(byId.get(String(id)) || { tokenId: String(id), attempts: 0, accepted: 0, rejected: 0, failed: 0, pending: 0 }) }));
+  // Live presence for each treasury seat: online, working, or offline right now.
+  await Promise.all(seats.map(async (s) => {
+    const st = await Data.get(`/seats/${s.tokenId}/standing?queue=0`, 15000).catch(() => null);
+    if (!st) return;
+    const p = st.presence || {}, e = st.enrollment || {}, d = st.standing || {};
+    s.agentId = s.agentId || e.agentId || null;
+    s.registered = !!e.registered;
+    s.online = !!p.connected && !p.stale;
+    s.accepting = p.acceptingWork !== false;
+    s.heartbeat = p.lastHeartbeatAt || null;
+    s.runtime = (p.runtimes || [])[0]?.id || null;
+    s.liveWorking = (d.working || 0) > 0 || (d.running || []).length > 0;
+    s.presenceKnown = true;
+  }));
   return { t, seats, earned };
 }
+// The vault: ETH as the headline, then seats, rewards and the token balance.
 function treasuryReadouts({ t, seats, earned }) {
   const eth = t?.ethWei ? tokenAmount(t.ethWei, 18) : null;
   const tok = t?.tokenRaw ? tokenAmount(t.tokenRaw, t.tokenDecimals ?? 18) : null;
-  return `
-    ${kpi('Seats bought', t?.seatsVerified === false ? fmt(t?.seatsHeldOnChain) : fmt(seats.length), Number.isFinite(t?.seatsHeldOnChain) ? `Identity.MD NFTs held · confirmed on-chain` : 'Identity.MD NFTs held', true)}
-    ${kpi('Rewards earned', earned ? `${fmt(earned.payouts)}${earned.more ? '+' : ''}` : '—', earned?.last ? `payouts to treasury seats · last ${esc(ago(earned.last))} · for ${esc(TICKER())} holders` : `payouts to treasury seats · for ${esc(TICKER())} holders`, true)}
-    ${kpi('ETH in treasury', eth == null ? '—' : eth.toFixed(eth < 1 ? 4 : eth < 10 ? 3 : 1), 'collected from the tax · for the next seats')}
-    ${kpi(`${esc(TICKER())} in treasury`, tok == null ? '—' : compact(tok), 'tax collected, not yet spent')}
-`;
+  const nSeats = t?.seatsVerified === false ? t?.seatsHeldOnChain : seats.length;
+  const cell = (ic, label, val, sub, i) => `<div class="v-cell" style="--i:${i}"><span class="v-ico">${ICON[ic]}</span><span class="cap"><i class="led"></i>${label}</span><b>${val}</b><span class="v-sub">${sub}</span></div>`;
+  return `<div class="vault">
+    <div class="v-main">
+      <span class="cap"><i class="led"></i>ETH in treasury</span>
+      <b>${eth == null ? '—' : eth.toFixed(eth < 1 ? 4 : eth < 10 ? 3 : 2)}<small>ETH</small></b>
+      <span class="v-sub">Collected from the ${esc(CONFIG.taxPercent)}% tax · spent on IMD seats</span>
+      ${hasTreasury() ? `<span class="links v-links">${extLink(etherscan(CONFIG.treasury, 1), 'Treasury on Etherscan')}</span>` : ''}
+    </div>
+    <div class="v-grid">
+      ${cell('seats', 'Seats bought', fmt(nSeats), 'Identity.MD NFTs · confirmed on-chain', 0)}
+      ${cell('agents', 'Agents online', `${fmt(seats.filter((x) => seatState(x)[0] !== 'offline').length)}<small>/${fmt(seats.length)}</small>`, `${fmt(seats.filter((x) => seatState(x)[0] === 'working').length)} working right now`, 3)}
+      ${cell('tokenomics', 'Rewards earned', earned ? `${fmt(earned.payouts)}${earned.more ? '+' : ''}` : '—', earned?.last ? `payouts · last ${esc(ago(earned.last))}` : `payouts for ${esc(TICKER())} holders`, 1)}
+      ${cell('treasury', `${esc(TICKER())} held`, tok == null ? '—' : compact(tok), 'in the treasury wallet', 2)}
+    </div>
+  </div>`;
 }
-function treasurySeatsTable(seats) {
-  if (!seats.length) return `<div class="empty"><b>No seats bought yet.</b><span>Every Identity.MD seat NFT the treasury buys appears here automatically, with how its AI agent performs.</span></div>`;
-  return `<div class="table-wrap"><table>
-    <thead><tr><th>Seat</th><th class="r">Accepted</th><th>Acceptance</th><th class="r">Failed</th><th>Last active</th><th>Status</th></tr></thead>
-    <tbody>${seats.sort((a, b) => Number(a.tokenId) - Number(b.tokenId)).map((s) => `<tr data-open-seat="${esc(s.tokenId)}" tabindex="0">
-      <td><span class="t">#${esc(s.tokenId)}</span><span class="s">${s.agentId ? `agent ${esc(s.agentId)}` : 'no agent yet'}</span></td>
-      <td class="r num"><b>${fmt(s.accepted)}</b></td>
-      <td><div class="rate"><span class="bar"><span style="width:${pct(s.accepted, s.attempts)}%"></span></span><span class="num" style="font-size:12px">${pct(s.accepted, s.attempts)}%</span></div></td>
-      <td class="r num">${fmt(s.failed)}</td>
-      <td class="muted">${s.last ? esc(ago(s.last)) : '—'}</td>
-      <td>${s.working ? '<span class="pill accent live">Working</span>' : s.attempts ? '<span class="pill good">Active</span>' : '<span class="pill">Idle</span>'}</td>
-    </tr>`).join('')}</tbody></table></div>`;
+// Every seat the treasury owns as its own card; click one to open the seat's full record.
+function seatState(s) {
+  if (s.presenceKnown) {
+    if (s.liveWorking || (s.online && s.working)) return ['working', 'Working', 'on a job right now'];
+    if (s.online) return ['online', 'Online', s.accepting ? 'accepting jobs' : 'not taking jobs'];
+    return ['offline', s.registered ? 'Offline' : 'Not registered', s.registered ? 'registered · worker not connected' : 'waiting for setup'];
+  }
+  if (s.working) return ['working', 'Working', 'on a job right now'];
+  if (s.presenceKnown && s.online) return ['online', 'Online', s.accepting ? 'accepting jobs' : 'not taking jobs'];
+  if (s.presenceKnown && s.registered) return ['offline', 'Offline', 'registered · worker not connected'];
+  if (s.presenceKnown) return ['offline', 'Not registered', 'waiting for setup'];
+  return s.attempts ? ['online', 'Active', 'has done work'] : ['offline', 'Idle', 'no work yet'];
 }
+// Every seat the treasury owns as its own card; click one to open the seat's full record.
+function seatCards(seats, slots) {
+  const sorted = [...seats].sort((a, b) => Number(a.tokenId) - Number(b.tokenId));
+  const card = (s, i) => {
+    const rate = pct(s.accepted, s.attempts); const [k, label, sub] = seatState(s);
+    return `<button type="button" class="seat-card st-${k}" data-open-seat="${esc(s.tokenId)}" style="--i:${i}">
+      <span class="sc-top"><span class="sc-av"><img src="${IMD_API}/agents/by-token/${esc(s.tokenId)}.svg" alt="" width="52" height="52" loading="lazy" onerror="this.style.visibility='hidden'"><i class="sc-dot"></i></span>
+        <span class="sc-id"><b>IMD #${esc(s.tokenId)}</b><span>${s.agentId ? `agent ${esc(s.agentId)}` : 'no agent yet'}${s.runtime ? ` · ${esc(s.runtime)}` : ''}</span></span></span>
+      <span class="sc-live"><span class="sc-state"><i></i>${label}</span><span class="sc-sub">${esc(sub)}${s.heartbeat && k !== 'offline' ? ` · checked in ${esc(ago(s.heartbeat))}` : ''}</span></span>
+      <span class="sc-stats"><span><i>Accepted</i><b>${fmt(s.accepted)}</b></span><span><i>Success</i><b>${s.attempts ? rate + '%' : '—'}</b></span><span><i>Failed</i><b>${fmt(s.failed)}</b></span></span>
+      <span class="sc-bar"><span style="width:${s.attempts ? rate : 0}%"></span></span>
+      <span class="sc-foot"><span>${s.last ? `Last job ${esc(ago(s.last))}` : 'Waiting for its first job'}</span><span class="go">Open seat <span class="arr">→</span></span></span>
+    </button>`;
+  };
+  const empty = Math.max(0, slots - sorted.length);
+  const slot = (i) => `<div class="seat-slot${i === 0 ? ' next' : ''}" style="--i:${sorted.length + i}"><span class="cap">Slot ${String(sorted.length + i + 1).padStart(2, '0')}</span><span class="slot-ico">${ICON.seats}</span><b>${i === 0 ? 'Next seat' : 'Open slot'}</b><span>${i === 0 ? 'bought with the tax as it builds up' : 'awaiting purchase'}</span></div>`;
+  return `<div class="seat-grid">${sorted.map(card).join('')}${Array.from({ length: empty }, (_, i) => slot(i)).join('')}</div>`;
+}
+function treasurySeatsTable(seats) { return seatCards(seats, seats.length ? 0 : 4); }
 const treasuryPending = () => `<div class="tpending">
   <div class="tp-status">
     <span class="tp-led" aria-hidden="true"></span>
@@ -2566,9 +2706,15 @@ async function treasuryLive(limit) {
   if (m.t?.error) return errorBox(m.t.error);
   const seats = limit ? m.seats.slice(0, limit) : m.seats;
   const note = m.t?.seatsVerified === false ? `<div class="banner">${ICON.info}<div>The seat count comes straight from the seat contract. The list of individual seats appears once IMD's owner list is confirmed against the chain; this retries on its own.</div></div>` : '';
-  return `<div class="grid g-4">${treasuryReadouts(m)}</div>
-    ${note}<section class="panel"><div class="panel-head"><h2>Seats bought by the treasury</h2>${limit ? '<a href="#treasury">Open the treasury →</a>' : ''}</div>${treasurySeatsTable(seats)}</section>
-    ${limit ? '' : `<p class="muted" style="font-size:12px">Balances read from ${esc(CONFIG.chain)} · seats from the IMD seat collection · updated ${esc(ago(m.t.at || Data.at))}</p>`}`;
+  const n = seats.length, slots = n ? (4 - (n % 4)) % 4 : (limit ? 4 : 8); // fill the last row of four
+  return `${treasuryReadouts(m)}
+    ${note}<section class="seats-sec">
+      <div class="seats-head"><div><span class="cap">Treasury seats</span><h2>${fmt(m.seats.length)} Identity.MD seat${m.seats.length === 1 ? '' : 's'} owned</h2>
+        <div class="fleet">${(() => { const c = { working: 0, online: 0, offline: 0 }; m.seats.forEach((x) => { c[seatState(x)[0]]++; }); return `<span class="f-working"><i></i>${c.working} working</span><span class="f-online"><i></i>${c.online} online</span><span class="f-offline"><i></i>${c.offline} offline</span>`; })()}</div></div>
+        <span class="links">${hasTreasury() ? extLink(`https://etherscan.io/token/${SEAT_COLLECTION}?a=${CONFIG.treasury}`, 'Seat purchases') : ''}${limit && m.seats.length > seats.length ? `<a href="#treasury">All ${fmt(m.seats.length)} seats →</a>` : limit ? '<a href="#treasury">Open the treasury →</a>' : ''}</span></div>
+      ${seatCards(seats, slots)}
+    </section>
+    ${limit ? '' : `<p class="muted" style="font-size:12px">Balances read from ${esc(CONFIG.chain)} · seats from the Identity.MD seat collection · updated ${esc(ago(m.t.at || Data.at))}</p>`}`;
 }
 
 /* ---------- app pages ---------- */
