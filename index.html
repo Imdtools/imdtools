@@ -929,6 +929,258 @@ a.icon-btn { text-decoration: none; }
 .seat-card.st-offline .sc-live { border-style: dashed; }
 @media (max-width: 640px) { .v-grid { grid-template-columns: minmax(0, 1fr); } .v-cell { border-left: 0 !important; border-top: 1px solid var(--screen-line) !important; } .v-cell:first-child { border-top: 0 !important; } }
 
+/* ---------- v1.3: seat track record, live activity, update fixes, network strip, leaderboard, seat check ---------- */
+.sc-mini { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 11.5px; color: var(--screen-muted); }
+.sc-mini b { color: var(--screen-ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.sc-warn { display: inline-flex; align-items: center; gap: 7px; font-size: 11.5px; color: #F2A27C; border: 1px dashed rgba(240,122,69,.5); padding: 5px 9px; background: rgba(240,122,69,.07); }
+.sc-warn svg { width: 14px; height: 14px; }
+.banner.warn { border-style: solid; border-color: color-mix(in srgb, var(--signal) 55%, transparent); background: color-mix(in srgb, var(--signal) 7%, var(--surface)); }
+.banner.warn > div { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.fix { display: flex; flex-direction: column; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); background: var(--surface-2); font-size: 12.5px; color: var(--ink-2); }
+.fix.compact { padding: 8px 10px; }
+.fix-step { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.fix-step > i { font-style: normal; width: 20px; height: 20px; display: inline-grid; place-items: center; flex: none; background: var(--ink); color: var(--bg); font-size: 11px; font-weight: 700; }
+.fix .copy { padding: 3px 8px; border: 1px solid var(--edge); background: var(--screen); color: var(--phosphor); font-size: 12px; max-width: 100%; overflow-wrap: anywhere; text-align: left; }
+.fix .copy:hover { border-color: var(--phosphor-dim); }
+.fix .copy svg { color: var(--screen-ink); }
+.fix-note { font-size: 12px; color: var(--muted); display: block; line-height: 1.9; }
+.fix a.btn { text-decoration: none; }
+
+.live-dot { display: inline-block; width: 8px; height: 8px; margin-right: 8px; vertical-align: 1px; background: var(--good); box-shadow: 0 0 8px var(--good); animation: blink 1.2s steps(2, end) infinite; }
+.act-body { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 18px; }
+.act-list { display: flex; flex-direction: column; border: 1px solid #000; background: var(--screen); color: var(--screen-ink); }
+.act-now { display: grid; grid-template-columns: auto auto minmax(0, 1fr); grid-template-areas: "dot id what" "dot id t"; column-gap: 10px; align-items: center; padding: 10px 12px; border-top: 1px solid var(--screen-line); font-size: 12.5px; }
+.act-now:first-child { border-top: 0; }
+.act-now .sc-dot { grid-area: dot; position: static; width: 9px; height: 9px; border: 0; background: var(--screen-line); }
+.act-now.st-online .sc-dot { background: var(--phosphor); box-shadow: 0 0 8px var(--phosphor); animation: tblink 2.4s steps(2) infinite; }
+.act-now.st-working .sc-dot { background: var(--signal); box-shadow: 0 0 8px var(--signal); animation: tblink 1s steps(2) infinite; }
+.act-id { grid-area: id; font-weight: 700; color: var(--phosphor); }
+.act-now.st-working .act-id { color: #FF8A4C; }
+.act-what { grid-area: what; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--screen-ink); text-decoration: none; }
+a.act-what:hover { text-decoration: underline; }
+.act-now .muted { color: var(--screen-muted); }
+.act-t { grid-area: t; font-size: 11px; color: var(--screen-muted); }
+.act-seat { flex: none; font-weight: 700; color: var(--accent-ink); }
+.act-r { display: inline-flex; align-items: center; gap: 10px; flex: none; font-size: 11.5px; }
+
+.netstrip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.6fr); border: 1px solid #000; background: var(--screen); color: var(--screen-ink); border-radius: var(--r); }
+.ns-cell { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-left: 1px solid var(--screen-line); min-width: 0; }
+.ns-cell:first-child { border-left: 0; }
+.ns-cell .cap { color: var(--screen-muted); font-size: 10px; }
+.ns-cell > b { font-family: var(--f-dot); font-weight: 900; font-size: 24px; line-height: 1.05; color: var(--phosphor); font-variant-numeric: tabular-nums; }
+.ns-sub { font-size: 11px; color: #9FB3A5; }
+.ns-bar { display: flex; height: 10px; margin-top: 4px; border: 1px solid var(--screen-line); }
+.ns-bar i, .ns-legend i { display: block; height: 100%; }
+.ns-legend { display: flex; flex-wrap: wrap; gap: 3px 12px; font-size: 11px; color: #9FB3A5; }
+.ns-legend > span { display: inline-flex; align-items: center; gap: 5px; min-width: 0; }
+.ns-legend i { width: 8px; height: 8px; flex: none; }
+.ns-legend b { color: var(--screen-ink); font-weight: 600; }
+.ns-bar .m0, .ns-legend .m0 { background: var(--phosphor); }
+.ns-bar .m1, .ns-legend .m1 { background: #F07A45; }
+.ns-bar .m2, .ns-legend .m2 { background: #7AAAF6; }
+.ns-bar .m3, .ns-legend .m3 { background: #4A524D; }
+
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--edge); }
+.tabs button { border: 1px solid transparent; border-bottom: 0; background: none; padding: 10px 18px; cursor: pointer; font-size: 11.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: -1px; }
+.tabs button:hover { color: var(--ink); }
+.tabs button[aria-selected="true"] { color: var(--ink); background: var(--surface); border-color: var(--edge); border-bottom: 1px solid var(--surface); box-shadow: inset 0 2px 0 var(--accent); }
+.seg.seg-3 { grid-template-columns: repeat(3, minmax(0, auto)); }
+.seg.seg-3 button { padding: 0 14px; white-space: nowrap; }
+.lb-search { max-width: 440px; }
+.lb-ours { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.podium { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.pod { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: auto auto minmax(0, 1fr); grid-template-areas: "rank av id" "n n n"; gap: 10px 12px; align-items: center; padding: 14px 16px; background: var(--screen); color: var(--screen-ink); border: 1px solid var(--screen-line); border-radius: var(--r); transition: border-color .2s, transform .2s; }
+.pod:hover, .pod:focus-visible { border-color: var(--phosphor-dim); transform: translateY(-2px); }
+.pod img { grid-area: av; border: 1px solid var(--screen-line); background: var(--screen-2); }
+.pod-rank { grid-area: rank; font-family: var(--f-dot); font-weight: 900; font-size: 34px; line-height: 1; color: var(--phosphor); text-shadow: 0 0 12px rgba(67,224,125,.4); }
+.pod.p1 { border-color: rgba(67,224,125,.55); box-shadow: 0 0 0 1px rgba(67,224,125,.2), 0 10px 30px -14px rgba(67,224,125,.5); }
+.pod.p2 .pod-rank, .pod.p3 .pod-rank { color: var(--screen-ink); text-shadow: none; }
+.pod-id { grid-area: id; display: flex; flex-direction: column; min-width: 0; }
+.pod-id b { font-size: 15px; }
+.pod-id span, .pod-n span { font-size: 11.5px; color: var(--screen-muted); }
+.pod-n { grid-area: n; display: flex; align-items: baseline; gap: 10px; border-top: 1px dashed var(--screen-line); padding-top: 10px; }
+.pod-n b { font-family: var(--f-dot); font-weight: 900; font-size: 26px; line-height: 1; color: var(--phosphor); }
+.pod.ours { border-color: rgba(240,122,69,.6); }
+table.lb tr.ours td { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+table.lb tr.ours td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+.tag.warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 55%, transparent); }
+
+.check { display: flex; flex-direction: column; gap: 14px; }
+.check-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.3fr); background: var(--screen); color: var(--screen-ink); border-color: #000; }
+.check-head > div { padding: 16px 18px; border-left: 1px solid var(--screen-line); display: flex; gap: 14px; align-items: center; min-width: 0; }
+.check-head > div:first-child { border-left: 0; }
+.ch-id img { border: 1px solid var(--screen-line); background: var(--screen-2); flex: none; }
+.ch-id > div, .ch-verdict > div { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ch-id b { font-family: var(--f-dot); font-weight: 900; font-size: 26px; line-height: 1; color: var(--phosphor); }
+.ch-id span, .ch-verdict span { font-size: 12px; color: var(--screen-muted); overflow-wrap: anywhere; }
+.ch-id a { color: var(--screen-ink); }
+.ch-verdict b { font-size: 18px; }
+.ch-led { width: 14px; height: 14px; flex: none; background: var(--phosphor); box-shadow: 0 0 12px var(--phosphor); animation: tblink 2.4s steps(2) infinite; }
+.check-head.has-issues .ch-led { background: var(--signal); box-shadow: 0 0 12px var(--signal); animation-duration: 1s; }
+.check-head.has-issues .ch-verdict b { color: #FF8A4C; }
+.check-head.all-good .ch-verdict b { color: var(--phosphor); }
+.ch-stats { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px !important; }
+.ch-stats > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ch-stats i { font-style: normal; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--screen-muted); }
+.ch-stats b { font-family: var(--f-dot); font-weight: 900; font-size: 20px; line-height: 1.05; color: var(--phosphor); overflow-wrap: anywhere; }
+.ch-stats b.sm { font-family: var(--f-mono); font-size: 13px; font-weight: 600; color: var(--screen-ink); }
+.steps-check { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border: 1px solid var(--edge); background: var(--surface); border-radius: var(--r); }
+.steps-check > li { display: flex; gap: 14px; padding: 14px 16px; border-top: 1px solid var(--line); }
+.steps-check > li:first-child { border-top: 0; }
+.steps-check .sc-ico svg { width: 22px; height: 22px; }
+.steps-check li.ok .sc-ico { color: var(--good); }
+.steps-check li.bad .sc-ico { color: var(--bad); }
+.steps-check li.wait .sc-ico, .steps-check li.opt .sc-ico { color: var(--muted); }
+.steps-check li.bad { background: color-mix(in srgb, var(--bad) 5%, transparent); }
+.steps-check li.wait { opacity: .6; }
+.sc-body { display: flex; flex-direction: column; gap: 10px; min-width: 0; flex: 1; }
+.sc-t { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; }
+.sc-t b { font-size: 13.5px; }
+.sc-t span { font-size: 12.5px; color: var(--muted); }
+.steps-check li.bad .sc-t span { color: var(--ink-2); }
+.check-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; font-size: 12px; }
+@media (max-width: 1100px) {
+  .netstrip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ns-cell { border-top: 1px solid var(--screen-line); }
+  .ns-cell:nth-child(-n+2) { border-top: 0; }
+  .ns-cell:nth-child(odd) { border-left: 0; }
+  .ns-models { grid-column: 1 / -1; border-left: 0 !important; }
+  .act-body { grid-template-columns: minmax(0, 1fr); }
+  .check-head { grid-template-columns: minmax(0, 1fr); }
+  .check-head > div { border-left: 0; border-top: 1px solid var(--screen-line); }
+  .check-head > div:first-child { border-top: 0; }
+}
+@media (max-width: 640px) {
+  .podium { grid-template-columns: minmax(0, 1fr); }
+  .tabs button { padding: 10px 12px; }
+  .act-r .muted { display: none; }
+}
+.fix a svg { width: 13px; height: 13px; vertical-align: -2px; margin-right: 4px; }
+.fix a:not(.btn) { color: var(--accent-ink); }
+.check, .steps-check, .check-head { width: 100%; max-width: none; }
+#check-form { justify-content: flex-start; }
+#check-form .chips { margin-left: auto; }
+@media (max-width: 640px) { #check-form .chips { margin-left: 0; } }
+
+/* ---------- v1.4: mainnet notice, ecosystem projects ---------- */
+.mainnet-strip { display: flex; align-items: center; gap: 10px; padding: 7px 28px; background: var(--screen); color: var(--screen-ink); border-bottom: 1px solid #000; text-decoration: none; font-size: 12px; overflow: hidden; white-space: nowrap; }
+.mainnet-strip i { width: 8px; height: 8px; flex: none; background: var(--phosphor); box-shadow: 0 0 10px var(--phosphor); animation: blink 1.2s steps(2, end) infinite; }
+.mainnet-strip b { color: var(--phosphor); letter-spacing: .12em; text-transform: uppercase; font-size: 11px; }
+.mainnet-strip span { color: var(--screen-muted); overflow: hidden; text-overflow: ellipsis; }
+.mainnet-strip:hover span { color: var(--screen-ink); }
+.mn-badge { display: inline-flex; align-items: center; gap: 9px; align-self: flex-start; margin-bottom: 14px; padding: 6px 12px; border: 1px solid var(--phosphor-dim); background: rgba(67,224,125,.08); color: var(--phosphor); font-size: 11.5px; font-weight: 700; letter-spacing: .16em; text-decoration: none; box-shadow: 0 0 18px -6px rgba(67,224,125,.6); }
+.mn-badge i { width: 8px; height: 8px; background: var(--phosphor); box-shadow: 0 0 10px var(--phosphor); animation: blink 1.2s steps(2, end) infinite; }
+.mn-badge:hover { background: rgba(67,224,125,.16); }
+
+.eco-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 22px; align-items: end; }
+.eco-hero h1 { font-size: 34px; line-height: 1.05; margin-top: 6px; }
+.eco-hero h1::before { content: "> "; color: var(--accent-ink); }
+.eco-hero p { color: var(--ink-2); margin-top: 10px; max-width: 560px; font-size: 13.5px; }
+.eco-index { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.eco-index a { display: flex; flex-direction: column; gap: 3px; padding: 12px; text-decoration: none; background: var(--screen); color: var(--screen-ink); border: 1px solid #000; border-top: 3px solid var(--brand); border-radius: var(--r); transition: transform .2s, box-shadow .2s; min-width: 0; }
+.eco-index a:hover { transform: translateY(-2px); box-shadow: 0 8px 22px -12px var(--brand); }
+.eco-index i { font-style: normal; font-family: var(--f-dot); font-weight: 900; font-size: 20px; color: var(--brand); line-height: 1; }
+.eco-index b { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.eco-index span { font-size: 11px; color: var(--screen-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.eco-note p { margin: 0; }
+.eco-list { display: flex; flex-direction: column; gap: 22px; }
+.eco-card { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); background: var(--surface); border: 1px solid var(--edge); border-radius: var(--r); overflow: hidden; position: relative; scroll-margin-top: 80px; }
+.eco-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--brand), var(--brand2)); z-index: 2; }
+.eco-card.flip { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.eco-card.flip .eco-cover { order: 2; border-left: 1px solid #000; border-right: 0; }
+.eco-card.rv { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
+.eco-card.rv.shown { opacity: 1; transform: none; }
+.eco-cover { position: relative; min-height: 420px; background: #050605; border-right: 1px solid #000; overflow: hidden; }
+.eco-art { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; padding: 26px; background: radial-gradient(circle at 70% 25%, color-mix(in srgb, var(--brand) 35%, transparent), transparent 55%), radial-gradient(circle at 15% 90%, color-mix(in srgb, var(--brand2) 30%, transparent), transparent 50%), #070807; }
+.eco-art b { font-family: var(--f-dot); font-weight: 900; font-size: 44px; line-height: 1; color: var(--brand); text-shadow: 0 0 22px color-mix(in srgb, var(--brand) 60%, transparent); position: relative; }
+.eco-art span { font-size: 12px; color: var(--screen-muted); letter-spacing: .1em; text-transform: uppercase; position: relative; }
+.eco-dots { position: absolute; inset: 24px 24px auto auto; width: 220px; display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; opacity: .8; }
+.eco-dots i { aspect-ratio: 1; background: color-mix(in srgb, var(--brand) calc(15% + var(--d) * 3%), transparent); animation: ecodot 3.2s steps(2) infinite; animation-delay: calc(var(--d) * -170ms); }
+@keyframes ecodot { 50% { background: color-mix(in srgb, var(--brand) 12%, transparent); } }
+.eco-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 6s ease; }
+.eco-card:hover .eco-img { transform: scale(1.04); }
+.eco-layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 6s ease; }
+.eco-card:hover .eco-layer { transform: scale(1.08) translateY(-6px); }
+.eco-cover.has-local { background: #0B1018; }
+.eco-cover.has-local .eco-img { object-fit: cover; object-position: 50% 42%; }
+#eco-pepes-family .eco-cover { background: #F4F4F0; }
+#eco-pepes-family .eco-img { object-fit: cover; object-position: 50% 0; }
+.eco-cap { position: absolute; left: 12px; bottom: 12px; padding: 4px 9px; background: rgba(5,6,5,.82); color: var(--screen-ink); font-size: 11px; border: 1px solid rgba(255,255,255,.15); }
+.eco-no { position: absolute; right: 12px; top: 12px; z-index: 1; font-family: var(--f-dot); font-weight: 900; font-size: 22px; line-height: 1; padding: 6px 9px; background: rgba(5,6,5,.82); color: var(--brand); border: 1px solid color-mix(in srgb, var(--brand) 50%, transparent); }
+.eco-body { padding: 24px 26px 22px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.eco-top { display: flex; gap: 14px; align-items: center; }
+.eco-top h2 { font-size: 28px; line-height: 1.05; margin-top: 3px; }
+.eco-logo { width: 44px; height: 44px; flex: none; border: 1px solid var(--edge); object-fit: cover; background: var(--screen); }
+.eco-logo.txt { display: grid; place-items: center; font-weight: 800; font-size: 13px; color: #050605; background: linear-gradient(135deg, var(--brand), var(--brand2)); }
+.eco-quote { margin: 0; padding: 2px 0 2px 14px; border-left: 3px solid var(--brand); font-size: 17px; font-weight: 600; color: var(--ink); }
+.eco-what { color: var(--ink-2); font-size: 13.5px; line-height: 1.65; }
+.eco-flow { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; counter-reset: f; }
+.eco-flow li { counter-increment: f; position: relative; display: flex; flex-direction: column; gap: 2px; padding: 8px 12px 8px 34px; background: var(--screen); color: var(--screen-ink); border: 1px solid #000; min-width: 0; flex: 1 1 150px; }
+.eco-flow li::before { content: counter(f); position: absolute; left: 10px; top: 9px; width: 16px; height: 16px; display: grid; place-items: center; font-size: 10px; font-weight: 800; color: #050605; background: var(--brand); }
+.eco-flow b { font-size: 12.5px; color: var(--brand); }
+.eco-flow span { font-size: 11.5px; color: var(--screen-muted); line-height: 1.4; }
+.eco-roles { display: flex; flex-wrap: wrap; gap: 6px; }
+.eco-roles span { padding: 5px 10px; font-size: 12px; border: 1px solid color-mix(in srgb, var(--brand) 55%, var(--edge)); background: color-mix(in srgb, var(--brand) 10%, transparent); }
+.eco-facts { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border: 1px solid var(--line); }
+.eco-facts > div { padding: 9px 12px; border-left: 1px solid var(--line); border-top: 1px solid var(--line); margin: -1px 0 0 -1px; min-width: 0; }
+.eco-facts dt { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.eco-facts dd { margin: 3px 0 0; font-size: 12.5px; font-weight: 600; overflow-wrap: anywhere; }
+.eco-involve ol { margin: 0; padding: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 6px; }
+.eco-involve li { counter-increment: s; position: relative; padding-left: 30px; font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+.eco-involve li::before { content: counter(s); position: absolute; left: 0; top: 1px; width: 20px; height: 20px; display: grid; place-items: center; font-size: 11px; font-weight: 700; background: var(--ink); color: var(--bg); }
+.eco-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 4px; }
+.eco-links .btn { text-decoration: none; display: inline-flex; align-items: center; gap: 7px; }
+.eco-links .btn svg { width: 14px; height: 14px; }
+.eco-links .eco-main { background: var(--brand); border-color: #000; color: #050605; }
+.eco-links .eco-main:hover { filter: brightness(1.08); }
+
+.eco-teaser { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.eco-tile { display: flex; flex-direction: column; text-decoration: none; color: inherit; background: var(--surface); border: 1px solid var(--edge); border-radius: var(--r); overflow: hidden; transition: transform .25s, box-shadow .25s; }
+.eco-tile:hover { transform: translateY(-4px); box-shadow: 0 14px 30px -16px var(--brand); }
+.eco-tile-art { position: relative; aspect-ratio: 16 / 10; display: grid; place-items: center; overflow: hidden; background: radial-gradient(circle at 70% 25%, color-mix(in srgb, var(--brand) 40%, transparent), transparent 60%), #070807; border-bottom: 1px solid #000; }
+.eco-tile-art b { font-family: var(--f-dot); font-weight: 900; font-size: 26px; color: var(--brand); text-align: center; padding: 0 12px; text-shadow: 0 0 18px color-mix(in srgb, var(--brand) 60%, transparent); }
+.eco-tile-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.eco-tile:hover .eco-tile-art img { transform: scale(1.06); }
+.eco-tile-t { display: flex; flex-direction: column; gap: 3px; padding: 12px 14px 4px; border-top: 3px solid var(--brand); }
+.eco-tile-t b { font-size: 15px; }
+.eco-tile-t span { font-size: 11.5px; color: var(--muted); }
+.eco-tile .datum { margin-top: auto; padding: 10px 14px 12px; display: flex; justify-content: space-between; gap: 8px; font-size: 11.5px; color: var(--ink-2); }
+.eco-tile .datum .go { color: var(--accent-ink); white-space: nowrap; }
+.eco-tile .arr { display: inline-block; transition: transform .25s; }
+.eco-tile:hover .arr { transform: translateX(4px); }
+#eco-s .indep { display: block; margin-top: 14px; }
+@media (max-width: 1100px) {
+  .eco-hero { grid-template-columns: minmax(0, 1fr); }
+  .eco-card, .eco-card.flip { grid-template-columns: minmax(0, 1fr); }
+  .eco-card.flip .eco-cover { order: 0; border-left: 0; }
+  .eco-cover { min-height: 300px; border-right: 0; border-bottom: 1px solid #000; }
+  .eco-teaser { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .eco-index { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .eco-body { padding: 18px 16px; }
+  .eco-cover { min-height: 230px; }
+  .eco-art b { font-size: 32px; }
+  .eco-dots { width: 150px; }
+  .eco-teaser { grid-template-columns: minmax(0, 1fr); }
+  .mainnet-strip { padding: 7px 16px; }
+  .mainnet-strip span { display: none; }
+}
+.hero-t .mn-badge { align-self: center; }
+.eco-tile .datum > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.eco-art-logo { position: absolute; left: 50%; top: 44%; width: min(52%, 230px); aspect-ratio: 1; transform: translate(-50%, -50%); object-fit: cover; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 20px 60px -20px var(--brand); }
+#eco-personality-md .eco-art-logo { border-radius: 50%; border: 0; }
+.eco-tile-logo { position: absolute; inset: 0; display: grid; place-items: center; }
+.eco-tile-logo img { position: static !important; width: 58% !important; height: auto !important; aspect-ratio: 1; object-fit: cover; }
+#eco-s .eco-tile:nth-child(2) .eco-tile-logo img { border-radius: 50%; }
+.eco-index a { position: relative; }
+.eco-ix-logo { position: absolute; right: 10px; top: 10px; width: 34px; height: 34px; object-fit: cover; border: 1px solid rgba(255,255,255,.15); }
+.eco-index a:nth-child(2) .eco-ix-logo { border-radius: 50%; border: 0; }
+.eco-logo[src*="personality"] { border-radius: 50%; }
+.eco-art-logo { z-index: 1; }
+.eco-cover .eco-img + .eco-layer ~ .eco-art-logo, .eco-cover .eco-img ~ .eco-art-logo { box-shadow: 0 24px 70px -10px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.08); }
+.eco-tile-logo { z-index: 1; }
+
 </style>
 </head>
 <body>
@@ -1298,6 +1550,8 @@ const ICON = {
   refresh: I('<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>'),
   info: I('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.2"/>'),
   ok: I('<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>'),
+  ecosystem: I('<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6h7M6 8.5v7M18 8.5v7M8.5 18h7"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/>'),
+  check: I('<path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>'),
   no: I('<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>'),
   github: I('<path d="M9 19c-4 1.5-4-2-6-2.5M15 21v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/>'),
   arrow: I('<path d="M5 12h14M13 6l6 6-6 6"/>'),
@@ -1310,6 +1564,9 @@ const ICON = {
 };
 const LOGO = `<svg viewBox="0 0 20 20" aria-hidden="true"><g fill="currentColor"><rect x="2" y="2" width="3" height="3"/><rect x="8.5" y="1" width="3" height="3"/><rect x="15" y="2" width="3" height="3"/><rect x="1" y="8.5" width="3" height="3"/><rect x="16" y="8.5" width="3" height="3"/><rect x="2" y="15" width="3" height="3"/><rect x="8.5" y="16" width="3" height="3"/><rect x="15" y="15" width="3" height="3"/></g><rect x="7" y="7" width="6" height="6" fill="#43E07D"/></svg>`;
 const brand = (href = '#home') => `<a class="brand" href="${href}" aria-label="IMD Tools home"><span class="glyph">${LOGO}</span><span class="word">IMD TOOLS</span></a>`;
+// IMD's mainnet launch, announced across the site.
+const MAINNET = { live: true, url: 'https://imd.fun' };
+const mainnetStrip = () => (MAINNET.live ? `<a class="mainnet-strip" href="${MAINNET.url}" target="_blank" rel="noopener"><i></i><b>IMD mainnet is live</b><span>The swarm is now running for real. Read more on imd.fun ↗</span></a>` : '');
 const TAGLINE = 'The user and interaction interface, and treasury, for the IMD ecosystem';
 const LINKS = { github: 'https://github.com/Imdtools/imdtools', x: 'https://x.com/imdtools' };
 const socialButtons = (cls = 'icon-btn') => `<a class="${cls}" href="${LINKS.github}" target="_blank" rel="noopener" aria-label="IMD Tools on GitHub" title="GitHub">${ICON.github}<span class="lbl">GitHub</span></a><a class="${cls}" href="${LINKS.x}" target="_blank" rel="noopener" aria-label="IMD Tools on X" title="X">${ICON.xlogo}<span class="lbl">X</span></a>`;
@@ -1381,6 +1638,7 @@ async function renderLanding(root) {
         <a href="#" data-scroll="tools" class="hide-s">Tools</a>
         <a href="#" data-scroll="token" class="hide-s">${esc(TICKER())}</a>
         <a href="#" data-scroll="treasury-s" class="hide-s">Treasury</a>
+        <a href="#" data-scroll="eco-s" class="hide-s">Ecosystem</a>
       </nav>
       <div class="right">
         <a class="ghbtn" href="${LINKS.github}" target="_blank" rel="noopener">${ICON.github}<span>GitHub</span></a>
@@ -1396,6 +1654,7 @@ async function renderLanding(root) {
         <section class="term" aria-label="IMD Tools terminal">
           <div class="status" id="term-status">${termStatus(L)}</div>
           <div class="hero-t">
+            ${MAINNET.live ? `<a class="mn-badge" href="${MAINNET.url}" target="_blank" rel="noopener"><i></i>IMD MAINNET IS LIVE</a>` : ''}
             <h1 class="pix">IMD TOOLS</h1>
             <div class="tag-l">interface · interaction · treasury for the IMD ecosystem</div>
             <div class="hero-btns"><a class="tbtn solid" href="#overview">Open app</a>${buyButton('tbtn')}</div>
@@ -1475,6 +1734,14 @@ async function renderLanding(root) {
       </div>
     </div></section>
 
+    <section class="section" id="eco-s" style="padding-top:0"><div class="wrap">
+      <div class="section-head rv">
+        <div><span class="sec-no">04 / Ecosystem</span><h2>Top ecosystem projects</h2></div>
+        <p>What the community is building on and around the IMD swarm. Open one to see what it does, how it works and how to get involved.</p>
+      </div>
+      ${ecoTeaser()}
+    </div></section>
+
     <footer class="site-foot"><div class="wrap in">
       <div style="display:flex;flex-direction:column;gap:12px;max-width:520px">
         ${brand('#home')}
@@ -1502,13 +1769,13 @@ async function renderLanding(root) {
 }
 
 async function landingData() {
-  const sw = await Data.get('/swarm', 10000).catch(() => SNAP.swarm);
+  const sw = await Data.get('/swarm', 25000).catch(() => SNAP.swarm);
   const h = sw.health || {}; const c = sw.counts || {};
   const [wf, la, orc, jobs, seats] = await Promise.all([
-    Data.get('/workflows?limit=40', 10000).catch(() => ({ workflows: [] })),
-    Data.get('/launches?limit=12', 10000).catch(() => ({ launches: [] })),
-    Data.get('/oracle/requests?limit=20', 10000).catch(() => ({ requests: [] })),
-    Data.get('/jobs?limit=40', 10000).catch(() => ({ jobs: [] })),
+    Data.get('/workflows?limit=40', 25000).catch(() => ({ workflows: [] })),
+    Data.get('/launches?limit=12', 25000).catch(() => ({ launches: [] })),
+    Data.get('/oracle/requests?limit=20', 25000).catch(() => ({ requests: [] })),
+    Data.get('/jobs?limit=40', 25000).catch(() => ({ jobs: [] })),
     getSeats().catch(() => []),
   ]);
   rememberOracle(orc.requests);
@@ -1565,10 +1832,11 @@ function landingMotion(root) {
 }
 // Keeps the terminal and readouts current while the landing page is open.
 function startLandingLive(root, firstLog) {
-  let seen = new Set(firstLog.map(logKey));
+  let seen = new Set(firstLog.map(logKey)); let tick = 0;
   const loop = setInterval(async () => {
     if (!document.body.contains(root.querySelector('#term-log'))) return clearInterval(loop);
-    if (document.hidden) return;
+    if (document.hidden || (typeof Activity !== 'undefined' && Activity.idle())) return;
+    tick++;
     try {
       const L = await landingData();
       const q = (sel) => root.querySelector(sel);
@@ -1577,10 +1845,10 @@ function startLandingLive(root, firstLog) {
       q('#term-foot').innerHTML = termFoot(L);
       q('#readouts').innerHTML = readoutsHtml(L);
       q('#term-log').innerHTML = L.log.map((e) => logLine(e, !seen.has(logKey(e)))).join('');
-      fillLandingTreasury(root);
+      if (tick % 2 === 0) fillLandingTreasury(root); // the treasury changes slowly: every minute is plenty
       seen = new Set(L.log.map(logKey));
     } catch (e) { console.warn('landing refresh', e); }
-  }, 12000);
+  }, 30000);
   const clock = setInterval(() => {
     const u = root.querySelector('#term-upd');
     if (!u) return clearInterval(clock);
@@ -2464,14 +2732,13 @@ async function openOracle(id) {
   } catch (e) { body.querySelector('#od').innerHTML = ''; }
 }
 
+const seatKpis = (s) => `${kpi('Accepted', fmt(s.accepted), `${pct(s.accepted || 0, s.attempts || 0)}% of ${fmt(s.attempts)} attempts`)}
+      ${kpi('Rejected / failed', `${fmt(s.rejected)} / ${fmt(s.failed)}`, `${fmt(s.pending)} pending`)}`;
 async function openSeat(id) {
   const seats = await getSeats().catch(() => []);
   const s = seats.find((x) => String(x.tokenId) === String(id)) || { tokenId: id };
   const body = openDrawer(`Seat #${id}`, `
-    <div class="grid g-2" style="gap:10px">
-      ${kpi('Accepted', fmt(s.accepted), `${pct(s.accepted || 0, s.attempts || 0)}% of ${fmt(s.attempts)} attempts`)}
-      ${kpi('Rejected / failed', `${fmt(s.rejected)} / ${fmt(s.failed)}`, `${fmt(s.pending)} pending`)}
-    </div>
+    <div class="grid g-2" style="gap:10px" id="sd-k">${seatKpis(s)}</div>
     <div id="sd">${Data.live || String(id) === '42' ? loading(4) : liveOnly}</div>`, s.agentId ? `Agent ${esc(s.agentId)}` : 'Seat');
   if (!Data.live && String(id) !== '42') return;
   // Each source is read on its own: the live status shows at once, and the seat's full record
@@ -2483,11 +2750,13 @@ async function openSeat(id) {
   const detail = persist((i) => Data.get(tries[i % tries.length]), 10, (e) => { if (cur[1] === 'loading' || cur[1]?.retrying) paint(cur[0], { retrying: true, status: e?.status, message: e?.message }); });
   let st = null; let stDone = !Data.live;
   const standing = Data.live ? persist(() => Data.get(`/seats/${id}/standing?queue=0`), 8) : Promise.reject(null);
-  const owners = await getOwners().catch(() => null);
+  const [owners, latest] = await Promise.all([getOwners().catch(() => null), latestWorker()]);
   let cur = [{}, 'loading'];
   const paint = (f, state) => {
     cur = [f, state];
     const box = body.querySelector('#sd'); if (!box) return;
+    // The seat's own record is fresher than IMD's network summary, so its totals win once loaded.
+    if (Number.isFinite(f.attempts)) { const k = body.querySelector('#sd-k'); if (k) k.innerHTML = seatKpis(f); }
     const p = st?.presence || {}; const sd = st?.standing || {};
     const owner = isAddr(f.owner) ? f.owner : owners?.ownerOf(id) || null;
     const online = f.online ?? p.connected;
@@ -2497,12 +2766,13 @@ async function openSeat(id) {
         <dt>Status</dt><dd>${online == null ? (stDone ? '<span class="pill">Unknown</span>' : '<span class="pill">Checking…</span>') : online ? '<span class="pill good">Online</span>' : '<span class="pill">Offline</span>'}${p.acceptingWork === false ? ' <span class="pill warn">Not taking work</span>' : ''}${sd.pausedUntil ? ` <span class="pill bad">Paused until ${esc(stamp(sd.pausedUntil))}</span>` : ''}${s.working ? ' <span class="pill accent live">Working</span>' : ''}</dd>
         ${isAddr(owner) ? `<dt>Owner</dt><dd><a href="#" data-wallet="${esc(owner)}" class="mono">${esc(short(owner, 8, 6))}</a>${isTreasury(owner) ? ' <span class="tag">Treasury</span>' : ''}</dd>` : ''}
         ${rt ? `<dt>Runs</dt><dd>${esc(rt)}</dd>` : ''}
-        ${f.daemonVersion || p.daemonVersion ? `<dt>Agent version</dt><dd class="mono">${esc(f.daemonVersion || p.daemonVersion)}</dd>` : ''}
+        ${f.daemonVersion || p.daemonVersion ? `<dt>Agent version</dt><dd><span class="mono">${esc(shortVer(p.daemonVersion || f.daemonVersion))}</span> ${isOlder(p.daemonVersion || f.daemonVersion, latest) ? `<span class="pill warn">Older · latest ${esc(shortVer(latest))}</span>` : latest ? '<span class="pill good">Latest</span>' : ''}</dd>` : ''}
         ${p.lastHeartbeatAt ? `<dt>Last heartbeat</dt><dd>${esc(ago(p.lastHeartbeatAt))}</dd>` : ''}
         ${s.last ? `<dt>Last work</dt><dd>${esc(ago(s.last))}</dd>` : ''}
         ${sd.consecutiveFailures ? `<dt>Failures in a row</dt><dd>${fmt(sd.consecutiveFailures)}</dd>` : ''}
         ${f.collaboratorJobs ? `<dt>Shared jobs</dt><dd>${fmt(f.collaboratorJobs)} with other seats</dd>` : ''}
       </dl>
+      ${isOlder(p.daemonVersion || f.daemonVersion, latest) ? `<div class="banner warn">${ICON.info}<div><p><b>This agent runs an older IMD worker.</b> It still takes work, but without the latest fixes.</p>${updateFix(true)}</div></div>` : ''}
       ${state?.retrying ? `<div class="banner">${ICON.info}<div>IMD is slow to return this seat's work history right now${state.status ? ` (${esc(state.status)})` : ''}. Retrying automatically, it fills in here as soon as IMD answers.</div></div>` : ''}
       ${state === 'loading' || state?.retrying ? `<div><div class="sub-h">Recent work</div>${'<div class="skeleton" style="margin-bottom:10px"></div>'.repeat(3)}</div>` : ''}
       ${state && state !== 'loading' && !state.retrying ? `<div class="banner">${ICON.info}<div>IMD isn't returning this seat's work history right now${state.status ? ` (${esc(state.status)})` : ''}. Everything above is current. <a href="#" data-open-seat="${esc(id)}">Try again</a></div></div>` : ''}
@@ -2512,6 +2782,121 @@ async function openSeat(id) {
   paint({}, 'loading');
   standing.then((v) => { st = v; }, () => {}).finally(() => { stDone = true; paint(...cur); });
   detail.then((f) => paint(f || {}, null), (e) => paint({}, e));
+}
+
+/* IMD Tools: shared network helpers. Latest worker release, per-seat records, update instructions. */
+'use strict';
+
+// The newest IMD worker release (e.g. 0.1.0+986b9f58), read by the relay from the worker repository.
+async function latestWorker() {
+  if (!Data.live) return null;
+  try { return (await Data.get('/worker/latest', 300000))?.daemonVersion || null; } catch { return null; }
+}
+const shortVer = (v) => String(v || '').replace(/^0\.1\.0\+/, '');
+const isOlder = (v, latest) => !!(v && latest && v !== latest);
+
+// Resolves to the value, or to `fallback` if it takes longer than `ms`. The request itself keeps going
+// and lands in the cache, so the next refresh has it.
+const within = (p, ms, fallback = null) => Promise.race([p, new Promise((r) => setTimeout(() => r(fallback), ms))]);
+// One seat's full record from IMD: totals, recent work and who it works with. Null when IMD is slow.
+async function seatRecord(id, work = 6) {
+  try { return await Data.get(`/seats/${id}?work=${work}&reviews=0`, 60000); } catch { return null; }
+}
+async function seatStanding(id, queue = false) {
+  try { return await Data.get(`/seats/${id}/standing${queue ? '' : '?queue=0'}`, 30000); } catch (e) { if (e?.status === 404) return { notFound: true }; return null; }
+}
+// Approval: accepted out of everything that has been decided (accepted + rejected).
+const approval = (acc, rej) => (acc + rej ? Math.round((acc / (acc + rej)) * 1000) / 10 : null);
+const teammates = (n) => (n ? `${fmt(n)}${n >= 200 ? '+' : ''}` : '—');
+
+// The fix for an agent on an older worker, with copyable commands.
+function updateFix(compact = false) {
+  return `<div class="fix${compact ? ' compact' : ''}">
+    <span class="fix-step"><i>1</i>On the agent's machine, run ${copyBtn('imd update')}</span>
+    <span class="fix-step"><i>2</i>Restart the agent: ${copyBtn('imd service restart')}</span>
+    ${compact ? '' : `<span class="fix-note">Several agents on one machine? Restart each one with its own folder, e.g. ${copyBtn('IDENTITYMD_HOME=~/.identitymd-2 imd service restart')}. Start with ${copyBtn('imd start --auto-update')} to stay current automatically.</span>`}
+  </div>`;
+}
+const WORKER_REPO = 'https://github.com/Identity-md/worker';
+
+/* ---------- check a seat ---------- */
+// One seat, one checklist: is it paired, registered, online, taking work and up to date, with the fix
+// for anything that isn't. Built for seat holders setting up or troubleshooting an agent.
+const FOUNDRY_CMD = 'curl -L https://foundry.paradigm.xyz | bash && foundryup';
+async function viewCheck(el, id) {
+  id = String(id ?? store.get('check') ?? '').trim().replace(/^#/, '');
+  el.innerHTML = `
+    ${head('Check a seat', 'Enter a seat number to see whether its agent is set up and earning: paired, registered, online, taking work and up to date. Anything that is off comes with the exact fix.')}
+    <form class="toolbar" id="check-form">
+      <div class="search" style="max-width:360px"><label class="sr" for="cs">Seat number</label>${ICON.seats}<input id="cs" type="text" inputmode="numeric" placeholder="Seat number, e.g. 461" value="${esc(id)}" autocomplete="off"></div>
+      <button class="btn" type="submit">Check</button>
+      ${hasTreasury() ? '<span class="chips"><span class="muted" style="font-size:13px;align-self:center">Try a treasury seat:</span>' + ['461', '690', '1061', '1016'].map((x) => `<button type="button" class="chip" data-ex="${x}">#${x}</button>`).join('') + '</span>' : ''}
+    </form>
+    <div id="check-out"></div>`;
+  el.querySelector('#check-form').addEventListener('submit', (e) => { e.preventDefault(); viewCheck(el, el.querySelector('#cs').value); });
+  el.querySelectorAll('[data-ex]').forEach((b) => b.addEventListener('click', () => viewCheck(el, b.dataset.ex)));
+  const out = el.querySelector('#check-out');
+  if (!id) { out.innerHTML = `<div class="panel"><div class="empty"><b>Enter a seat number to begin.</b><span>The number of your Identity.MD NFT. Your last check is remembered on this device only.</span></div></div>`; return; }
+  if (!/^\d{1,5}$/.test(id) || Number(id) < 1) { out.innerHTML = `<div class="panel"><div class="empty"><b>That isn't a seat number.</b><span>Use the number of the Identity.MD NFT, for example 461.</span></div></div>`; return; }
+  store.set('check', id);
+  if (!Data.live) { out.innerHTML = `<div class="panel"><div class="empty"><b>Seat checks run on the live site.</b><span>They read the seat's status from IMD as it is right now.</span></div></div>`; return; }
+  out.innerHTML = loading(5);
+  const [st, rec, latest, owners] = await Promise.all([seatStanding(id, true), seatRecord(id), latestWorker(), getOwners().catch(() => null)]);
+  if (!out.isConnected) return;
+  if (st === null) { out.innerHTML = `<div class="banner">${ICON.info}<div>IMD didn't answer for seat #${esc(id)} just now. <a href="#" id="check-again">Check again</a></div></div>`; out.querySelector('#check-again')?.addEventListener('click', (e) => { e.preventDefault(); viewCheck(el, id); }); return; }
+  out.innerHTML = checkReport(id, st.notFound ? {} : st, rec, latest, owners);
+  out.querySelector('#check-again')?.addEventListener('click', (e) => { e.preventDefault(); Data.refresh(); viewCheck(el, id); });
+}
+function checkReport(id, st, rec, latest, owners) {
+  const e = st.enrollment || {}, p = st.presence || {}, sd = st.standing || {}, c = st.contract || {}, q = st.queue || {};
+  const paired = e.status === 'active' || !!e.pairedAt;
+  const online = !!p.connected && !p.stale;
+  const paused = sd.pausedUntil && Date.parse(sd.pausedUntil) > Date.now();
+  const ver = p.daemonVersion || rec?.daemonVersion || null;
+  const reg = safeUrl(e.registerUrl);
+  const steps = [
+    { ok: paired, t: 'Paired with a worker', good: e.pairedAt ? `paired ${ago(e.pairedAt)}` : 'paired',
+      bad: 'No worker is paired with this seat yet.',
+      fix: `<span class="fix-step"><i>1</i>Install the IMD worker on a Linux VPS (or a computer that stays on), following ${extLink(WORKER_REPO + '#install', 'the install guide')}</span><span class="fix-step"><i>2</i>Start it: ${copyBtn('imd start --auto-update')} and pair it with the wallet that holds seat #${esc(id)}</span>` },
+    { ok: !!e.registered, t: 'Registered as an agent', good: e.agentId ? `agent ${e.agentId}` : 'registered on-chain',
+      bad: 'The seat is not registered as an agent yet, so it can\'t connect for work.',
+      fix: reg ? `<span class="fix-step"><i>1</i><a class="btn small" href="${esc(reg)}" target="_blank" rel="noopener">Register seat #${esc(id)} on IMD ↗</a></span><span class="fix-step"><i>2</i>Confirm the transaction with the wallet that holds the seat. The NFT stays in your wallet.</span>` : `<span class="fix-step"><i>1</i>Run ${copyBtn('imd start --auto-update')}; the first start shows the registration link.</span>`, dep: 0 },
+    { ok: online, t: 'Online', good: p.lastHeartbeatAt ? `checked in ${ago(p.lastHeartbeatAt)}` : 'connected',
+      bad: p.lastHeartbeatAt ? `Last seen ${ago(p.lastHeartbeatAt)}. The worker isn't connected right now.` : 'The worker isn\'t connected.',
+      fix: `<span class="fix-step"><i>1</i>On the agent's machine, check it: ${copyBtn('imd service status')}</span><span class="fix-step"><i>2</i>Start it again: ${copyBtn('imd service start')} (or ${copyBtn('imd start --auto-update')})</span>`, dep: 1 },
+    { ok: online && p.acceptingWork !== false && !paused, t: 'Taking work', good: (sd.running || []).length ? 'working on a job right now' : 'ready for the next job',
+      bad: paused ? `Paused until ${stamp(sd.pausedUntil)}${sd.pausedFor ? ` (${String(sd.pausedFor).replace(/_/g, ' ')})` : ''} after failed jobs.` : 'The worker is online but not taking work.',
+      fix: `<span class="fix-step"><i>1</i>See why in the agent's log: ${copyBtn('imd service logs -f')}</span><span class="fix-step"><i>2</i>${paused ? 'The pause lifts on its own. If jobs keep failing, run ' + copyBtn('imd doctor') : 'Run ' + copyBtn('imd doctor') + ' to see what it is waiting for'}</span>`, dep: 2 },
+    { ok: !!ver && !isOlder(ver, latest), t: 'Up to date', good: ver ? `worker ${shortVer(ver)}${latest ? ' · latest' : ''}` : '',
+      bad: ver ? `Runs worker ${shortVer(ver)}; the latest is ${shortVer(latest)}. It still works, without the latest fixes.` : 'Version unknown until the worker connects.',
+      fix: `<span class="fix-step"><i>1</i>On the agent's machine, run ${copyBtn('imd update')}</span><span class="fix-step"><i>2</i>Restart the agent: ${copyBtn('imd service restart')}</span>`, dep: 2 },
+    { ok: !!c.qualifies, opt: true, t: 'Contract & website jobs', good: 'qualifies for contract and website build jobs',
+      bad: (c.missing || []).length ? `Optional: also needs ${c.missing.join(', ')} for contract and website jobs.` : 'Optional: not set up for contract and website jobs.',
+      fix: (c.missing || []).includes('foundry') ? `<span class="fix-step"><i>1</i>Install Foundry on the agent's machine: ${copyBtn(FOUNDRY_CMD)}</span><span class="fix-step"><i>2</i>Restart the agent: ${copyBtn('imd service restart')}</span>` : `<span class="fix-step"><i>1</i>Run ${copyBtn('imd doctor')} to see what is missing.</span>`, dep: 1 },
+  ];
+  // A step that depends on an earlier failed one is shown as waiting, not as a separate problem.
+  steps.forEach((s, i) => { s.wait = !s.ok && s.dep != null && !steps[s.dep].ok; });
+  const issues = steps.filter((s) => !s.ok && !s.wait && !s.opt).length;
+  const owner = isAddr(rec?.owner) ? rec.owner : owners?.ownerOf(id) || null;
+  const ap = rec ? approval(rec.accepted || 0, rec.rejected || 0) : null;
+  const rt = (p.runtimes || rec?.runtimes || [])[0];
+  return `<div class="check">
+    <section class="panel check-head ${issues ? 'has-issues' : 'all-good'}">
+      <div class="ch-id"><img src="${IMD_API}/agents/by-token/${esc(id)}.svg" alt="" width="56" height="56" onerror="this.style.visibility='hidden'">
+        <div><b>IMD #${esc(id)}</b><span>${e.agentId || rec?.agentId ? `agent ${esc(e.agentId || rec.agentId)}` : 'no agent yet'}${owner ? ` · owner <a href="#" data-wallet="${esc(owner)}" class="mono">${esc(short(owner))}</a>${isTreasury(owner) ? ' <span class="tag">Treasury</span>' : ''}` : ''}</span></div></div>
+      <div class="ch-verdict"><span class="ch-led"></span><div><b>${issues ? `${issues} thing${issues === 1 ? '' : 's'} to fix` : 'All set'}</b><span>${issues ? 'Work through the steps below in order.' : (sd.running || []).length ? 'Online and working on a job right now.' : 'Online, up to date and ready for work.'}</span></div></div>
+      <div class="ch-stats">
+        <span><i>Accepted</i><b>${rec ? fmt(rec.accepted || 0) : '—'}</b></span><span><i>Approval</i><b>${ap == null ? '—' : ap + '%'}</b></span>
+        <span><i>Tasks it can take</i><b>${Number.isFinite(q.eligible) ? fmt(q.eligible) : '—'}</b></span><span><i>Model</i><b class="sm">${esc(rt?.premiumModel?.model || rt?.model || rt?.id || '—')}</b></span>
+      </div>
+    </section>
+    <ol class="steps-check">${steps.map((s, i) => `<li class="${s.ok ? 'ok' : s.wait ? 'wait' : s.opt ? 'opt' : 'bad'}">
+      <span class="sc-ico">${s.ok ? ICON.ok : s.wait ? ICON.info : s.opt ? ICON.info : ICON.no}</span>
+      <div class="sc-body"><div class="sc-t"><b>${String(i + 1).padStart(2, '0')} · ${s.t}</b><span>${esc(s.ok ? s.good : s.wait ? 'waits on the step above' : s.bad)}</span></div>
+      ${!s.ok && !s.wait ? `<div class="fix">${s.fix}</div>` : ''}</div></li>`).join('')}</ol>
+    ${(q.blocked || []).length ? `<div class="banner">${ICON.info}<div><b>Why some tasks pass this seat by:</b> ${q.blocked.map((b) => `${esc(b.reason)} (${fmt(b.nodes)})`).join(' · ')}</div></div>` : ''}
+    <div class="check-foot"><button type="button" class="btn small ghost" data-open-seat="${esc(id)}">Open seat #${esc(id)} →</button><a href="#" id="check-again" class="muted">Check again</a><span class="muted">Read from IMD just now. Commands run on the agent's machine.</span></div>
+  </div>`;
 }
 
 /* IMD Tools: $IMDT tokenomics and the treasury.
@@ -2595,13 +2980,13 @@ function treasuryFlow() {
     </div>
     <div class="tflow-loop"><span class="dot"></span>Repeats with every ${esc(TICKER())} trade</div>`;
 }
-// Where one trade's tax goes, drawn as 20 cells of 5%: one cell is the tax.
+// Where the trading tax goes: all of it, every cell, to the treasury for IMD seats.
 function taxSplit() {
-  const cells = 20, taxCells = Math.max(1, Math.round(CONFIG.taxPercent / (100 / cells)));
+  const cells = 20;
   return `<div class="split">
-    <div class="split-h"><span class="cap">Every ${esc(TICKER())} trade</span><span class="cap">100%</span></div>
-    <div class="split-bar" aria-hidden="true">${Array.from({ length: cells }, (_, i) => `<i class="${i >= cells - taxCells ? 'tax' : ''}" style="--i:${i}"></i>`).join('')}</div>
-    <div class="split-l"><span><i class="k"></i>${100 - CONFIG.taxPercent}% reaches the trader</span><span><i class="k tax"></i>${esc(CONFIG.taxPercent)}% to the treasury → IMD seats</span></div>
+    <div class="split-h"><span class="cap">The ${esc(CONFIG.taxPercent)}% trading tax</span><span class="cap">100% → IMD seats</span></div>
+    <div class="split-bar" aria-hidden="true">${Array.from({ length: cells }, (_, i) => `<i class="tax" style="--i:${i}"></i>`).join('')}</div>
+    <div class="split-l"><span><i class="k tax"></i>All ${esc(TICKER())} trading fees go to the treasury and are spent on IMD seats</span></div>
   </div>`;
 }
 function treasuryRow() {
@@ -2616,10 +3001,20 @@ async function treasuryModel() {
   const all = await getSeats().catch(() => []);
   const byId = new Map(all.map((s) => [String(s.tokenId), s]));
   const seats = (t.seats || []).map((id) => ({ ...(byId.get(String(id)) || { tokenId: String(id), attempts: 0, accepted: 0, rejected: 0, failed: 0, pending: 0 }) }));
-  // Live presence for each treasury seat: online, working, or offline right now.
-  await Promise.all(seats.map(async (s) => {
-    const st = await Data.get(`/seats/${s.tokenId}/standing?queue=0`, 15000).catch(() => null);
-    if (!st) return;
+  // Live presence and the full record for each treasury seat: online, working, what it is doing and how it scores.
+  const [latest] = await Promise.all([within(latestWorker(), 2000), ...seats.map(async (s) => {
+    const [st, rec] = await Promise.all([seatStanding(s.tokenId), within(seatRecord(s.tokenId), 2000)]);
+    if (rec && !rec.notFound) {
+      for (const k of ['attempts', 'accepted', 'rejected', 'failed', 'pending']) if (Number.isFinite(rec[k])) s[k] = rec[k];
+      s.agentId = s.agentId || rec.agentId || null;
+      s.work = (rec.work || []).map((w) => ({ ...w, tokenId: s.tokenId }));
+      s.team = (rec.collaborators || []).length;
+      s.version = rec.daemonVersion || null;
+      const times = s.work.map((w) => Date.parse(w.acceptedAt || w.submittedAt)).filter(Number.isFinite);
+      if (times.length) s.last = new Date(Math.max(...times)).toISOString();
+      s.recordKnown = true;
+    }
+    if (!st || st.notFound) return;
     const p = st.presence || {}, e = st.enrollment || {}, d = st.standing || {};
     s.agentId = s.agentId || e.agentId || null;
     s.registered = !!e.registered;
@@ -2627,9 +3022,13 @@ async function treasuryModel() {
     s.accepting = p.acceptingWork !== false;
     s.heartbeat = p.lastHeartbeatAt || null;
     s.runtime = (p.runtimes || [])[0]?.id || null;
-    s.liveWorking = (d.working || 0) > 0 || (d.running || []).length > 0;
+    s.model = (p.runtimes || [])[0]?.premiumModel?.model || null;
+    s.version = p.daemonVersion || s.version;
+    s.running = d.running || [];
+    s.liveWorking = (d.working || 0) > 0 || s.running.length > 0;
     s.presenceKnown = true;
-  }));
+  })]);
+  for (const s of seats) s.older = isOlder(s.version, latest);
   return { t, seats, earned };
 }
 // The vault: ETH as the headline, then seats, rewards and the token balance.
@@ -2670,13 +3069,15 @@ function seatState(s) {
 function seatCards(seats, slots) {
   const sorted = [...seats].sort((a, b) => Number(a.tokenId) - Number(b.tokenId));
   const card = (s, i) => {
-    const rate = pct(s.accepted, s.attempts); const [k, label, sub] = seatState(s);
+    const ap = approval(s.accepted || 0, s.rejected || 0); const [k, label, sub] = seatState(s);
     return `<button type="button" class="seat-card st-${k}" data-open-seat="${esc(s.tokenId)}" style="--i:${i}">
       <span class="sc-top"><span class="sc-av"><img src="${IMD_API}/agents/by-token/${esc(s.tokenId)}.svg" alt="" width="52" height="52" loading="lazy" onerror="this.style.visibility='hidden'"><i class="sc-dot"></i></span>
         <span class="sc-id"><b>IMD #${esc(s.tokenId)}</b><span>${s.agentId ? `agent ${esc(s.agentId)}` : 'no agent yet'}${s.runtime ? ` · ${esc(s.runtime)}` : ''}</span></span></span>
       <span class="sc-live"><span class="sc-state"><i></i>${label}</span><span class="sc-sub">${esc(sub)}${s.heartbeat && k !== 'offline' ? ` · checked in ${esc(ago(s.heartbeat))}` : ''}</span></span>
-      <span class="sc-stats"><span><i>Accepted</i><b>${fmt(s.accepted)}</b></span><span><i>Success</i><b>${s.attempts ? rate + '%' : '—'}</b></span><span><i>Failed</i><b>${fmt(s.failed)}</b></span></span>
-      <span class="sc-bar"><span style="width:${s.attempts ? rate : 0}%"></span></span>
+      <span class="sc-stats"><span><i>Accepted</i><b>${fmt(s.accepted)}</b></span><span><i>Approval</i><b>${ap == null ? '—' : ap + '%'}</b></span><span><i>Attempts</i><b>${fmt(s.attempts)}</b></span></span>
+      <span class="sc-bar"><span style="width:${ap ?? 0}%"></span></span>
+      <span class="sc-mini"><span>Rejected <b>${fmt(s.rejected || 0)}</b></span><span>Awaiting review <b>${fmt(s.pending || 0)}</b></span><span>Works with <b>${teammates(s.team)}</b></span></span>
+      ${s.older ? `<span class="sc-warn">${ICON.info}Older worker · update needed</span>` : ''}
       <span class="sc-foot"><span>${s.last ? `Last job ${esc(ago(s.last))}` : 'Waiting for its first job'}</span><span class="go">Open seat <span class="arr">→</span></span></span>
     </button>`;
   };
@@ -2714,7 +3115,36 @@ async function treasuryLive(limit) {
         <span class="links">${hasTreasury() ? extLink(`https://etherscan.io/token/${SEAT_COLLECTION}?a=${CONFIG.treasury}`, 'Seat purchases') : ''}${limit && m.seats.length > seats.length ? `<a href="#treasury">All ${fmt(m.seats.length)} seats →</a>` : limit ? '<a href="#treasury">Open the treasury →</a>' : ''}</span></div>
       ${seatCards(seats, slots)}
     </section>
+    ${updateBanner(m.seats)}
+    ${limit ? '' : treasuryActivity(m.seats)}
     ${limit ? '' : `<p class="muted" style="font-size:12px">Balances read from ${esc(CONFIG.chain)} · seats from the Identity.MD seat collection · updated ${esc(ago(m.t.at || Data.at))}</p>`}`;
+}
+
+// Treasury seats on an older worker: name them and show the fix.
+function updateBanner(seats) {
+  const old = seats.filter((s) => s.older);
+  if (!old.length) return '';
+  return `<div class="banner warn upd">${ICON.info}<div><p><b>${old.length === 1 ? `Seat #${esc(old[0].tokenId)} runs` : `${old.length} treasury seats run`} an older IMD worker</b>${old.length > 1 ? ` (${old.map((s) => '#' + esc(s.tokenId)).join(', ')})` : ''}. They still take work, but without the latest fixes.</p>${updateFix(true)}</div></div>`;
+}
+// What the treasury's agents are doing: the job each one is on right now, then their latest work.
+function treasuryActivity(seats) {
+  if (!seats.length) return '';
+  const now = seats.map((s) => {
+    const r = (s.running || [])[0]; const [k] = seatState(s);
+    return `<div class="act-now st-${k}"><span class="sc-dot"></span><span class="act-id">#${esc(s.tokenId)}</span>${r
+      ? `<a href="#" data-open-job="${esc(r.jobId)}" class="act-what">${esc(jobTitle({ id: r.jobId, objective: r.objective }))}</a><span class="act-t">${r.since ? `started ${esc(ago(r.since))}` : 'working'}</span>`
+      : `<span class="act-what muted">${k === 'offline' ? 'Offline' : 'Waiting for the next job'}</span><span class="act-t">${s.heartbeat && k !== 'offline' ? `checked in ${esc(ago(s.heartbeat))}` : ''}</span>`}</div>`;
+  }).join('');
+  const recent = seats.flatMap((s) => s.work || []).map((w) => ({ ...w, t: w.acceptedAt || w.submittedAt }))
+    .sort((a, b) => Date.parse(b.t || 0) - Date.parse(a.t || 0)).slice(0, 8);
+  const pill = (w) => statePill(w.status, { accepted: ['Accepted', 'good'], rejected: ['Rejected', 'bad'], pending: ['In review', 'info'], failed: ['Failed', 'bad'] });
+  return `<section class="panel act">
+    <div class="panel-head"><h2><span class="live-dot"></span>Live activity</h2><span class="muted" style="font-size:12px">What the treasury's agents are doing</span></div>
+    <div class="panel-body act-body">
+      <div><div class="sub-h">Right now</div><div class="act-list">${now}</div></div>
+      <div><div class="sub-h">Latest work</div>${recent.length ? `<div class="contracts">${recent.map((w) => `<a href="#" data-open-job="${esc(w.jobId)}"><span class="nm"><span class="act-seat">#${esc(w.tokenId)}</span><span>${esc(jobTitle({ id: w.jobId, objective: w.objective }))}</span></span><span class="act-r">${w.t ? `<span class="muted">${esc(ago(w.t))}</span>` : ''}${pill(w)}</span></a>`).join('')}</div>` : '<div class="empty"><b>No work yet.</b><span>Jobs appear here as the seats take them.</span></div>'}</div>
+    </div>
+  </section>`;
 }
 
 /* ---------- app pages ---------- */
@@ -2739,15 +3169,16 @@ async function viewTreasury(el) {
     </div>`;
 }
 
-/* IMD Tools: live agents. Every agent connected to IMD, its presence, version, model and track record.
-   Presence comes from IMD's /workers list, track record from /contributors, joined per device. */
+/* IMD Tools: live agents. Every agent connected to IMD, its presence, version, model and track record,
+   plus a network stats strip and a leaderboard of every seat's accepted work.
+   Presence comes from IMD's /workers list, track record from /contributors and /swarm, joined per seat. */
 'use strict';
 
-const AgentView = { filter: 'all', q: '', show: 100 };
+const AgentView = { tab: 'live', filter: 'all', q: '', show: 100, sort: 'accepted', lbShow: 50 };
 const HEARTBEAT_STALE_MS = 120000; // IMD's own presence window
 
 async function getAgents() {
-  const [w, c] = await Promise.all([Data.get('/workers', 10000), Data.get('/contributors', 30000).catch(() => ({ contributors: [] }))]);
+  const [w, c, latest] = await Promise.all([Data.get('/workers', 10000), Data.get('/contributors', 30000).catch(() => ({ contributors: [] })), within(latestWorker(), 2500)]);
   const byDev = new Map(); const bySeat = new Map();
   for (const x of c.contributors || []) { byDev.set(x.deviceKey, x); if (x.tokenId) bySeat.set(String(x.tokenId), x); }
   const now = Date.now();
@@ -2761,26 +3192,118 @@ async function getAgents() {
       stale: !(now - hb < HEARTBEAT_STALE_MS), version: x.daemonVersion || '', connectedAt: x.connectedAt, heartbeat: x.lastHeartbeatAt,
       model: rt.model || rt.premiumModel?.model || '', runtime: rt.id || '', wallet: isAddr(k.wallet) ? k.wallet.toLowerCase() : null,
       attempts: Number(k.attempts) || 0, accepted: Number(k.accepted) || 0, rejected: Number(k.rejected) || 0, turns: Number(k.turns) || 0,
-      workMs: Number(k.wallClockMs) || 0,
+      workMs: Number(k.wallClockMs) || 0, os: x.platform?.os || null,
     };
   });
-  // "Current" version: the one most connected agents run. Anything else is flagged as an older version.
+  // "Current" version: the latest worker release. If it can't be read, the one most connected agents run.
   const counts = new Map(); for (const a of list) if (a.version) counts.set(a.version, (counts.get(a.version) || 0) + 1);
-  const current = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || '';
+  const current = latest || [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || '';
   for (const a of list) a.outdated = !!current && !!a.version && a.version !== current;
-  return { list, current, count: w.count ?? list.length };
+  return { list, current, fromRelease: !!latest, count: w.count ?? list.length };
 }
 
 const agentStatus = (a) => (a.working ? '<span class="pill accent live">Working</span>'
   : a.paused ? '<span class="pill warn">Paused</span>'
   : a.stale ? '<span class="pill">Quiet</span>'
   : '<span class="pill good">Online</span>');
-const shortVersion = (v) => String(v || '').replace(/^0\.1\.0\+/, '');
+const shortVersion = shortVer;
 const hoursMs = (ms) => (ms >= 3600000 ? `${fmt(ms >= 36000000 ? Math.round(ms / 3600000) : Math.round(ms / 360000) / 10)} h` : ms >= 60000 ? `${Math.round(ms / 60000)} min` : '—');
+const AGENTS_INTRO = 'Every AI agent connected to IMD right now: whether it is working, which version and model it runs, and how its work goes.';
 
+/* ---------- network stats strip ---------- */
+async function networkStats(list) {
+  const sw = await Data.get('/swarm', 15000).catch(() => null);
+  const h = sw?.health || {};
+  // IMD reports the network's queue of ready tasks with any seat's standing; one online seat is enough.
+  const probe = list.find((a) => a.tokenId && !a.stale)?.tokenId;
+  const q = probe ? (await within(seatStanding(probe, true), 2500))?.queue : null;
+  const withOs = list.filter((a) => a.os); const linux = withOs.filter((a) => a.os === 'linux').length;
+  const models = new Map(); for (const a of list) if (a.model) models.set(a.model, (models.get(a.model) || 0) + 1);
+  const mTotal = [...models.values()].reduce((x, y) => x + y, 0);
+  const top = [...models.entries()].sort((a, b) => b[1] - a[1]);
+  const shown = top.slice(0, 3); const rest = mTotal - shown.reduce((x, [, n]) => x + n, 0);
+  const versioned = list.filter((a) => a.version); const onLatest = versioned.filter((a) => !a.outdated).length;
+  const cell = (label, val, sub) => `<div class="ns-cell"><span class="cap">${label}</span><b>${val}</b><span class="ns-sub">${sub}</span></div>`;
+  return `<section class="netstrip" aria-label="Network stats">
+    ${cell('Tasks waiting', Number.isFinite(q?.ready) ? fmt(q.ready) : '—', 'ready for an agent to pick up')}
+    ${cell('Accepted · 24h', Number.isFinite(h.acceptedLastDay) ? compact(h.acceptedLastDay) : '—', 'pieces of work that passed review')}
+    ${cell('Run on servers', withOs.length ? `${pct(linux, withOs.length)}%` : '—', withOs.length ? `${fmt(linux)} of ${fmt(withOs.length)} on Linux` : 'operating system not reported')}
+    ${cell('On the latest worker', versioned.length ? `${pct(onLatest, versioned.length)}%` : '—', `${fmt(onLatest)} agents up to date`)}
+    <div class="ns-cell ns-models"><span class="cap">AI models in use</span>
+      ${mTotal ? `<span class="ns-bar" aria-hidden="true">${shown.map(([, n], i) => `<i class="m${i}" style="width:${(n / mTotal) * 100}%"></i>`).join('')}${rest > 0 ? `<i class="m3" style="width:${(rest / mTotal) * 100}%"></i>` : ''}</span>
+      <span class="ns-legend">${shown.map(([m, n], i) => `<span><i class="m${i}"></i>${esc(m)} <b>${pct(n, mTotal)}%</b></span>`).join('')}${rest > 0 ? `<span><i class="m3"></i>other <b>${pct(rest, mTotal)}%</b></span>` : ''}</span>` : '<b>—</b>'}
+    </div>
+  </section>`;
+}
+
+/* ---------- leaderboard ---------- */
+async function getLeaderboard() {
+  const [seats, owners, t] = await Promise.all([getSeats().catch(() => []), getOwners().catch(() => null), getTreasury().catch(() => null)]);
+  const ours = new Set((t?.seats || []).map(String));
+  const map = new Map(seats.map((s) => [String(s.tokenId), { ...s, tokenId: String(s.tokenId) }]));
+  // Treasury seats are read in full, so they are ranked on their latest numbers even if IMD's summary lags.
+  await Promise.all([...ours].map(async (id) => {
+    const r = await within(seatRecord(id), 2500); if (!r) return;
+    const s = map.get(id) || { tokenId: id };
+    for (const k of ['attempts', 'accepted', 'rejected', 'failed', 'pending']) if (Number.isFinite(r[k])) s[k] = Math.max(Number(s[k]) || 0, r[k]);
+    s.agentId = s.agentId || r.agentId; map.set(id, s);
+  }));
+  const rows = [...map.values()].filter((s) => (s.attempts || 0) > 0).map((s) => ({
+    ...s, accepted: s.accepted || 0, rejected: s.rejected || 0, attempts: s.attempts || 0,
+    ap: approval(s.accepted || 0, s.rejected || 0), ours: ours.has(s.tokenId), owner: owners?.ownerOf(s.tokenId) || null,
+  }));
+  return { rows, ours };
+}
+function rankRows(rows, sort) {
+  const by = {
+    accepted: (a, b) => b.accepted - a.accepted || (b.ap ?? 0) - (a.ap ?? 0),
+    approval: (a, b) => (b.ap ?? -1) - (a.ap ?? -1) || b.accepted - a.accepted,
+    attempts: (a, b) => b.attempts - a.attempts || b.accepted - a.accepted,
+  }[sort] || ((a, b) => b.accepted - a.accepted);
+  // Approval rankings only count seats with enough reviewed work to mean something.
+  const pool = sort === 'approval' ? rows.filter((r) => r.accepted + r.rejected >= 20) : rows;
+  return [...pool].sort(by).map((r, i) => ({ ...r, rank: i + 1 }));
+}
+async function leaderboardHtml() {
+  const { rows } = await getLeaderboard();
+  const ranked = rankRows(rows, AgentView.sort);
+  const q = AgentView.q.trim().toLowerCase().replace(/^#/, '');
+  const match = (r) => !q || r.tokenId === q || String(r.agentId || '') === q || (r.owner && r.owner.startsWith(q));
+  const list = ranked.filter(match); const shown = list.slice(0, AgentView.lbShow);
+  const ours = ranked.filter((r) => r.ours);
+  const avatar = (id, sz) => `<img src="${IMD_API}/agents/by-token/${esc(id)}.svg" alt="" width="${sz}" height="${sz}" loading="lazy" onerror="this.style.visibility='hidden'">`;
+  const podium = !q ? ranked.slice(0, 3).map((r, i) => `<button type="button" class="pod p${i + 1}${r.ours ? ' ours' : ''}" data-open-seat="${esc(r.tokenId)}">
+      <span class="pod-rank">${i + 1}</span>${avatar(r.tokenId, 44)}<span class="pod-id"><b>IMD #${esc(r.tokenId)}</b><span>agent ${esc(r.agentId || '—')}</span></span>
+      <span class="pod-n"><b>${fmt(r.accepted)}</b><span>accepted · ${r.ap == null ? '—' : r.ap + '%'} approval</span></span></button>`).join('') : '';
+  const s = (k, l) => `<button type="button" data-lbs="${k}" aria-pressed="${AgentView.sort === k}">${l}</button>`;
+  return `
+    <div class="toolbar agents-bar">
+      <div class="seg seg-3" role="group" aria-label="Rank by">${s('accepted', 'Accepted')}${s('approval', 'Approval')}${s('attempts', 'Attempts')}</div>
+      ${ours.length ? `<div class="lb-ours"><span class="cap">Treasury seats</span>${ours.map((r) => `<button type="button" class="chip" data-open-seat="${esc(r.tokenId)}">#${esc(r.tokenId)}<span class="n">rank ${fmt(r.rank)}</span></button>`).join('')}</div>` : ''}
+    </div>
+    ${podium ? `<div class="podium">${podium}</div>` : ''}
+    <section class="panel"><div class="table-wrap"><table class="lb">
+      <thead><tr><th class="r">Rank</th><th>Agent</th><th class="r">Accepted</th><th>Approval</th><th class="r">Attempts</th><th class="r">Rejected</th><th>Last work</th><th>Owner</th></tr></thead>
+      <tbody>${shown.map((r) => `<tr data-open-seat="${esc(r.tokenId)}" tabindex="0" class="${r.ours ? 'ours' : ''}">
+        <td class="r num"><b>${fmt(r.rank)}</b></td>
+        <td><span class="agent-id">${avatar(r.tokenId, 28)}<span><span class="t">IMD #${esc(r.tokenId)}${r.ours ? ' <span class="tag">Treasury</span>' : ''}</span><span class="s">agent ${esc(r.agentId || '—')}</span></span></span></td>
+        <td class="r num"><b>${fmt(r.accepted)}</b></td>
+        <td>${r.ap == null ? '<span class="muted">—</span>' : `<div class="rate"><span class="bar"><span style="width:${r.ap}%"></span></span><span class="num" style="font-size:12px">${r.ap}%</span></div>`}</td>
+        <td class="r num muted">${fmt(r.attempts)}</td>
+        <td class="r num ${r.rejected ? '' : 'muted'}">${fmt(r.rejected)}</td>
+        <td class="muted" style="white-space:nowrap">${r.last ? esc(ago(r.last)) : '—'}</td>
+        <td>${r.owner ? `<a href="#" data-wallet="${esc(r.owner)}" class="mono muted">${esc(short(r.owner))}</a>` : '<span class="muted">—</span>'}</td>
+      </tr>`).join('')}</tbody></table></div>
+      ${list.length ? '' : `<div class="empty"><b>No seats match${q ? ` "${esc(AgentView.q)}"` : ''}.</b></div>`}
+      ${list.length > shown.length ? `<div class="panel-body" style="text-align:center"><button type="button" class="btn small ghost" id="lb-more">Show more · ${fmt(list.length - shown.length)} left</button></div>` : ''}
+    </section>
+    <p class="muted" style="font-size:12px">Ranked on every seat's all-time work from IMD. Approval is accepted work out of everything reviewed${AgentView.sort === 'approval' ? '; ranking by approval only includes seats with at least 20 reviewed pieces of work' : ''}. Click a row to open the seat.</p>`;
+}
+
+/* ---------- page ---------- */
 async function viewAgents(el) {
   if (!Data.live) {
-    el.innerHTML = `${head('Agents', 'Every AI agent connected to IMD right now: whether it is working, which version and model it runs, and how its work goes.')}
+    el.innerHTML = `${head('Agents', AGENTS_INTRO)}
       <div class="panel"><div class="empty"><b>Live agent status loads on the live site.</b><span>Agent presence changes every few seconds, so this page only shows live data.</span></div></div>`;
     return;
   }
@@ -2788,47 +3311,174 @@ async function viewAgents(el) {
   try { d = await getAgents(); } catch (e) { el.innerHTML = `${head('Agents', '')}${errorBox(e)}`; return; }
   const { list, current } = d;
   const n = { all: list.length, online: list.filter((a) => !a.stale).length, working: list.filter((a) => a.working).length, outdated: list.filter((a) => a.outdated).length };
-  const q = AgentView.q.trim().toLowerCase().replace(/^#/, '');
-  const match = (a) => !q || (a.tokenId && a.tokenId === q) || (a.agentId && a.agentId === q) || (a.wallet && a.wallet.startsWith(q)) || (q.length > 2 && a.model.toLowerCase().includes(q));
-  const pass = { all: () => true, online: (a) => !a.stale, working: (a) => a.working, outdated: (a) => a.outdated }[AgentView.filter] || (() => true);
-  const rows = list.filter((a) => pass(a) && match(a)).sort((a, b) => (b.working - a.working) || (b.accepted - a.accepted));
-  const shown = rows.slice(0, AgentView.show);
-  const f = (k, l) => `<button type="button" data-af="${k}" aria-pressed="${AgentView.filter === k}">${l} <span class="muted">${fmt(n[k])}</span></button>`;
-
-  el.innerHTML = `
-    ${head('Agents', 'Every AI agent connected to IMD right now: whether it is working, which version and model it runs, and how its work goes.')}
+  const strip = await networkStats(list).catch(() => '');
+  const tabs = `<div class="tabs" role="tablist">${[['live', 'Live agents'], ['board', 'Leaderboard']].map(([k, l]) => `<button type="button" role="tab" data-atab="${k}" aria-selected="${AgentView.tab === k}">${l}</button>`).join('')}</div>`;
+  const top = `
+    ${head('Agents', AGENTS_INTRO)}
     <div class="grid g-4">
       ${kpi('Agents connected', fmt(n.all), 'one per enrolled seat', true)}
       ${kpi('Online', fmt(n.online), `heartbeat in the last ${HEARTBEAT_STALE_MS / 60000} min`)}
       ${kpi('Working now', fmt(n.working), 'on a task at this moment')}
-      ${kpi('Older version', fmt(n.outdated), current ? `current <span class="mono">${esc(shortVersion(current))}</span>` : 'running an older agent')}
+      ${kpi('Older version', fmt(n.outdated), current ? `latest <span class="mono">${esc(shortVersion(current))}</span>` : 'running an older agent')}
     </div>
-    <div class="toolbar agents-bar">
-      <div class="seg seg-4" role="group" aria-label="Filter agents">${f('all', 'All')}${f('online', 'Online')}${f('working', 'Working')}${f('outdated', 'Older')}</div>
-      <form class="search" id="agent-search" role="search"><label class="sr" for="aq">Find an agent</label>${ICON.search}<input id="aq" type="search" placeholder="Seat, agent id, wallet or model" value="${esc(AgentView.q)}"></form>
-    </div>
-    <section class="panel"><div class="table-wrap"><table>
-      <thead><tr><th>Agent</th><th>Status</th><th class="r">Accepted</th><th>Success</th><th class="r">Turns</th><th class="r">Time working</th><th>Version</th><th>Connected</th><th>Model</th><th>Wallet</th></tr></thead>
-      <tbody>${shown.map((a) => `<tr ${a.tokenId ? `data-open-seat="${esc(a.tokenId)}" tabindex="0"` : ''}>
-        <td><span class="agent-id">${a.tokenId ? `<img src="${IMD_API}/agents/by-token/${esc(a.tokenId)}.svg" alt="" width="28" height="28" loading="lazy" onerror="this.style.visibility='hidden'">` : ''}<span><span class="t">IMD #${esc(a.tokenId || '—')}</span><span class="s">agent ${esc(a.agentId || '—')}</span></span></span></td>
-        <td>${agentStatus(a)}</td>
-        <td class="r num"><b>${fmt(a.accepted)}</b></td>
-        <td>${a.attempts ? `<div class="rate"><span class="bar"><span style="width:${pct(a.accepted, a.attempts)}%"></span></span><span class="num" style="font-size:12px">${pct(a.accepted, a.attempts)}%</span></div>` : '<span class="muted">new</span>'}</td>
-        <td class="r num">${a.turns ? compact(a.turns) : '—'}</td>
-        <td class="r num muted">${hoursMs(a.workMs)}</td>
-        <td><span class="mono" style="font-size:12px">${esc(shortVersion(a.version) || '—')}</span>${a.outdated ? ' <span class="tag">older</span>' : ''}</td>
-        <td class="muted" style="white-space:nowrap">${a.connectedAt ? esc(dur(a.connectedAt, new Date().toISOString())) : '—'}</td>
-        <td class="muted" style="white-space:nowrap">${esc(a.model || a.runtime || '—')}</td>
-        <td>${a.wallet ? `<a href="#" data-wallet="${esc(a.wallet)}" class="mono muted">${esc(short(a.wallet))}</a>${isTreasury(a.wallet) ? ' <span class="tag">Treasury</span>' : ''}` : '<span class="muted">—</span>'}</td>
-      </tr>`).join('')}</tbody></table></div>
-      ${rows.length ? '' : `<div class="empty"><b>No agents match${q ? ` "${esc(AgentView.q)}"` : ''}.</b></div>`}
-      ${rows.length > shown.length ? `<div class="panel-body" style="text-align:center"><button type="button" class="btn small ghost" id="a-more">Show more · ${fmt(rows.length - shown.length)} left</button></div>` : ''}
-    </section>
-    <p class="muted" style="font-size:12px">Presence from IMD's list of connected agents, track record from its per-agent totals. Time working is how long each agent has spent on accepted and attempted work. Updated every 20 seconds.</p>`;
+    ${strip}
+    ${tabs}`;
 
+  if (AgentView.tab === 'board') {
+    let board;
+    try { board = await leaderboardHtml(); } catch (e) { board = errorBox(e); }
+    el.innerHTML = `${top}
+      <form class="search lb-search" id="agent-search" role="search"><label class="sr" for="aq">Find a seat</label>${ICON.search}<input id="aq" type="search" placeholder="Seat number, agent id or owner wallet" value="${esc(AgentView.q)}"></form>
+      ${board}`;
+  } else {
+    const q = AgentView.q.trim().toLowerCase().replace(/^#/, '');
+    const match = (a) => !q || (a.tokenId && a.tokenId === q) || (a.agentId && a.agentId === q) || (a.wallet && a.wallet.startsWith(q)) || (q.length > 2 && a.model.toLowerCase().includes(q));
+    const pass = { all: () => true, online: (a) => !a.stale, working: (a) => a.working, outdated: (a) => a.outdated }[AgentView.filter] || (() => true);
+    const rows = list.filter((a) => pass(a) && match(a)).sort((a, b) => (b.working - a.working) || (b.accepted - a.accepted));
+    const shown = rows.slice(0, AgentView.show);
+    const f = (k, l) => `<button type="button" data-af="${k}" aria-pressed="${AgentView.filter === k}">${l} <span class="muted">${fmt(n[k])}</span></button>`;
+    const upd = n.outdated && (AgentView.filter === 'outdated' || n.outdated / Math.max(1, n.all) > 0.02)
+      ? `<div class="banner warn">${ICON.info}<div><p><b>${fmt(n.outdated)} agent${n.outdated === 1 ? ' runs' : 's run'} an older IMD worker</b> than the latest release <span class="mono">${esc(shortVersion(current))}</span>. They still take work, but without the latest fixes. Running one of them?</p>${updateFix()}</div></div>` : '';
+    el.innerHTML = `${top}
+      ${upd}
+      <div class="toolbar agents-bar">
+        <div class="seg seg-4" role="group" aria-label="Filter agents">${f('all', 'All')}${f('online', 'Online')}${f('working', 'Working')}${f('outdated', 'Older')}</div>
+        <form class="search" id="agent-search" role="search"><label class="sr" for="aq">Find an agent</label>${ICON.search}<input id="aq" type="search" placeholder="Seat, agent id, wallet or model" value="${esc(AgentView.q)}"></form>
+      </div>
+      <section class="panel"><div class="table-wrap"><table>
+        <thead><tr><th>Agent</th><th>Status</th><th class="r">Accepted</th><th>Success</th><th class="r">Turns</th><th class="r">Time working</th><th>Version</th><th>Connected</th><th>Model</th><th>Wallet</th></tr></thead>
+        <tbody>${shown.map((a) => `<tr ${a.tokenId ? `data-open-seat="${esc(a.tokenId)}" tabindex="0"` : ''}>
+          <td><span class="agent-id">${a.tokenId ? `<img src="${IMD_API}/agents/by-token/${esc(a.tokenId)}.svg" alt="" width="28" height="28" loading="lazy" onerror="this.style.visibility='hidden'">` : ''}<span><span class="t">IMD #${esc(a.tokenId || '—')}</span><span class="s">agent ${esc(a.agentId || '—')}</span></span></span></td>
+          <td>${agentStatus(a)}</td>
+          <td class="r num"><b>${fmt(a.accepted)}</b></td>
+          <td>${a.attempts ? `<div class="rate"><span class="bar"><span style="width:${pct(a.accepted, a.attempts)}%"></span></span><span class="num" style="font-size:12px">${pct(a.accepted, a.attempts)}%</span></div>` : '<span class="muted">new</span>'}</td>
+          <td class="r num">${a.turns ? compact(a.turns) : '—'}</td>
+          <td class="r num muted">${hoursMs(a.workMs)}</td>
+          <td><span class="mono" style="font-size:12px">${esc(shortVersion(a.version) || '—')}</span>${a.outdated ? ' <span class="tag warn" title="Update with: imd update, then restart the agent">update</span>' : ''}</td>
+          <td class="muted" style="white-space:nowrap">${a.connectedAt ? esc(dur(a.connectedAt, new Date().toISOString())) : '—'}</td>
+          <td class="muted" style="white-space:nowrap">${esc(a.model || a.runtime || '—')}</td>
+          <td>${a.wallet ? `<a href="#" data-wallet="${esc(a.wallet)}" class="mono muted">${esc(short(a.wallet))}</a>${isTreasury(a.wallet) ? ' <span class="tag">Treasury</span>' : ''}` : '<span class="muted">—</span>'}</td>
+        </tr>`).join('')}</tbody></table></div>
+        ${rows.length ? '' : `<div class="empty"><b>No agents match${q ? ` "${esc(AgentView.q)}"` : ''}.</b></div>`}
+        ${rows.length > shown.length ? `<div class="panel-body" style="text-align:center"><button type="button" class="btn small ghost" id="a-more">Show more · ${fmt(rows.length - shown.length)} left</button></div>` : ''}
+      </section>
+      <p class="muted" style="font-size:12px">Presence from IMD's list of connected agents, track record from its per-agent totals. ${d.fromRelease ? 'Versions are compared with the latest IMD worker release.' : 'Versions are compared with the one most agents run.'} Updated every 20 seconds.</p>`;
+  }
+
+  el.querySelectorAll('[data-atab]').forEach((b) => b.addEventListener('click', () => { AgentView.tab = b.dataset.atab; AgentView.q = ''; viewAgents(el); }));
   el.querySelectorAll('[data-af]').forEach((b) => b.addEventListener('click', () => { AgentView.filter = b.dataset.af; AgentView.show = 100; viewAgents(el); }));
-  el.querySelector('#agent-search').addEventListener('submit', (e) => { e.preventDefault(); AgentView.q = el.querySelector('#aq').value; AgentView.show = 100; viewAgents(el); });
+  el.querySelectorAll('[data-lbs]').forEach((b) => b.addEventListener('click', () => { AgentView.sort = b.dataset.lbs; AgentView.lbShow = 50; viewAgents(el); }));
+  el.querySelector('#agent-search')?.addEventListener('submit', (e) => { e.preventDefault(); AgentView.q = el.querySelector('#aq').value; AgentView.show = 100; AgentView.lbShow = 50; viewAgents(el); });
   el.querySelector('#a-more')?.addEventListener('click', () => { AgentView.show += 200; viewAgents(el); });
+  el.querySelector('#lb-more')?.addEventListener('click', () => { AgentView.lbShow += 100; viewAgents(el); });
+}
+
+/* IMD Tools: top ecosystem projects. Independent projects built on or around the IMD swarm, each with what
+   it does, how it works, how to get involved and its links. A directory for discovery, not endorsements. */
+'use strict';
+
+const ECO_DISCLAIMER = 'These are not endorsements. They are independent community projects, listed so people can find what is being built around IMD. IMD Tools is not affiliated with them, has not audited them and does not vouch for them. Do your own research before you buy anything, connect a wallet or sign a transaction. Nothing here is financial advice.';
+
+const ECO = [
+  {
+    id: 'identity-units', name: 'Identity Units', short: 'IU', brand: '#E8E8E2', brand2: '#9A9A92',
+    tag: 'NFT collection · made by the swarm', quote: 'The swarm creates the unit.',
+    what: '787 unique NFTs, each one created by an IMD agent and checked by another agent before it counts. Trading fees from its $UNIT token, paid in IMD, fund new jobs inside the swarm, so the collection keeps being made by the network itself.',
+    how: [['Fees', 'from $UNIT trades, paid in IMD'], ['Swarm wallet', 'collects them'], ['Jobs', 'are funded'], ['Create', 'one agent makes a piece'], ['Review', 'another agent checks it'], ['Unit', 'accepted work becomes an Identity Unit']],
+    facts: [['Collection', '787 unique units'], ['Token', '$UNIT, paired with IMD'], ['Contract', 'to be announced'], ['Made by', 'IMD agents, peer reviewed']],
+    involve: ['Enter the swarm on the site and watch new units being made and reviewed.', 'Browse the units, and claim one when claiming opens.', 'Follow @IdentityUnits for the $UNIT contract once it is announced.'],
+    links: [['Website', 'https://identityunits.fun/', true], ['X', 'https://x.com/IdentityUnits']],
+    img: 'https://identityunits.fun/room/plate.jpg', layer: 'https://identityunits.fun/room/foreground.png', logo: 'eco/identityunits-logo.jpg',
+  },
+  {
+    id: 'personality-md', name: 'personality.md', short: 'P.md', brand: '#5B8CFF', brand2: '#2A4C9E',
+    tag: 'AI virtual influencers · an app on IMD', quote: 'Virtual influencers designed through a real IMD request layer.',
+    what: 'An app for creating AI virtual influencers. Instead of one model doing everything, every part of a personality is a separate IMD job, handled by agents that each specialise in one role.',
+    how: [['Describe', 'build a personality from a structured brief'], ['Validate', 'the brief becomes IMD jobs'], ['Approve', 'review outputs, permissions and payment'], ['Operate', 'specialised agents run the personality']],
+    roles: ['Identity Architect', 'Visual Director', 'Content Room', 'Policy Guard', 'Growth Analyst'],
+    facts: [['Runs on', 'IMD jobs, one per role'], ['Agent roles', '5 specialists'], ['Start in', 'the Creator Studio']],
+    involve: ['Open the Creator Studio and write a brief for a personality.', 'Browse the personalities that are already running.', 'Read the docs and follow @PersonalityETH for new releases.'],
+    links: [['Website', 'https://www.pmdeth.fun/', true], ['Creator Studio', 'https://www.pmdeth.fun/create.html'], ['Personalities', 'https://www.pmdeth.fun/personalities.html'], ['Docs', 'https://www.pmdeth.fun/docs.html'], ['X', 'https://x.com/PersonalityETH']],
+    img: 'https://www.pmdeth.fun/imd-assets/wall-blue.png', logo: 'eco/personality-logo.jpg',
+  },
+  {
+    id: 'pepes-family', name: 'Pepes Family', short: 'PF', brand: '#6CC24A', brand2: '#2F7A1F',
+    tag: 'Launchpad · NFTs · game on Robinhood Chain', quote: 'Launchpad on Robinhood.',
+    what: 'A token launchpad on Robinhood Chain, built on Uniswap v4. Every launch is paired with ETH or IMD, its liquidity is locked forever, and part of every trade goes to the token\'s holders. Its Pepes Earn IMD collection puts 2,000 on-chain Pepes in wallets, and their holders earn IMD.',
+    how: [['Launch', 'a token paired with ETH or IMD'], ['Locked', 'liquidity can never be removed'], ['4% fee', 'on every trade'], ['3% to holders', '1% to the protocol'], ['Claim', 'holders claim their rewards']],
+    facts: [['Chain', 'Robinhood Chain (4663)'], ['Trading fee', '4%: 3% to holders, 1% protocol'], ['NFTs', 'Pepes Earn IMD, 2,000 on-chain Pepes'], ['Audits', 'by the IMD swarm']],
+    involve: ['Launch a token, or trade one, on the site.', 'Hold a token to earn a share of its trading fees, then claim them.', 'Collect a Pepes Earn IMD NFT: every whole $EARN token is one Pepe.', 'Play Pepes World: walk a tiny Pepe planet delivering letters, with your NFT as your character.'],
+    links: [['Website', 'https://www.pepesfamily.fun/#/', true], ['X', 'https://x.com/Pepesdotfamily'], ['Pepes World', 'https://www.pepesfamily.fun/world/'], ['GitHub', 'https://github.com/0xtenang/PepesFamily']],
+    img: 'eco/pepes-earn.jpg', logo: 'eco/pepes-icon.png', local: true, caption: 'Pepes Earn IMD · drawn by the on-chain contract',
+  },
+  {
+    id: 'pepe2pepe', name: 'Pepe2Pepe', short: 'P2P', brand: '#8FE3C8', brand2: '#A98BEA',
+    tag: 'Peer-to-peer markets · settled by the IMD Oracle', quote: 'Take the other side.',
+    what: 'Peer-to-peer YES or NO markets. You back a side, and your stake is matched with people backing the other side. When the market closes, the IMD Oracle settles the outcome and the matched winners collect.',
+    how: [['Pick', 'a market'], ['Back', 'YES or NO'], ['Match', 'first come, first matched'], ['Unmatched', 'backing can be claimed back'], ['Settle', 'the IMD Oracle decides, winners claim']],
+    facts: [['Settled by', 'the IMD Oracle'], ['Matching', 'in the order backing arrives'], ['Fees', 'apply']],
+    involve: ['Browse the open markets on pepe2pepe.fun.', 'Back the side you believe in, or create a market of your own.', 'Claim back any backing that wasn\'t matched; matched stakes wait for the result.'],
+    links: [['Website', 'https://pepe2pepe.fun/', true]],
+    img: 'eco/pepe2pepe.jpg', local: true,
+  },
+];
+
+function ecoCover(p, i) {
+  // A designed cover is always drawn; the project's own image goes on top and simply disappears if it can't load.
+  const dots = Array.from({ length: 60 }, (_, k) => `<i style="--d:${(k * 37) % 23}"></i>`).join('');
+  return `<div class="eco-cover ${p.local ? 'has-local' : ''}" aria-hidden="true">
+    <div class="eco-art"><div class="eco-dots">${dots}</div><b>${esc(p.name)}</b><span>${esc(p.tag)}</span></div>
+    ${p.img ? `<img class="eco-img" src="${esc(p.img)}" alt="" loading="${i ? 'lazy' : 'eager'}" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}
+    ${p.layer ? `<img class="eco-layer" src="${esc(p.layer)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}
+    ${p.logo && !p.local ? `<img class="eco-art-logo" src="${esc(p.logo)}" alt="">` : ''}
+    ${p.caption ? `<span class="eco-cap">${esc(p.caption)}</span>` : ''}
+    <span class="eco-no">${String(i + 1).padStart(2, '0')}</span>
+  </div>`;
+}
+function ecoCard(p, i) {
+  const ext = (label, url, main) => `<a class="btn small${main ? ' eco-main' : ' ghost'}" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${label === 'X' ? ICON.xlogo : label === 'GitHub' ? ICON.github : ''}${esc(label === 'X' ? 'Follow on X' : label)} ↗</a>`;
+  return `<article class="eco-card rv${i % 2 ? ' flip' : ''}" id="eco-${p.id}" style="--brand:${p.brand};--brand2:${p.brand2};--i:${i}">
+    ${ecoCover(p, i)}
+    <div class="eco-body">
+      <div class="eco-top">${p.logo ? `<img class="eco-logo" src="${esc(p.logo)}" alt="" width="44" height="44">` : `<span class="eco-logo txt">${esc(p.short)}</span>`}
+        <div><span class="cap">${esc(p.tag)}</span><h2>${esc(p.name)}</h2></div></div>
+      <blockquote class="eco-quote">“${esc(p.quote)}”</blockquote>
+      <p class="eco-what">${esc(p.what)}</p>
+      <div><div class="sub-h">How it works</div><ol class="eco-flow">${p.how.map(([t, d], k) => `<li style="--k:${k}"><b>${esc(t)}</b><span>${esc(d)}</span></li>`).join('')}</ol></div>
+      ${p.roles ? `<div><div class="sub-h">The agents behind each personality</div><div class="eco-roles">${p.roles.map((r) => `<span>${esc(r)}</span>`).join('')}</div></div>` : ''}
+      <dl class="eco-facts">${p.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+      <div class="eco-involve"><div class="sub-h">How to get involved</div><ol>${p.involve.map((s) => `<li>${esc(s)}</li>`).join('')}</ol></div>
+      <div class="eco-links">${p.links.map(([l, u, m]) => ext(l, u, m)).join('')}</div>
+    </div>
+  </article>`;
+}
+async function viewEcosystem(el) {
+  el.innerHTML = `
+    <div class="eco-hero">
+      <div><span class="cap">The IMD ecosystem</span><h1>Top ecosystem projects</h1>
+        <p>Projects the community is building on and around the IMD swarm: what each one does, how it works and how to get involved.</p></div>
+      <nav class="eco-index" aria-label="Projects">${ECO.map((p, i) => `<a href="#" data-eco="${p.id}" style="--brand:${p.brand}">${p.logo ? `<img class="eco-ix-logo" src="${esc(p.logo)}" alt="" width="34" height="34">` : ''}<i>${String(i + 1).padStart(2, '0')}</i><b>${esc(p.name)}</b><span>${esc(p.tag.split(' · ')[0])}</span></a>`).join('')}</nav>
+    </div>
+    <div class="banner warn eco-note">${ICON.info}<div><p><b>Not endorsements.</b> ${esc(ECO_DISCLAIMER.replace('These are not endorsements. ', ''))}</p></div></div>
+    <div class="eco-list">${ECO.map(ecoCard).join('')}</div>
+    <p class="muted" style="font-size:12px">Descriptions are summarised from each project's own website and public code. Images belong to their projects. Building something on IMD? Tell us on X at <a href="${LINKS.x}" target="_blank" rel="noopener">@imdtools</a>.</p>`;
+  el.querySelectorAll('[data-eco]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); document.getElementById('eco-' + a.dataset.eco)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }));
+  ecoReveal(el);
+}
+function ecoReveal(root) {
+  const els = [...root.querySelectorAll('.eco-card.rv')];
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { els.forEach((e) => e.classList.add('shown')); return; }
+  const io = new IntersectionObserver((ents) => ents.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('shown'); io.unobserve(en.target); } }), { rootMargin: '0px 0px 15% 0px' });
+  els.forEach((e) => io.observe(e));
+}
+// The landing page teaser: four tiles that open the full page.
+function ecoTeaser() {
+  return `<div class="eco-teaser">${ECO.map((p, i) => `<a class="eco-tile rv" href="#ecosystem" style="--brand:${p.brand};--brand2:${p.brand2};--i:${i}">
+      <span class="eco-tile-art">${p.local ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : `<img class="hot" src="${esc(p.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">${p.logo ? `<span class="eco-tile-logo"><img src="${esc(p.logo)}" alt=""></span>` : `<b>${esc(p.name)}</b>`}`}</span>
+      <span class="eco-tile-t"><b>${esc(p.name)}</b><span>${esc(p.tag)}</span></span>
+      <span class="datum"><span>${esc(p.quote)}</span><span class="go">open <span class="arr">→</span></span></span>
+    </a>`).join('')}</div>
+    <span class="indep rv">Not endorsements · independent community projects · do your own research</span>`;
 }
 
 /* IMD Tools: request builder. Mirrors the rules in IMD's docs so a request is right before it's sent. */
@@ -3065,16 +3715,16 @@ async function viewBuild(el) {
 'use strict';
 
 const NAV = [
-  ['Network', [['overview', 'Overview'], ['agents', 'Agents'], ['tasks', 'Tasks'], ['releases', 'Releases'], ['launches', 'Launches'], ['showcase', 'Showcase'], ['oracle', 'Oracle']]],
-  ['Seats', [['seats', 'Seats'], ['holders', 'Holders'], ['wallet', 'My wallet']]],
+  ['Network', [['overview', 'Overview'], ['ecosystem', 'Ecosystem'], ['agents', 'Agents'], ['tasks', 'Tasks'], ['releases', 'Releases'], ['launches', 'Launches'], ['showcase', 'Showcase'], ['oracle', 'Oracle']]],
+  ['Seats', [['seats', 'Seats'], ['check', 'Check a seat'], ['holders', 'Holders'], ['wallet', 'My wallet']]],
   ['$IMDT', [['tokenomics', 'Tokenomics'], ['treasury', 'Treasury']]],
   ['Create', [['build', 'Launch']]],
 ];
 const VIEWS = {
-  overview: viewOverview, agents: viewAgents, tasks: viewTasks, releases: viewReleases, launches: viewLaunches, showcase: viewShowcase,
-  oracle: viewOracle, seats: viewSeats, holders: viewHolders, wallet: viewWallet, build: viewBuild, treasury: viewTreasury, tokenomics: viewTokenomics,
+  overview: viewOverview, ecosystem: viewEcosystem, agents: viewAgents, tasks: viewTasks, releases: viewReleases, launches: viewLaunches, showcase: viewShowcase,
+  oracle: viewOracle, seats: viewSeats, check: viewCheck, holders: viewHolders, wallet: viewWallet, build: viewBuild, treasury: viewTreasury, tokenomics: viewTokenomics,
 };
-const TITLES = Object.fromEntries(NAV.flatMap(([, items]) => items));
+const TITLES = { ...Object.fromEntries(NAV.flatMap(([, items]) => items)), ecosystem: 'Top ecosystem projects' };
 
 function shell(route) {
   return `<div class="app">
@@ -3084,6 +3734,7 @@ function shell(route) {
       <div class="foot"><span>${TAGLINE}.</span><span>Independent, community-built. Data from IMD's public API.</span><div class="social">${socialButtons('sbtn')}</div></div>
     </aside>
     <div class="main">
+      ${mainnetStrip()}
       <header class="topbar">
         <div class="left"><span class="mobile-brand">${brand('#home')}</span><span class="source">${sourceChip()}${Data.live ? `<span class="muted" id="upd">updated ${esc(ago(Data.at))}</span>` : ''}</span></div>
         <div class="right">
@@ -3103,7 +3754,7 @@ let renderSeq = 0;
 async function route() {
   const seq = ++renderSeq;
   closeDrawer();
-  const r = (location.hash || '#home').slice(1) || 'home';
+  const [r, arg] = ((location.hash || '#home').slice(1) || 'home').split('/');
   const root = document.getElementById('root');
   document.title = r === 'home' ? 'IMD Tools' : `${TITLES[r] || 'IMD Tools'} · IMD Tools`;
   window.scrollTo(0, 0);
@@ -3117,7 +3768,7 @@ async function route() {
   const page = root.querySelector('#page');
   lastRun[r] = Date.now();
   try {
-    await VIEWS[r](page);
+    await (arg ? VIEWS[r](page, decodeURIComponent(arg)) : VIEWS[r](page));
   } catch (e) {
     console.error(e);
     if (seq === renderSeq) page.innerHTML = errorBox(e);
@@ -3147,7 +3798,13 @@ document.addEventListener('click', (e) => { if (e.target.closest('[data-retry]')
 
 // ---------- continuous updates ----------
 // Every page re-reads IMD on its own cadence and redraws in place, keeping filters, scroll and open panels.
-const CADENCE = { agents: 20, treasury: 30, overview: 15, tasks: 15, releases: 20, launches: 30, showcase: 60, oracle: 20, seats: 20, holders: 120 };
+const CADENCE = { agents: 45, treasury: 60, overview: 30, tasks: 30, releases: 45, launches: 60, showcase: 120, oracle: 45, seats: 60, holders: 300 };
+// Live updates pause while nobody is using the page (no scroll, click, key or touch for 3 minutes)
+// and resume on the next interaction, so a forgotten tab doesn't keep calling the server.
+const Activity = { last: Date.now(), idle() { return Date.now() - this.last > 180000; } };
+for (const ev of ['pointerdown', 'pointermove', 'keydown', 'scroll', 'touchstart', 'wheel']) {
+  window.addEventListener(ev, () => { const was = Activity.idle(); Activity.last = Date.now(); if (was) refreshView(); }, { passive: true });
+}
 let refreshing = false;
 async function refreshView(force = false) {
   const r = (location.hash || '#home').slice(1) || 'home';
@@ -3168,7 +3825,7 @@ async function refreshView(force = false) {
 }
 const lastRun = {};
 setInterval(() => {
-  if (document.hidden) return;
+  if (document.hidden || Activity.idle()) return;
   const r = (location.hash || '#home').slice(1) || 'home';
   const every = (CADENCE[r] || 0) * 1000;
   if (!every) return;

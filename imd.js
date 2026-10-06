@@ -26,7 +26,7 @@ async function cachedUpstream(key, url, ttlSec) {
   return entry;
 }
 const NO_CDN = 'no-store, max-age=0';
-const EDGE = 'public, max-age=0, s-maxage=5, stale-while-revalidate=20';
+const EDGE = 'public, max-age=0, s-maxage=20, stale-while-revalidate=120';
 // IMD's own edge keeps stale copies (and sometimes stored errors) of a few plain addresses.
 // Adding a parameter that changes every 5 seconds makes IMD compute them fresh.
 const FRESH = new Set(['swarm', 'seats/owners', 'seats/records', 'health', 'workers', 'contributors']);
@@ -75,9 +75,23 @@ function slimWorkers(text) {
       runtimes: (w.runtimes || []).map((r) => ({ id: r.id, version: r.version, model: r.premiumModel?.model })),
       skills: Array.isArray(w.skills) ? w.skills.length : null, maxConcurrency: w.maxConcurrency,
       connectedAt: w.connectedAt, lastHeartbeatAt: w.lastHeartbeatAt,
+      platform: w.platform ? { os: w.platform.os || null, arch: w.platform.arch || null } : null,
     }));
     return JSON.stringify({ count: b.count ?? workers.length, at: Date.now(), workers });
   } catch { return text; }
+}
+// The newest IMD worker release, read from the worker repository's build record. Agents running
+// anything else are on an older version.
+let releaseCache = null; // { t, body }
+async function latestWorker() {
+  if (releaseCache && Date.now() - releaseCache.t < 300e3) return releaseCache.body;
+  const r = await upstream('https://raw.githubusercontent.com/Identity-md/worker/main/build.json', { headers: { Accept: 'text/plain' } });
+  if (!r.ok) { if (releaseCache) return releaseCache.body; throw new Error(`github_${r.status}`); }
+  const b = JSON.parse(await r.text());
+  if (typeof b.daemonVersion !== 'string') throw new Error('no_version');
+  const body = { daemonVersion: b.daemonVersion, version: b.version || null, commit: b.sourceCommit || null, checkedAt: new Date().toISOString() };
+  releaseCache = { t: Date.now(), body };
+  return body;
 }
 const ADDR = /^0x[0-9a-f]{40}$/;
 const SEATS = '0x0000ec93127baa929e58e97dd0095a2bfb38ec1d'; // IMD seat NFT collection (Ethereum mainnet)
@@ -141,12 +155,18 @@ export default async function handler(req, res) {
       res.setHeader('Cache-Control', 'no-store');
       return res.status(200).json({ relay: 'ok', imdStatus: r.status, ms: Date.now() - started, error: r.error || null });
     }
+    if (req.method === 'GET' && path === 'worker/latest') {
+      const body = await latestWorker();
+      res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=120, stale-while-revalidate=600');
+      return res.status(200).json(body);
+    }
     if (req.method === 'GET' && path === 'treasury') {
       const address = String(req.query.address || '').toLowerCase();
       const token = String(req.query.token || '').toLowerCase();
       if (!ADDR.test(address) || (token && !ADDR.test(token))) return res.status(400).json({ error: 'invalid_address' });
       const body = await treasury(address, token || null);
-      res.setHeader('Cache-Control', NO_CDN);
+      // Balances and seats change slowly; one read per half minute is shared by every visitor.
+      res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=30, stale-while-revalidate=120');
       return res.status(200).json(body);
     }
     if (req.method === 'GET' && path === 'seats/owners') {
