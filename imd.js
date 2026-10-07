@@ -142,6 +142,38 @@ async function treasury(address, token) {
   };
 }
 
+// Every Identity.MD seat that moved into or out of the treasury wallet, with date and ETH paid, read from
+// the seat contract's Transfer events. Cached for a few minutes; seats are bought rarely.
+const TRANSFER = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+let historyCache = null; // { addr, t, body }
+async function treasuryHistory(address) {
+  if (historyCache && historyCache.addr === address && Date.now() - historyCache.t < 300e3) return historyCache.body;
+  const latest = Number(BigInt(await rpc('eth_blockNumber', [])));
+  const from = Math.max(0, latest - 7200 * 60); // ~60 days of blocks
+  const topic = '0x' + address.slice(2).padStart(64, '0');
+  const range = (f, t) => ({ address: SEATS, fromBlock: '0x' + f.toString(16), toBlock: '0x' + t.toString(16) });
+  const [inLogs, outLogs] = await Promise.all([
+    rpc('eth_getLogs', [{ ...range(from, latest), topics: [TRANSFER, null, topic] }]),
+    rpc('eth_getLogs', [{ ...range(from, latest), topics: [TRANSFER, topic, null] }]),
+  ]);
+  const logs = [...(inLogs || []).map((l) => ({ ...l, dir: 'in' })), ...(outLogs || []).map((l) => ({ ...l, dir: 'out' }))];
+  const blocks = new Map(); const txs = new Map();
+  await Promise.all([...new Set(logs.map((l) => l.blockNumber))].map(async (b) => { const bl = await rpc('eth_getBlockByNumber', [b, false]).catch(() => null); if (bl) blocks.set(b, Number(BigInt(bl.timestamp)) * 1000); }));
+  await Promise.all([...new Set(logs.map((l) => l.transactionHash))].map(async (h) => { const tx = await rpc('eth_getTransactionByHash', [h]).catch(() => null); if (tx) txs.set(h, tx); }));
+  const perTx = new Map(); for (const l of logs) perTx.set(l.transactionHash, (perTx.get(l.transactionHash) || 0) + 1);
+  const events = logs.map((l) => {
+    const tx = txs.get(l.transactionHash);
+    return {
+      dir: l.dir, tokenId: String(BigInt(l.topics[3])), tx: l.transactionHash, block: Number(BigInt(l.blockNumber)),
+      at: blocks.has(l.blockNumber) ? new Date(blocks.get(l.blockNumber)).toISOString() : null,
+      ethWei: tx && tx.from && tx.from.toLowerCase() === address && tx.value && BigInt(tx.value) > 0n ? (BigInt(tx.value) / BigInt(perTx.get(l.transactionHash))).toString() : null,
+    };
+  }).sort((a, b) => b.block - a.block);
+  const body = { address, fromBlock: from, toBlock: latest, events, at: new Date().toISOString() };
+  historyCache = { addr: address, t: Date.now(), body };
+  return body;
+}
+
 export default async function handler(req, res) {
   const path = String(req.query.path || '').replace(/^\/+|\/+$/g, '');
   const params = new URLSearchParams();
@@ -157,6 +189,13 @@ export default async function handler(req, res) {
     }
     if (req.method === 'GET' && path === 'worker/latest') {
       const body = await latestWorker();
+      res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=120, stale-while-revalidate=600');
+      return res.status(200).json(body);
+    }
+    if (req.method === 'GET' && path === 'treasury/history') {
+      const address = String(req.query.address || '').toLowerCase();
+      if (!ADDR.test(address)) return res.status(400).json({ error: 'invalid_address' });
+      const body = await treasuryHistory(address);
       res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=120, stale-while-revalidate=600');
       return res.status(200).json(body);
     }

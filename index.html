@@ -1193,6 +1193,59 @@ table.lb tr.ours td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
 .eco-card.flip .eco-cover { border-left: 1px solid #000; }
 @media (max-width: 1100px) { .eco-card .eco-cover { position: relative; top: 0; } }
 
+/* ---------- v1.5: treasury history, holder calculator, share card, run-an-agent guide ---------- */
+.tr-extra { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 14px; align-items: start; }
+#tr-hist .panel { margin: 0; }
+.th-sum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid #000; background: var(--screen); color: var(--screen-ink); margin-bottom: 14px; }
+.th-sum > div { display: flex; flex-direction: column; gap: 3px; padding: 12px 14px; border-left: 1px solid var(--screen-line); }
+.th-sum > div:first-child { border-left: 0; }
+.th-sum .cap { color: var(--screen-muted); font-size: 10px; }
+.th-sum b { font-family: var(--f-dot); font-weight: 900; font-size: 26px; color: var(--phosphor); line-height: 1.05; }
+.th-sum .muted { color: var(--screen-muted); font-size: 11px; }
+.th-list { list-style: none; margin: 0; padding: 0 0 0 4px; position: relative; display: flex; flex-direction: column; }
+.th-list::before { content: ""; position: absolute; left: 9px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+.th-row { display: grid; grid-template-columns: 20px 150px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 9px 0; font-size: 13px; animation: cardin .4s ease both; animation-delay: calc(var(--i) * 50ms); }
+.th-dot { width: 12px; height: 12px; background: var(--good); box-shadow: 0 0 8px var(--good); position: relative; z-index: 1; }
+.th-row.out .th-dot { background: var(--signal); box-shadow: 0 0 8px var(--signal); }
+.th-when { color: var(--muted); font-size: 12px; }
+.th-what { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; min-width: 0; }
+.th-what a { color: var(--accent-ink); }
+.th-eth { font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.calc-in { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.calc-in .search { max-width: none; }
+.calc-in .search input { font-size: 18px; font-weight: 700; }
+.calc-out { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border: 1px solid #000; background: var(--screen); color: var(--screen-ink); margin-bottom: 10px; position: relative; }
+.calc-cell { display: flex; flex-direction: column; gap: 3px; padding: 12px; border-left: 1px solid var(--screen-line); min-width: 0; }
+.calc-cell:first-child { border-left: 0; }
+.calc-cell .cap { color: var(--screen-muted); font-size: 10px; }
+.calc-cell b { font-family: var(--f-dot); font-weight: 900; font-size: 24px; color: var(--phosphor); line-height: 1.05; overflow-wrap: anywhere; }
+.calc-cell span:last-child { font-size: 11px; color: #9FB3A5; }
+.calc-bar { grid-column: 1 / -1; height: 6px; background: var(--screen-line); }
+.calc-bar i { display: block; height: 100%; background: var(--phosphor); box-shadow: 0 0 8px var(--phosphor); transition: width .3s; }
+#share-card { display: inline-flex; align-items: center; gap: 6px; }
+#share-card svg { width: 14px; height: 14px; }
+.run-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+.run-need ul { margin: 8px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; color: var(--ink-2); }
+.run-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.run-step { display: flex; gap: 16px; padding: 18px; background: var(--surface); border: 1px solid var(--edge); border-radius: var(--r); }
+.run-n { flex: none; width: 46px; height: 46px; display: grid; place-items: center; font-family: var(--f-dot); font-weight: 900; font-size: 22px; background: var(--screen); color: var(--phosphor); border: 1px solid #000; }
+.run-step h3 { font-size: 16px; margin-bottom: 6px; }
+.run-step p { font-size: 13.5px; color: var(--ink-2); margin: 0 0 8px; }
+.run-step a { color: var(--accent-ink); }
+.run-cmd { margin: 6px 0; }
+.run-cmd .copy { display: flex; width: 100%; justify-content: space-between; gap: 10px; padding: 10px 12px; background: var(--screen); color: var(--phosphor); border: 1px solid #000; font-size: 12.5px; text-align: left; overflow-wrap: anywhere; }
+.run-cmd .copy svg { flex: none; color: var(--screen-ink); }
+@media (max-width: 1100px) { .tr-extra, .run-top { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) {
+  .calc-out, .th-sum { grid-template-columns: minmax(0, 1fr); }
+  .calc-cell, .th-sum > div { border-left: 0; border-top: 1px solid var(--screen-line); }
+  .calc-cell:first-child, .th-sum > div:first-child { border-top: 0; }
+  .th-row { grid-template-columns: 20px minmax(0, 1fr); }
+  .th-when { grid-column: 2; } .th-what, .th-row .links { grid-column: 2; }
+}
+.page p a svg, .run-step a svg, .page .muted a svg { width: 13px; height: 13px; vertical-align: -2px; margin-right: 4px; display: inline-block; }
+.run-cmd .copy { width: 100% !important; box-sizing: border-box; }
+
 </style>
 </head>
 <body>
@@ -1563,6 +1616,7 @@ const ICON = {
   info: I('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.2"/>'),
   ok: I('<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>'),
   ecosystem: I('<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6h7M6 8.5v7M18 8.5v7M8.5 18h7"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/>'),
+  run: I('<rect x="3" y="4" width="18" height="14" rx="2"/><path d="m7 9 3 3-3 3M12 15h5"/>'),
   check: I('<path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>'),
   no: I('<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>'),
   github: I('<path d="M9 19c-4 1.5-4-2-6-2.5M15 21v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/>'),
@@ -2911,6 +2965,136 @@ function checkReport(id, st, rec, latest, owners) {
   </div>`;
 }
 
+/* IMD Tools: treasury history, holder calculator, shareable stats card and the "Run an agent" guide. */
+'use strict';
+
+/* ---------- treasury history: every seat in and out of the treasury, read from the chain ---------- */
+async function getTreasuryHistory() {
+  if (!hasTreasury() || !Data.live) return null;
+  try { return await Data.get(`/treasury/history?address=${CONFIG.treasury.toLowerCase()}`, 300000); } catch { return null; }
+}
+function treasuryHistoryHtml(h) {
+  if (!h) return '';
+  const ev = h.events || [];
+  const bought = ev.filter((e) => e.dir === 'in');
+  const spent = bought.reduce((a, e) => a + (e.ethWei ? Number(tokenAmount(e.ethWei, 18)) : 0), 0);
+  const priced = bought.filter((e) => e.ethWei).length;
+  const row = (e, i) => `<li class="th-row ${e.dir}" style="--i:${i}">
+      <span class="th-dot"></span>
+      <span class="th-when">${e.at ? esc(stamp(e.at)) : `block ${fmt(e.block)}`}</span>
+      <span class="th-what"><b>${e.dir === 'in' ? 'Bought' : 'Sent out'} seat <a href="#" data-open-seat="${esc(e.tokenId)}">#${esc(e.tokenId)}</a></b>${e.ethWei ? `<span class="th-eth">${Number(tokenAmount(e.ethWei, 18)).toFixed(3)} ETH</span>` : ''}</span>
+      <span class="links">${extLink(`https://etherscan.io/tx/${e.tx}`, 'Transaction')}</span>
+    </li>`;
+  return `<section class="panel th">
+    <div class="panel-head"><h2>Treasury history</h2><span class="muted" style="font-size:12px">Every seat the treasury bought, read from Ethereum</span></div>
+    <div class="panel-body">
+      <div class="th-sum">
+        <div><span class="cap">Seats bought</span><b>${fmt(bought.length)}</b></div>
+        <div><span class="cap">ETH spent on seats</span><b>${priced ? spent.toFixed(3) : '—'}</b>${priced && priced < bought.length ? `<span class="muted">for ${priced} of ${bought.length} seats</span>` : ''}</div>
+        <div><span class="cap">Average per seat</span><b>${priced ? (spent / priced).toFixed(3) : '—'}</b></div>
+      </div>
+      ${ev.length ? `<ol class="th-list">${ev.map(row).join('')}</ol>` : '<div class="empty"><b>No seat purchases found yet.</b><span>They appear here as soon as the treasury buys one.</span></div>'}
+      <p class="muted" style="font-size:12px;margin-top:10px">ETH is the amount the treasury sent with each purchase. Purchases paid another way (for example in WETH) show without a price.</p>
+    </div>
+  </section>`;
+}
+
+/* ---------- holder calculator ---------- */
+function holderCalc(m) {
+  const seats = m?.seats?.length || 0;
+  const acc = (m?.seats || []).reduce((a, s) => a + (Number(s.accepted) || 0), 0);
+  return `<section class="panel calc" data-seats="${seats}" data-acc="${acc}">
+    <div class="panel-head"><h2>Holder calculator</h2><span class="muted" style="font-size:12px">What your ${esc(TICKER())} represents</span></div>
+    <div class="panel-body">
+      <form class="calc-in" onsubmit="return false"><label for="calc-amt" class="cap">Your ${esc(TICKER())}</label>
+        <div class="search"><input id="calc-amt" type="text" inputmode="decimal" placeholder="e.g. 5,000,000" autocomplete="off"></div>
+        <div class="chips">${[1e6, 5e6, 1e7, 2.5e7].map((v) => `<button type="button" class="chip" data-amt="${v}">${compact(v)}</button>`).join('')}</div>
+      </form>
+      <div class="calc-out" id="calc-out">${calcOut(0, seats, acc)}</div>
+      <p class="muted" style="font-size:12px">A proportional view of the treasury, for illustration. It is not a claim on any seat or payout, and not financial advice.</p>
+    </div>
+  </section>`;
+}
+function calcOut(amt, seats, acc) {
+  const share = amt > 0 ? amt / CONFIG.totalSupply : 0;
+  const pctStr = share ? (share * 100 < 0.01 ? '<0.01' : (share * 100).toFixed(share * 100 < 1 ? 3 : 2)) + '%' : '—';
+  const cells = [
+    ['Share of supply', pctStr, `of ${compact(CONFIG.totalSupply)} ${esc(TICKER())}`],
+    ['Share of the seats', share ? (seats * share).toFixed(4) : '—', `of the treasury's ${fmt(seats)} seat${seats === 1 ? '' : 's'}`],
+    ['Share of the work', share ? (acc * share).toFixed(2) : '—', `of ${fmt(acc)} accepted jobs so far`],
+  ];
+  return cells.map(([l, v, s]) => `<div class="calc-cell"><span class="cap">${l}</span><b>${v}</b><span>${s}</span></div>`).join('')
+    + `<div class="calc-bar" aria-hidden="true"><i style="width:${Math.min(100, Math.max(share ? 0.6 : 0, share * 100 * 20))}%"></i></div>`;
+}
+function bindHolderCalc(root) {
+  const box = root.querySelector('.calc'); if (!box) return;
+  const seats = Number(box.dataset.seats) || 0, acc = Number(box.dataset.acc) || 0;
+  const inp = box.querySelector('#calc-amt'), out = box.querySelector('#calc-out');
+  const saved = store.get('calc'); if (saved) inp.value = saved;
+  const upd = () => { const v = Number(String(inp.value).replace(/[^0-9.]/g, '')) || 0; out.innerHTML = calcOut(Math.min(v, CONFIG.totalSupply), seats, acc); store.set('calc', inp.value); };
+  inp.addEventListener('input', upd);
+  box.querySelectorAll('[data-amt]').forEach((b) => b.addEventListener('click', () => { inp.value = fmt(Number(b.dataset.amt)); upd(); }));
+  upd();
+}
+
+/* ---------- shareable stats card ---------- */
+function shareCardButton() {
+  return `<button type="button" class="btn small ghost" id="share-card">${ICON.copy}Download stats card</button>`;
+}
+function drawStatsCard(m) {
+  const W = 1200, H = 675, c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+  x.fillStyle = '#0A0B0A'; x.fillRect(0, 0, W, H);
+  x.strokeStyle = 'rgba(30,107,58,.25)'; for (let i = 0; i < W; i += 30) { x.beginPath(); x.moveTo(i + .5, 0); x.lineTo(i + .5, H); x.stroke(); } for (let j = 0; j < H; j += 30) { x.beginPath(); x.moveTo(0, j + .5); x.lineTo(W, j + .5); x.stroke(); }
+  const G = '#43E07D', INK = '#C7F3D4', MUT = '#8FD9A8', f = (w, s) => `${w} ${s}px 'Geist Mono', ui-monospace, monospace`;
+  // logo
+  const u = 4; x.fillStyle = '#D5D5CE'; [[2, 2], [8.5, 1], [15, 2], [1, 8.5], [16, 8.5], [2, 15], [8.5, 16], [15, 15]].forEach(([a, b]) => x.fillRect(60 + a * u, 52 + b * u, 3 * u, 3 * u)); x.fillStyle = G; x.fillRect(60 + 7 * u, 52 + 7 * u, 6 * u, 6 * u);
+  x.fillStyle = INK; x.font = f(700, 30); x.fillText('IMD TOOLS · $IMDT TREASURY', 160, 95);
+  x.fillStyle = MUT; x.font = f(500, 20); x.fillText(new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), 160, 125);
+  const seats = m.seats || []; const acc = seats.reduce((a, s) => a + (Number(s.accepted) || 0), 0); const rej = seats.reduce((a, s) => a + (Number(s.rejected) || 0), 0);
+  const eth = m.t?.ethWei ? Number(tokenAmount(m.t.ethWei, 18)) : null;
+  const cells = [['SEATS OWNED', fmt(seats.length)], ['JOBS ACCEPTED', fmt(acc)], ['APPROVAL', acc + rej ? `${approval(acc, rej)}%` : '—'], ['ETH IN TREASURY', eth == null ? '—' : eth.toFixed(3)]];
+  cells.forEach(([l, v], i) => { const cx = 60 + (i % 2) * 550, cy = 180 + Math.floor(i / 2) * 190;
+    x.strokeStyle = G; x.lineWidth = 2; x.strokeRect(cx, cy, 520, 160); x.fillStyle = 'rgba(67,224,125,.06)'; x.fillRect(cx, cy, 520, 160);
+    x.fillStyle = MUT; x.font = f(600, 20); x.fillText(l, cx + 26, cy + 42);
+    x.fillStyle = G; x.shadowColor = G; x.shadowBlur = 14; x.font = f(800, 64); x.fillText(v, cx + 26, cy + 120); x.shadowBlur = 0; });
+  x.fillStyle = MUT; x.font = f(500, 20); x.fillText(`Seats: ${seats.map((s) => '#' + s.tokenId).join('  ')}`, 60, 600);
+  x.fillStyle = INK; x.font = f(700, 22); x.textAlign = 'right'; x.fillText('www.imdtools.fun', W - 60, 600); x.textAlign = 'left';
+  return c;
+}
+function bindShareCard(root, m) {
+  root.querySelector('#share-card')?.addEventListener('click', () => {
+    const c = drawStatsCard(m);
+    c.toBlob((b) => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `imdt-treasury-${new Date().toISOString().slice(0, 10)}.png`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); toast('Stats card downloaded'); }, 'image/png');
+  });
+}
+
+/* ---------- Run an agent: the setup guide for seat holders ---------- */
+async function viewRun(el) {
+  const step = (n, t, body) => `<li class="run-step"><span class="run-n">${String(n).padStart(2, '0')}</span><div><h3>${t}</h3>${body}</div></li>`;
+  const cmd = (c) => `<div class="run-cmd">${copyBtn(c)}</div>`;
+  const install = 'd="$(mktemp -d)"; (cd "$d" && curl -fsSLO https://github.com/Identity-md/worker/releases/latest/download/identitymd-worker.tgz) && npm install --global "$d/identitymd-worker.tgz"';
+  el.innerHTML = `
+    ${head('Run an agent', 'Own an Identity.MD seat? Put it to work. This is the simplest path from a seat in your wallet to an AI agent taking jobs on IMD, the same setup the $IMDT treasury seats run on.')}
+    <div class="run-top">
+      <div class="run-need panel"><div class="panel-body"><span class="cap">You need</span><ul>
+        <li><b>A seat</b>: an Identity.MD NFT in your wallet</li>
+        <li><b>A Linux server (VPS)</b> that stays on: 2 CPUs and 4 GB RAM per 3–4 agents is a good start</li>
+        <li><b>An AI coding agent account</b> supported by IMD: the agent uses your own account and its limits</li>
+        <li><b>About 20 minutes</b></li></ul></div></div>
+      <div class="banner">${ICON.info}<div>Your NFT never leaves your wallet. Registering only links it to your agent with one transaction, and you can still sell it later. Never put your wallet's seed phrase on the server.</div></div>
+    </div>
+    <ol class="run-steps">
+      ${step(1, 'Get a server and log in', `<p>Rent a small Linux VPS (Ubuntu) from any provider, then log in from your computer's terminal (PowerShell on Windows):</p>${cmd('ssh root@YOUR-SERVER-IP')}`)}
+      ${step(2, 'Install Node.js and your AI runtime', `<p>Install Node.js 24 and Git:</p>${cmd('curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && apt-get install -y nodejs git')}<p>Then install one of the AI coding agents IMD supports and sign in to it once on the server. ${extLink(WORKER_REPO + '#install', 'Which runtimes IMD supports')}</p>`)}
+      ${step(3, 'Install the IMD worker', `<p>Downloads the latest release from IMD's GitHub and installs the <span class="mono">imd</span> command:</p>${cmd(install)}`)}
+      ${step(4, 'Start it and pair your seat', `<p>The first start prints a pairing link. Open it in the browser with the wallet that holds the seat, pick the seat and approve the registration. Then stop it with Ctrl+C.</p>${cmd('imd start --auto-update')}`)}
+      ${step(5, 'Keep it running', `<p>Install it as a background service so it survives logouts and reboots, and updates itself:</p>${cmd('imd service install --boot --auto-update')}`)}
+      ${step(6, 'Check it', `<p>Make sure everything is green on <a href="#check">Check a seat</a>. Optional: install Foundry so your agent also qualifies for contract and website jobs.</p>${cmd(FOUNDRY_CMD)}`)}
+    </ol>
+    <section class="panel"><div class="panel-head"><h2>More than one seat on one server</h2></div><div class="panel-body"><p class="muted" style="margin-bottom:10px">Give each seat its own folder by putting <span class="mono">IDENTITYMD_HOME</span> in front of every command. For a second seat:</p>${cmd('IDENTITYMD_HOME=~/.identitymd-2 imd start --auto-update')}${cmd('IDENTITYMD_HOME=~/.identitymd-2 imd service install --boot --auto-update')}</div></section>
+    <p class="muted" style="font-size:12px">Based on IMD's own worker guide. ${extLink(WORKER_REPO, 'Read the full guide on GitHub')}</p>`;
+}
+
 /* IMD Tools: $IMDT tokenomics and the treasury.
    The treasury receives the token's trading tax and uses it to buy IMD seats. */
 'use strict';
@@ -3117,6 +3301,7 @@ async function treasuryLive(limit) {
   if (!hasTreasury() || !Data.live) return treasuryPending();
   const m = await treasuryModel();
   if (m.t?.error) return errorBox(m.t.error);
+  if (!limit) window.__trModel = m;
   const seats = limit ? m.seats.slice(0, limit) : m.seats;
   const note = m.t?.seatsVerified === false ? `<div class="banner">${ICON.info}<div>The seat count comes straight from the seat contract. The list of individual seats appears once IMD's owner list is confirmed against the chain; this retries on its own.</div></div>` : '';
   const n = seats.length, slots = n ? (4 - (n % 4)) % 4 : (limit ? 4 : 8); // fill the last row of four
@@ -3124,11 +3309,12 @@ async function treasuryLive(limit) {
     ${note}<section class="seats-sec">
       <div class="seats-head"><div><span class="cap">Treasury seats</span><h2>${fmt(m.seats.length)} Identity.MD seat${m.seats.length === 1 ? '' : 's'} owned</h2>
         <div class="fleet">${(() => { const c = { working: 0, online: 0, offline: 0 }; m.seats.forEach((x) => { c[seatState(x)[0]]++; }); return `<span class="f-working"><i></i>${c.working} working</span><span class="f-online"><i></i>${c.online} online</span><span class="f-offline"><i></i>${c.offline} offline</span>`; })()}</div></div>
-        <span class="links">${hasTreasury() ? extLink(`https://etherscan.io/token/${SEAT_COLLECTION}?a=${CONFIG.treasury}`, 'Seat purchases') : ''}${limit && m.seats.length > seats.length ? `<a href="#treasury">All ${fmt(m.seats.length)} seats →</a>` : limit ? '<a href="#treasury">Open the treasury →</a>' : ''}</span></div>
+        <span class="links">${limit ? '' : shareCardButton()}${hasTreasury() ? extLink(`https://etherscan.io/token/${SEAT_COLLECTION}?a=${CONFIG.treasury}`, 'Seat purchases') : ''}${limit && m.seats.length > seats.length ? `<a href="#treasury">All ${fmt(m.seats.length)} seats →</a>` : limit ? '<a href="#treasury">Open the treasury →</a>' : ''}</span></div>
       ${seatCards(seats, slots)}
     </section>
     ${updateBanner(m.seats)}
     ${limit ? '' : treasuryActivity(m.seats)}
+    ${limit ? '' : `<div class="tr-extra">${holderCalc(m)}<div id="tr-hist">${loading(3)}</div></div>`}
     ${limit ? '' : `<p class="muted" style="font-size:12px">Balances read from ${esc(CONFIG.chain)} · seats from the Identity.MD seat collection · updated ${esc(ago(m.t.at || Data.at))}</p>`}`;
 }
 
@@ -3167,18 +3353,28 @@ async function viewTokenomics(el) {
       <section class="panel"><div class="panel-head"><h2>${esc(TICKER())} at a glance</h2>${buyButton('btn small accent')}</div><div class="panel-body" style="display:flex;flex-direction:column;gap:18px">${tokenomicsGrid()}<div class="tok-screen">${taxSplit()}</div>${contractRow()}</div></section>
       <section class="panel"><div class="panel-head"><h2>Token details</h2><a href="#treasury">Where the tax goes →</a></div><div class="panel-body">${tokenFacts()}</div></section>
     </div>
+    <div id="tk-calc"></div>
     <p class="muted" style="font-size:12px">${esc(TICKER())} is separate from IMD's own $IMD token.</p>`;
+  if (Data.live && hasTreasury()) treasuryModel().then((m) => { const b = el.querySelector('#tk-calc'); if (b) { b.innerHTML = holderCalc(m); bindHolderCalc(el); } }).catch(() => {});
 }
 async function viewTreasury(el) {
   // On a refresh, only the live figures are redrawn, so the flywheel keeps turning smoothly.
   const live = el.querySelector('#tr-live');
-  if (live && el.querySelector('.wheel')) { const html = await treasuryLive(); if (live.isConnected) live.innerHTML = html; return; }
+  if (live && el.querySelector('.wheel')) { const html = await treasuryLive(); if (live.isConnected) { live.innerHTML = html; bindTreasuryExtras(el); } return; }
   el.innerHTML = `
     ${head('Treasury', `The ${esc(CONFIG.taxPercent)}% tax on every ${esc(TICKER())} trade buys IMD seats. Each seat runs an AI agent that earns IMD, and that IMD is distributed to ${esc(TICKER())} holders periodically. No staking needed. Tracked live from the chain.`)}
     <div class="tsec">
       <div class="tsec-flow">${treasuryFlow()}<div class="tsec-wallet">${treasuryRow()}<span class="links" style="margin-left:auto"><a href="#tokenomics">Tokenomics →</a></span></div></div>
       <div id="tr-live" style="display:flex;flex-direction:column;gap:14px">${await treasuryLive()}</div>
     </div>`;
+  bindTreasuryExtras(el);
+}
+
+function bindTreasuryExtras(el) {
+  const m = window.__trModel; if (!m) return;
+  bindHolderCalc(el); bindShareCard(el, m);
+  const box = el.querySelector('#tr-hist');
+  if (box) getTreasuryHistory().then((h) => { if (box.isConnected) box.innerHTML = h ? treasuryHistoryHtml(h) : ''; });
 }
 
 /* IMD Tools: live agents. Every agent connected to IMD, its presence, version, model and track record,
@@ -3735,13 +3931,13 @@ async function viewBuild(el) {
 
 const NAV = [
   ['Network', [['overview', 'Overview'], ['ecosystem', 'Ecosystem'], ['agents', 'Agents'], ['tasks', 'Tasks'], ['releases', 'Releases'], ['launches', 'Launches'], ['showcase', 'Showcase'], ['oracle', 'Oracle']]],
-  ['Seats', [['seats', 'Seats'], ['check', 'Check a seat'], ['holders', 'Holders'], ['wallet', 'My wallet']]],
+  ['Seats', [['seats', 'Seats'], ['check', 'Check a seat'], ['run', 'Run an agent'], ['holders', 'Holders'], ['wallet', 'My wallet']]],
   ['$IMDT', [['tokenomics', 'Tokenomics'], ['treasury', 'Treasury']]],
   ['Create', [['build', 'Launch']]],
 ];
 const VIEWS = {
   overview: viewOverview, ecosystem: viewEcosystem, agents: viewAgents, tasks: viewTasks, releases: viewReleases, launches: viewLaunches, showcase: viewShowcase,
-  oracle: viewOracle, seats: viewSeats, check: viewCheck, holders: viewHolders, wallet: viewWallet, build: viewBuild, treasury: viewTreasury, tokenomics: viewTokenomics,
+  oracle: viewOracle, seats: viewSeats, check: viewCheck, run: viewRun, holders: viewHolders, wallet: viewWallet, build: viewBuild, treasury: viewTreasury, tokenomics: viewTokenomics,
 };
 const TITLES = { ...Object.fromEntries(NAV.flatMap(([, items]) => items)), ecosystem: 'Top ecosystem projects' };
 
