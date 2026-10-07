@@ -1101,10 +1101,6 @@ table.lb tr.ours td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
 .eco-card:hover .eco-img { transform: scale(1.04); }
 .eco-layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 6s ease; }
 .eco-card:hover .eco-layer { transform: scale(1.08) translateY(-6px); }
-.eco-cover.has-local { background: #0B1018; }
-.eco-cover.has-local .eco-img { object-fit: cover; object-position: 50% 42%; }
-#eco-pepes-family .eco-cover { background: #F4F4F0; }
-#eco-pepes-family .eco-img { object-fit: cover; object-position: 50% 0; }
 .eco-cap { position: absolute; left: 12px; bottom: 12px; padding: 4px 9px; background: rgba(5,6,5,.82); color: var(--screen-ink); font-size: 11px; border: 1px solid rgba(255,255,255,.15); }
 .eco-no { position: absolute; right: 12px; top: 12px; z-index: 1; font-family: var(--f-dot); font-weight: 900; font-size: 22px; line-height: 1; padding: 6px 9px; background: rgba(5,6,5,.82); color: var(--brand); border: 1px solid color-mix(in srgb, var(--brand) 50%, transparent); }
 .eco-body { padding: 24px 26px 22px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
@@ -1169,17 +1165,33 @@ table.lb tr.ours td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
 .hero-t .mn-badge { align-self: center; }
 .eco-tile .datum > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 .eco-art-logo { position: absolute; left: 50%; top: 44%; width: min(52%, 230px); aspect-ratio: 1; transform: translate(-50%, -50%); object-fit: cover; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 20px 60px -20px var(--brand); }
-#eco-personality-md .eco-art-logo { border-radius: 50%; border: 0; }
 .eco-tile-logo { position: absolute; inset: 0; display: grid; place-items: center; }
 .eco-tile-logo img { position: static !important; width: 58% !important; height: auto !important; aspect-ratio: 1; object-fit: cover; }
-#eco-s .eco-tile:nth-child(2) .eco-tile-logo img { border-radius: 50%; }
 .eco-index a { position: relative; }
 .eco-ix-logo { position: absolute; right: 10px; top: 10px; width: 34px; height: 34px; object-fit: cover; border: 1px solid rgba(255,255,255,.15); }
-.eco-index a:nth-child(2) .eco-ix-logo { border-radius: 50%; border: 0; }
-.eco-logo[src*="personality"] { border-radius: 50%; }
 .eco-art-logo { z-index: 1; }
 .eco-cover .eco-img + .eco-layer ~ .eco-art-logo, .eco-cover .eco-img ~ .eco-art-logo { box-shadow: 0 24px 70px -10px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.08); }
 .eco-tile-logo { z-index: 1; }
+
+/* ecosystem v2: one bundled 16:10 cover per project, same framing everywhere */
+.eco-cover { aspect-ratio: 16 / 10; min-height: 0; align-self: start; }
+.eco-card { align-items: stretch; }
+.eco-card .eco-cover { align-self: stretch; aspect-ratio: auto; min-height: 380px; }
+.eco-img { object-fit: cover; object-position: 50% 50%; transform: none; }
+.eco-card:hover .eco-img { transform: scale(1.03); }
+.eco-logo.round, .eco-ix-logo.round { border-radius: 50%; border: 0; }
+.eco-index { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.eco-teaser { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.eco-tile-art { aspect-ratio: 16 / 10; }
+.eco-tile-art img { object-fit: cover; }
+@media (max-width: 1300px) { .eco-teaser { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 1100px) { .eco-index { grid-template-columns: repeat(3, minmax(0, 1fr)); } .eco-card .eco-cover { min-height: 0; aspect-ratio: 16 / 10; } }
+@media (max-width: 760px) { .eco-teaser { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .eco-index { grid-template-columns: repeat(2, minmax(0, 1fr)); } .eco-teaser { grid-template-columns: minmax(0, 1fr); } }
+.eco-card .eco-cover { align-self: start; aspect-ratio: 16 / 10; min-height: 0; position: sticky; top: 72px; border-bottom: 1px solid #000; }
+.eco-card { background: var(--surface); }
+.eco-card.flip .eco-cover { border-left: 1px solid #000; }
+@media (max-width: 1100px) { .eco-card .eco-cover { position: relative; top: 0; } }
 
 </style>
 </head>
@@ -3388,7 +3400,7 @@ const ECO = [
     facts: [['Collection', '787 unique units'], ['Token', '$UNIT, paired with IMD'], ['Contract', 'to be announced'], ['Made by', 'IMD agents, peer reviewed']],
     involve: ['Enter the swarm on the site and watch new units being made and reviewed.', 'Browse the units, and claim one when claiming opens.', 'Follow @IdentityUnits for the $UNIT contract once it is announced.'],
     links: [['Website', 'https://identityunits.fun/', true], ['X', 'https://x.com/IdentityUnits']],
-    img: 'https://identityunits.fun/room/plate.jpg', layer: 'https://identityunits.fun/room/foreground.png', logo: 'eco/identityunits-logo.jpg',
+    img: 'eco/cover-identityunits.jpg', logo: 'eco/identityunits-logo.jpg',
   },
   {
     id: 'personality-md', name: 'personality.md', short: 'P.md', brand: '#5B8CFF', brand2: '#2A4C9E',
@@ -3399,7 +3411,7 @@ const ECO = [
     facts: [['Runs on', 'IMD jobs, one per role'], ['Agent roles', '5 specialists'], ['Start in', 'the Creator Studio']],
     involve: ['Open the Creator Studio and write a brief for a personality.', 'Browse the personalities that are already running.', 'Read the docs and follow @PersonalityETH for new releases.'],
     links: [['Website', 'https://www.pmdeth.fun/', true], ['Creator Studio', 'https://www.pmdeth.fun/create.html'], ['Personalities', 'https://www.pmdeth.fun/personalities.html'], ['Docs', 'https://www.pmdeth.fun/docs.html'], ['X', 'https://x.com/PersonalityETH']],
-    img: 'https://www.pmdeth.fun/imd-assets/wall-blue.png', logo: 'eco/personality-logo.jpg',
+    img: 'eco/cover-personality.jpg', logo: 'eco/personality-logo.jpg', round: true,
   },
   {
     id: 'pepes-family', name: 'Pepes Family', short: 'PF', brand: '#6CC24A', brand2: '#2F7A1F',
@@ -3409,7 +3421,7 @@ const ECO = [
     facts: [['Chain', 'Robinhood Chain (4663)'], ['Trading fee', '4%: 3% to holders, 1% protocol'], ['NFTs', 'Pepes Earn IMD, 2,000 on-chain Pepes'], ['Audits', 'by the IMD swarm']],
     involve: ['Launch a token, or trade one, on the site.', 'Hold a token to earn a share of its trading fees, then claim them.', 'Collect a Pepes Earn IMD NFT: every whole $EARN token is one Pepe.', 'Play Pepes World: walk a tiny Pepe planet delivering letters, with your NFT as your character.'],
     links: [['Website', 'https://www.pepesfamily.fun/#/', true], ['X', 'https://x.com/Pepesdotfamily'], ['Pepes World', 'https://www.pepesfamily.fun/world/'], ['GitHub', 'https://github.com/0xtenang/PepesFamily']],
-    img: 'eco/pepes-earn.jpg', logo: 'eco/pepes-icon.png', local: true, caption: 'Pepes Earn IMD · drawn by the on-chain contract',
+    img: 'eco/cover-pepes.jpg', logo: 'eco/pepes-icon.png', caption: 'Pepes Earn IMD · drawn by the on-chain contract',
   },
   {
     id: 'pepe2pepe', name: 'Pepe2Pepe', short: 'P2P', brand: '#8FE3C8', brand2: '#A98BEA',
@@ -3419,18 +3431,25 @@ const ECO = [
     facts: [['Settled by', 'the IMD Oracle'], ['Matching', 'in the order backing arrives'], ['Fees', 'apply']],
     involve: ['Browse the open markets on pepe2pepe.fun.', 'Back the side you believe in, or create a market of your own.', 'Claim back any backing that wasn\'t matched; matched stakes wait for the result.'],
     links: [['Website', 'https://pepe2pepe.fun/', true]],
-    img: 'eco/pepe2pepe.jpg', local: true,
+    img: 'eco/cover-pepe2pepe.jpg',
+  },
+  {
+    id: 'company-md', name: 'Company.md', short: 'CO', brand: '#F5C542', brand2: '#7C4DFF',
+    tag: 'Agent swarm · law-firm theme · Robinhood Chain', quote: 'Two thousand counsels. One swarm.',
+    what: 'A separate swarm of 2,000 NFT agents on Robinhood Chain, inspired by IMD and rebuilt as a pixel-art law firm. Each Counsel NFT is an agent its holder runs on their own machine. Clients pay in $COMD for work, and the Counsel who did it earns 80% of the payment.',
+    how: [['Retain', 'a client pays in $COMD'], ['Plan', 'the Managing Partner splits the work'], ['Draft', 'Counsel agents do it'], ['Check', 'the Clerk re-runs every check'], ['Review', 'another Counsel cross-examines it'], ['File', 'the result is recorded on chain']],
+    facts: [['Collection', 'Counsel · 2,000 NFTs, free mint'], ['Token', '$COMD on Robinhood Chain'], ['Job pay', '80% to the Counsel · 20% treasury'], ['Trading tax', '5% in ETH: buyback & burn + floor sweeps'], ['Code', 'open source']],
+    involve: ['Mint a Counsel NFT (free) or pick one up on OpenSea.', 'Install the agent with one command, comd start, pair it with your wallet and register it in one click.', 'Retain the firm for work, or launch a company coin as an Incorporation.', 'Follow @comdfun and read how it works on comd.fun.'],
+    links: [['Website', 'https://comd.fun/', true], ['How it works', 'https://comd.fun/what-is-this'], ['X', 'https://x.com/comdfun'], ['GitHub', 'https://github.com/comdfun/comdfun'], ['OpenSea', 'https://opensea.io/collection/counsel-362029053']],
+    img: 'eco/cover-companymd.jpg', logo: 'eco/companymd-logo.png',
   },
 ];
 
 function ecoCover(p, i) {
-  // A designed cover is always drawn; the project's own image goes on top and simply disappears if it can't load.
-  const dots = Array.from({ length: 60 }, (_, k) => `<i style="--d:${(k * 37) % 23}"></i>`).join('');
-  return `<div class="eco-cover ${p.local ? 'has-local' : ''}" aria-hidden="true">
-    <div class="eco-art"><div class="eco-dots">${dots}</div><b>${esc(p.name)}</b><span>${esc(p.tag)}</span></div>
-    ${p.img ? `<img class="eco-img" src="${esc(p.img)}" alt="" loading="${i ? 'lazy' : 'eager'}" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}
-    ${p.layer ? `<img class="eco-layer" src="${esc(p.layer)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}
-    ${p.logo && !p.local ? `<img class="eco-art-logo" src="${esc(p.logo)}" alt="">` : ''}
+  // Every cover is bundled with the site, so it always loads and looks the same everywhere.
+  return `<div class="eco-cover" aria-hidden="true">
+    <div class="eco-art"><b>${esc(p.name)}</b><span>${esc(p.tag)}</span></div>
+    <img class="eco-img" src="${esc(p.img)}" alt="" loading="${i ? 'lazy' : 'eager'}" onerror="this.remove()">
     ${p.caption ? `<span class="eco-cap">${esc(p.caption)}</span>` : ''}
     <span class="eco-no">${String(i + 1).padStart(2, '0')}</span>
   </div>`;
@@ -3440,7 +3459,7 @@ function ecoCard(p, i) {
   return `<article class="eco-card rv${i % 2 ? ' flip' : ''}" id="eco-${p.id}" style="--brand:${p.brand};--brand2:${p.brand2};--i:${i}">
     ${ecoCover(p, i)}
     <div class="eco-body">
-      <div class="eco-top">${p.logo ? `<img class="eco-logo" src="${esc(p.logo)}" alt="" width="44" height="44">` : `<span class="eco-logo txt">${esc(p.short)}</span>`}
+      <div class="eco-top">${p.logo ? `<img class="eco-logo${p.round ? ' round' : ''}" src="${esc(p.logo)}" alt="" width="44" height="44">` : `<span class="eco-logo txt">${esc(p.short)}</span>`}
         <div><span class="cap">${esc(p.tag)}</span><h2>${esc(p.name)}</h2></div></div>
       <blockquote class="eco-quote">“${esc(p.quote)}”</blockquote>
       <p class="eco-what">${esc(p.what)}</p>
@@ -3457,7 +3476,7 @@ async function viewEcosystem(el) {
     <div class="eco-hero">
       <div><span class="cap">The IMD ecosystem</span><h1>Top ecosystem projects</h1>
         <p>Projects the community is building on and around the IMD swarm: what each one does, how it works and how to get involved.</p></div>
-      <nav class="eco-index" aria-label="Projects">${ECO.map((p, i) => `<a href="#" data-eco="${p.id}" style="--brand:${p.brand}">${p.logo ? `<img class="eco-ix-logo" src="${esc(p.logo)}" alt="" width="34" height="34">` : ''}<i>${String(i + 1).padStart(2, '0')}</i><b>${esc(p.name)}</b><span>${esc(p.tag.split(' · ')[0])}</span></a>`).join('')}</nav>
+      <nav class="eco-index" aria-label="Projects">${ECO.map((p, i) => `<a href="#" data-eco="${p.id}" style="--brand:${p.brand}">${p.logo ? `<img class="eco-ix-logo${p.round ? ' round' : ''}" src="${esc(p.logo)}" alt="" width="34" height="34">` : ''}<i>${String(i + 1).padStart(2, '0')}</i><b>${esc(p.name)}</b><span>${esc(p.tag.split(' · ')[0])}</span></a>`).join('')}</nav>
     </div>
     <div class="banner warn eco-note">${ICON.info}<div><p><b>Not endorsements.</b> ${esc(ECO_DISCLAIMER.replace('These are not endorsements. ', ''))}</p></div></div>
     <div class="eco-list">${ECO.map(ecoCard).join('')}</div>
@@ -3474,7 +3493,7 @@ function ecoReveal(root) {
 // The landing page teaser: four tiles that open the full page.
 function ecoTeaser() {
   return `<div class="eco-teaser">${ECO.map((p, i) => `<a class="eco-tile rv" href="#ecosystem" style="--brand:${p.brand};--brand2:${p.brand2};--i:${i}">
-      <span class="eco-tile-art">${p.local ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : `<img class="hot" src="${esc(p.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">${p.logo ? `<span class="eco-tile-logo"><img src="${esc(p.logo)}" alt=""></span>` : `<b>${esc(p.name)}</b>`}`}</span>
+      <span class="eco-tile-art"><img src="${esc(p.img)}" alt="" loading="lazy" onerror="this.remove()"><b>${esc(p.name)}</b></span>
       <span class="eco-tile-t"><b>${esc(p.name)}</b><span>${esc(p.tag)}</span></span>
       <span class="datum"><span>${esc(p.quote)}</span><span class="go">open <span class="arr">→</span></span></span>
     </a>`).join('')}</div>
