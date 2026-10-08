@@ -60,6 +60,9 @@ A stats strip above the list shows the network as a whole: tasks waiting for an 
 
 The **Leaderboard** tab ranks every seat by accepted work, approval rate or attempts, with the top three on a podium and the treasury's seats marked with their rank.
 
+### Project investments
+**Project investments** (under $IMDT) lists every project the treasury has backed besides buying IMD seats, newest first: the announcement video, why it was backed, and the full project overview with how to get involved. The first is **Company.md** (comd.fun), announced 8 October 2026. Investments are listed as information, **not financial advice** and not endorsements. To add one, add an entry to `INVESTMENTS` in `src/investments.js` (the project overview comes from its Ecosystem entry).
+
 ### Top ecosystem projects
 **Ecosystem** showcases independent projects built on and around the IMD swarm: personality.md, Pepes Family, Pepe2Pepe and Company.md. Each one gets a visual overview: what it does, how it works step by step, key facts, how to get involved, and links to its website and X. The landing page shows them as tiles. These are listed for discovery and are **not endorsements**: IMD Tools isn't affiliated with them and hasn't audited them, so do your own research.
 
