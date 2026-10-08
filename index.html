@@ -1246,6 +1246,72 @@ table.lb tr.ours td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
 .page p a svg, .run-step a svg, .page .muted a svg { width: 13px; height: 13px; vertical-align: -2px; margin-right: 4px; display: inline-block; }
 .run-cmd .copy { width: 100% !important; box-sizing: border-box; }
 
+/* ---------- v1.6: compare seats ---------- */
+.cmp-chips { align-items: center; }
+.cmp-chip { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; }
+.cmp-chip button { border: 0; background: none; cursor: pointer; font-size: 16px; line-height: 1; color: var(--muted); padding: 0 2px; }
+.cmp-chip button:hover { color: var(--bad); }
+#cmp-share svg { width: 13px; height: 13px; vertical-align: -2px; margin-right: 4px; }
+table.cmp-t { table-layout: fixed; min-width: 760px; }
+table.cmp-t th, table.cmp-t td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+table.cmp-t thead th { background: var(--screen); color: var(--screen-ink); border-bottom: 1px solid #000; }
+table.cmp-t thead th:first-child { width: 190px; }
+table.cmp-t tbody th { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+table.cmp-t td { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+table.cmp-t td.top { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent-ink); box-shadow: inset 3px 0 0 var(--accent); }
+table.cmp-t td.st-online, table.cmp-t td.st-working { color: var(--good); } table.cmp-t td.st-working { color: var(--signal); } table.cmp-t td.st-offline { color: var(--muted); }
+.cmp-net { color: var(--muted) !important; font-weight: 500 !important; font-size: 14px !important; border-left: 1px dashed var(--line); }
+thead .cmp-net { color: var(--screen-muted) !important; font-size: 11px !important; letter-spacing: .12em; text-transform: uppercase; }
+.cmp-head { all: unset; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+.cmp-head img { border: 1px solid var(--screen-line); background: var(--screen-2); flex: none; }
+.cmp-head b { display: block; font-size: 15px; color: var(--phosphor); }
+.cmp-head > span > span { font-size: 11.5px; color: var(--screen-muted); }
+.cmp-head .tag { font-style: normal; color: var(--screen-ink); border-color: var(--screen-line); }
+.cmp-head:hover b { text-decoration: underline; }
+.cmp-vs { display: block; font-size: 11px; font-weight: 600; margin-top: 2px; }
+.cmp-vs.up { color: var(--good); } .cmp-vs.down { color: var(--bad); }
+.cmp-head > span { min-width: 0; }
+.cmp-head > span > span { display: block; white-space: nowrap; }
+.cmp-head .cmp-tre { display: inline-block; margin-top: 4px; font-size: 9.5px; padding: 1px 6px; letter-spacing: .1em; text-transform: uppercase; }
+@media (max-width: 720px) {
+  table.cmp-t { min-width: 640px; }
+  table.cmp-t thead th:first-child { width: 112px; }
+  table.cmp-t th:first-child { position: sticky; left: 0; z-index: 1; background: var(--surface); }
+  table.cmp-t thead th:first-child { background: var(--screen); }
+  table.cmp-t tbody th { font-size: 9.5px; letter-spacing: .08em; padding: 10px; }
+  table.cmp-t td { font-size: 15px; padding: 10px; }
+  .cmp-head img { width: 32px; height: 32px; }
+  .cmp-head b { font-size: 13px; }
+}
+section.cmp + p.muted { margin-top: 10px; }
+@media (max-width: 720px) { table.cmp-t tbody th { white-space: normal; line-height: 1.35; } }
+
+/* v1.7 quick wins: seat actions, wallet buttons, quick jump */
+#cmp-img svg { width: 13px; height: 13px; vertical-align: -2px; margin-right: 4px; }
+.sd-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.sd-acts .btn svg, .links-btns .btn svg, .ctas .btn svg { width: 14px; height: 14px; margin-right: 6px; vertical-align: -2px; }
+.links-btns { display: inline-flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: flex-end; }
+kbd { font-family: var(--f-mono); font-size: 11px; line-height: 1; padding: 3px 5px; border: 1px solid var(--edge); border-bottom-width: 2px; background: var(--surface); color: var(--ink); border-radius: var(--r); }
+.qj-btn { width: auto; padding-inline: 9px; gap: 6px; display: inline-flex; align-items: center; }
+.qj-btn kbd { font-size: 10px; padding: 2px 4px; }
+.qj-scrim { position: fixed; inset: 0; background: rgba(5, 5, 5, .55); z-index: 70; animation: fade .12s ease both; }
+.qj { position: fixed; z-index: 71; left: 50%; top: 14vh; transform: translateX(-50%); width: min(620px, calc(100vw - 32px)); background: var(--screen); color: var(--screen-ink); border: 1px solid var(--phosphor-dim); box-shadow: 0 0 0 1px #000, 0 24px 60px rgba(0,0,0,.5), 0 0 24px rgba(67,224,125,.15); animation: rise .15s ease both; }
+.qj-f { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--screen-line); }
+.qj-p { color: var(--phosphor); font-weight: 800; font-size: 18px; }
+.qj-f input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: var(--phosphor); font: 600 17px var(--f-mono); caret-color: var(--phosphor); }
+.qj-f input::placeholder { color: var(--screen-muted); }
+.qj kbd { background: var(--screen-2); color: var(--screen-ink); border-color: var(--screen-line); }
+.qj-list { padding: 6px; max-height: 46vh; overflow: auto; }
+.qj-list a { display: flex; justify-content: space-between; gap: 12px; padding: 10px 12px; color: var(--screen-ink); text-decoration: none; font-weight: 600; }
+.qj-list a span { color: var(--screen-muted); font-weight: 400; font-size: 12px; }
+.qj-list a.on, .qj-list a:hover { background: rgba(67,224,125,.12); color: var(--phosphor); box-shadow: inset 3px 0 0 var(--phosphor); }
+.qj-list p { padding: 10px 12px; margin: 0; color: var(--screen-muted); }
+.qj-keys { display: none; flex-wrap: wrap; gap: 8px 16px; padding: 12px 16px; border-top: 1px solid var(--screen-line); font-size: 12px; color: var(--screen-muted); }
+.qj-keys kbd + kbd { margin-left: 3px; }
+.qj.help .qj-keys { display: flex; }
+@media (min-width: 900px) { .qj-keys { display: flex; } }
+@media (max-width: 720px) { .qj-btn kbd { display: none; } .qj-btn { padding-inline: 0; width: 38px; justify-content: center; } }
+
 </style>
 </head>
 <body>
@@ -1616,6 +1682,7 @@ const ICON = {
   info: I('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.2"/>'),
   ok: I('<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>'),
   ecosystem: I('<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6h7M6 8.5v7M18 8.5v7M8.5 18h7"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/>'),
+  compare: I('<rect x="3" y="5" width="7" height="14" rx="1"/><rect x="14" y="5" width="7" height="14" rx="1"/><path d="M5.5 9h2M5.5 12h2M16.5 9h2M16.5 12h2"/>'),
   run: I('<rect x="3" y="4" width="18" height="14" rx="2"/><path d="m7 9 3 3-3 3M12 15h5"/>'),
   check: I('<path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>'),
   no: I('<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>'),
@@ -1782,7 +1849,7 @@ async function renderLanding(root) {
           <span class="cap">The ${esc(CONFIG.tokenName)} token</span>
           <div class="big-t">${esc(TICKER())}</div>
           <p>${fmt(CONFIG.totalSupply)} tokens, fixed, on ${esc(CONFIG.chain)}. The ${esc(CONFIG.taxPercent)}% trading tax isn't kept by a team wallet. All of it goes to the treasury, and the IMD its seats earn is paid out to holders. Just hold ${esc(TICKER())}, no staking.</p>
-          <div class="ctas">${buyButton('btn accent')}<a class="btn ghost" href="#tokenomics">Token details</a></div>
+          <div class="ctas">${buyButton('btn accent')}${walletButtons('btn ghost')}<a class="btn ghost" href="#tokenomics">Token details</a></div>
           <span class="indep">${esc(TICKER())} is separate from IMD's own $IMD token</span>
         </div>
         <div class="tok-screen">${tokenomicsGrid()}${taxSplit()}${contractRow()}</div>
@@ -2803,7 +2870,7 @@ const seatKpis = (s) => `${kpi('Accepted', fmt(s.accepted), `${pct(s.accepted ||
 async function openSeat(id) {
   const seats = await getSeats().catch(() => []);
   const s = seats.find((x) => String(x.tokenId) === String(id)) || { tokenId: id };
-  const body = openDrawer(`Seat #${id}`, `
+  const body = openDrawer(`Seat #${id}`, `${seatActions(id)}
     <div class="grid g-2" style="gap:10px" id="sd-k">${seatKpis(s)}</div>
     <div id="sd">${Data.live || String(id) === '42' ? loading(4) : liveOnly}</div>`, s.agentId ? `Agent ${esc(s.agentId)}` : 'Seat');
   if (!Data.live && String(id) !== '42') return;
@@ -3095,6 +3162,190 @@ async function viewRun(el) {
     <p class="muted" style="font-size:12px">Based on IMD's own worker guide. ${extLink(WORKER_REPO, 'Read the full guide on GitHub')}</p>`;
 }
 
+/* IMD Tools: compare seats side by side, against the network average. Shareable as #compare/461,690,1061 */
+'use strict';
+
+const COMPARE_MAX = 4;
+async function viewCompare(el, arg) {
+  const parse = (s) => [...new Set(String(s || '').split(/[\s,]+/).map((x) => x.replace(/^#/, '')).filter((x) => /^\d{1,5}$/.test(x)))].slice(0, COMPARE_MAX);
+  let ids = parse(arg ?? store.get('compare'));
+  if (!ids.length) ids = ['461', '690', '1061', '1016'];
+  store.set('compare', ids.join(','));
+  const go = (next) => { location.hash = 'compare/' + next.join(','); };
+  el.innerHTML = `
+    ${head('Compare seats', 'Put up to four seats side by side and see how each one measures up against the whole IMD network. The best value in every row lights up. Share the link to share the comparison.')}
+    <form class="toolbar" id="cmp-form">
+      <div class="chips cmp-chips">${ids.map((id) => `<span class="chip static cmp-chip">#${esc(id)}<button type="button" data-rm="${esc(id)}" aria-label="Remove seat ${esc(id)}">×</button></span>`).join('')}</div>
+      ${ids.length < COMPARE_MAX ? `<div class="search" style="max-width:260px"><label class="sr" for="cmp-in">Add a seat</label>${ICON.seats}<input id="cmp-in" type="text" inputmode="numeric" placeholder="Add a seat number" autocomplete="off"></div><button class="btn" type="submit">Add</button>` : '<span class="muted" style="font-size:12px">Four seats is the maximum. Remove one to add another.</span>'}
+      <span class="links" style="margin-left:auto"><a href="#" id="cmp-tre">Treasury seats</a><a href="#" id="cmp-share">${ICON.copy}Copy link</a><a href="#" id="cmp-img">${ICON.doc}Save image</a></span>
+    </form>
+    <div id="cmp-out">${loading(5)}</div>`;
+  el.querySelector('#cmp-form').addEventListener('submit', (e) => { e.preventDefault(); const v = parse(el.querySelector('#cmp-in')?.value); if (v.length) go(parse([...ids, ...v].join(','))); });
+  el.querySelectorAll('[data-rm]').forEach((b) => b.addEventListener('click', () => { const n = ids.filter((x) => x !== b.dataset.rm); go(n.length ? n : ['461']); }));
+  el.querySelector('#cmp-tre').addEventListener('click', (e) => { e.preventDefault(); go(['461', '690', '1061', '1016']); });
+  el.querySelector('#cmp-img').addEventListener('click', (e) => e.preventDefault());
+  el.querySelector('#cmp-share').addEventListener('click', (e) => { e.preventDefault(); copyText(`https://www.imdtools.fun/#compare/${ids.join(',')}`, 'Link copied'); });
+
+  const out = el.querySelector('#cmp-out');
+  const all = await getSeats().catch(() => []);
+  const [recs, sts, t] = await Promise.all([
+    Promise.all(ids.map((id) => within(seatRecord(id, 1), 3000))),
+    Data.live ? Promise.all(ids.map((id) => within(seatStanding(id), 3000))) : ids.map(() => null),
+    within(getTreasury().catch(() => null), 3000),
+  ]);
+  if (!out.isConnected) return;
+  const ours = new Set((t?.seats || []).map(String));
+  const byId = new Map(all.map((s) => [String(s.tokenId), s]));
+  const seats = ids.map((id, i) => {
+    const s = { ...(byId.get(id) || {}), tokenId: id }; const r = recs[i];
+    if (r) for (const k of ['attempts', 'accepted', 'rejected', 'failed', 'pending']) if (Number.isFinite(r[k])) s[k] = r[k];
+    const p = sts[i]?.presence;
+    s.state = p ? (p.connected && !p.stale ? ((sts[i].standing?.working || 0) > 0 ? 'Working' : 'Online') : 'Offline') : (s.working ? 'Working' : null);
+    s.agentId = s.agentId || r?.agentId || sts[i]?.enrollment?.agentId || null;
+    s.ours = ours.has(id); s.known = !!(r || byId.has(id));
+    return s;
+  });
+  // The network: every seat that has done work.
+  const active = all.filter((s) => (s.attempts || 0) > 0);
+  const sum = (k) => active.reduce((a, s) => a + (Number(s[k]) || 0), 0);
+  const net = { accepted: active.length ? sum('accepted') / active.length : null, attempts: active.length ? sum('attempts') / active.length : null, rejected: active.length ? sum('rejected') / active.length : null, ap: approval(sum('accepted'), sum('rejected')) };
+  const sortedAcc = active.map((s) => s.accepted || 0).sort((a, b) => b - a);
+  const rankOf = (v) => (v == null ? null : sortedAcc.findIndex((x) => x <= v) + 1 || sortedAcc.length + 1);
+  const cols = seats.map((s) => ({ ...s, ap: approval(s.accepted || 0, s.rejected || 0), rank: s.attempts ? rankOf(s.accepted || 0) : null }));
+  const ROWS = [
+    ['Status', (s) => s.state || '—', null],
+    ['Rank by accepted work', (s) => (s.rank ? `#${fmt(s.rank)}` : '—'), (s) => (s.rank ? -s.rank : null), active.length ? `of ${fmt(active.length)}` : ''],
+    ['Accepted', (s) => fmt(s.accepted || 0), (s) => s.accepted || 0, net.accepted == null ? '' : fmt(Math.round(net.accepted))],
+    ['Approval', (s) => (s.ap == null ? '—' : `${s.ap}%`), (s) => s.ap, net.ap == null ? '' : `${net.ap}%`],
+    ['Attempts', (s) => fmt(s.attempts || 0), (s) => s.attempts || 0, net.attempts == null ? '' : fmt(Math.round(net.attempts))],
+    ['Rejected', (s) => fmt(s.rejected || 0), (s) => -(s.rejected || 0), net.rejected == null ? '' : (Math.round(net.rejected * 10) / 10).toString()],
+    ['Awaiting review', (s) => fmt(s.pending || 0), null],
+    ['Last work', (s) => (s.last ? ago(s.last) : '—'), null],
+  ];
+  const best = ROWS.map(([, , score]) => { if (!score) return null; const v = cols.map(score).filter((x) => x != null); return v.length > 1 ? Math.max(...v) : null; });
+  window.__cmpModel = { cols, active: active.length, rows: ROWS.filter(([l]) => l !== 'Awaiting review' && l !== 'Last work').map(([label, show, score, netv]) => { const ri = ROWS.findIndex((r) => r[0] === label); return { label, net: netv || '', vals: cols.map(show), top: cols.map((s) => score && best[ri] != null && score(s) === best[ri]) }; }) };
+  el.querySelector('#cmp-img').onclick = (e) => { e.preventDefault(); downloadCanvas(drawCompareCard(window.__cmpModel), `imd-compare-${ids.join('-')}.png`); };
+  const vsNet = (s) => { if (s.ap == null || net.ap == null) return ''; const d = Math.round((s.ap - net.ap) * 10) / 10; return `<span class="cmp-vs ${d >= 0 ? 'up' : 'down'}">${d >= 0 ? '+' : ''}${d} pts vs network</span>`; };
+  out.innerHTML = `<section class="panel cmp"><div class="table-wrap"><table class="cmp-t">
+    <thead><tr><th></th>${cols.map((s) => `<th><button type="button" class="cmp-head" data-open-seat="${esc(s.tokenId)}"><img src="${IMD_API}/agents/by-token/${esc(s.tokenId)}.svg" alt="" width="44" height="44" onerror="this.style.visibility='hidden'"><span><b>IMD #${esc(s.tokenId)}</b><span>${s.agentId ? `agent ${esc(s.agentId)}` : s.known ? 'seat' : 'no record'}</span>${s.ours ? '<i class="tag cmp-tre">Treasury</i>' : ''}</span></span></button></th>`).join('')}<th class="cmp-net">Network average</th></tr></thead>
+    <tbody>${ROWS.map(([label, show, score, netv], ri) => `<tr><th scope="row">${label}</th>${cols.map((s) => { const v = score ? score(s) : null; const top = best[ri] != null && v === best[ri]; const st = ri === 0 ? ` class="st-${String(s.state || '').toLowerCase()}"` : ''; return `<td${top ? ' class="top"' : st}>${esc(show(s))}${ri === 3 ? vsNet(s) : ''}</td>`; }).join('')}<td class="cmp-net">${esc(netv || '')}</td></tr>`).join('')}</tbody>
+  </table></div></section>
+  <p class="muted" style="font-size:12px">Totals are all-time, from IMD. Approval is accepted work out of everything reviewed. Network average covers the ${fmt(active.length)} seats that have done work. Highlighted cells are the best of the seats compared.</p>`;
+}
+
+/* IMD Tools: quick wins. Seat links, wallet buttons, compare image, keyboard shortcuts. */
+'use strict';
+
+const TREASURY_SEATS = ['461', '690', '1061', '1016'];
+const siteLink = (h) => `https://www.imdtools.fun/#${h}`;
+
+function downloadCanvas(c, name) {
+  c.toBlob((b) => {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    toast('Image saved');
+  }, 'image/png');
+}
+
+/* ---------- seat links: #seat/461 opens that seat straight away ---------- */
+async function viewSeatLink(el, arg) {
+  await viewSeats(el);
+  const id = String(arg || '').replace(/\D/g, '');
+  if (id && el.isConnected) openSeat(id);
+}
+function seatActions(id) {
+  const ids = [String(id), ...TREASURY_SEATS.filter((x) => x !== String(id))].slice(0, 4);
+  return `<div class="sd-acts">
+    <a class="btn small" href="#compare/${ids.join(',')}">${ICON.compare}Compare</a>
+    <a class="btn small ghost" href="#check/${esc(id)}">${ICON.check}Check setup</a>
+    <button type="button" class="btn small ghost" data-copy="${esc(siteLink('seat/' + id))}">${ICON.copy}Copy link</button>
+  </div>`;
+}
+
+/* ---------- $IMDT in your wallet ---------- */
+function walletButtons(cls = 'btn small ghost') {
+  if (!hasToken()) return '';
+  return `<button type="button" class="${cls}" data-add-token>${ICON.wallet}Add to wallet</button><button type="button" class="${cls}" data-copy="${esc(CONFIG.contract)}">${ICON.copy}Copy CA</button>`;
+}
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-add-token]'); if (!b) return;
+  e.preventDefault();
+  const eth = window.ethereum;
+  if (!eth?.request) { copyText(CONFIG.contract, 'No wallet found in this browser. Contract address copied'); return; }
+  let decimals = 18;
+  try { const t = await within(getTreasury(), 2500); if (Number.isFinite(t?.tokenDecimals)) decimals = t.tokenDecimals; } catch {}
+  try {
+    const ok = await eth.request({ method: 'wallet_watchAsset', params: { type: 'ERC20', options: { address: CONFIG.contract, symbol: CONFIG.ticker, decimals, image: 'https://www.imdtools.fun/icon-512.png' } } });
+    toast(ok === false ? 'Not added' : `${TICKER()} added to your wallet`);
+  } catch (err) { toast(err?.code === 4001 ? 'Not added' : 'Your wallet could not add the token. Contract address copied'); if (err?.code !== 4001) copyText(CONFIG.contract, 'Contract address copied'); }
+});
+
+/* ---------- compare: save the table as an image for X ---------- */
+function drawCompareCard(m) {
+  const W = 1200, H = 675, c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+  const G = '#43E07D', INK = '#C7F3D4', MUT = '#8FD9A8', DIM = '#6F8A76', GOLD = '#F5C542', f = (w, s) => `${w} ${s}px 'Geist Mono', ui-monospace, monospace`;
+  x.fillStyle = '#0A0B0A'; x.fillRect(0, 0, W, H);
+  x.strokeStyle = 'rgba(30,107,58,.25)'; for (let i = 0; i < W; i += 30) { x.beginPath(); x.moveTo(i + .5, 0); x.lineTo(i + .5, H); x.stroke(); } for (let j = 0; j < H; j += 30) { x.beginPath(); x.moveTo(0, j + .5); x.lineTo(W, j + .5); x.stroke(); }
+  const u = 4; x.fillStyle = '#D5D5CE'; [[2, 2], [8.5, 1], [15, 2], [1, 8.5], [16, 8.5], [2, 15], [8.5, 16], [15, 15]].forEach(([a, b]) => x.fillRect(60 + a * u, 44 + b * u, 3 * u, 3 * u)); x.fillStyle = G; x.fillRect(60 + 7 * u, 44 + 7 * u, 6 * u, 6 * u);
+  x.fillStyle = INK; x.font = f(700, 30); x.fillText('IMD TOOLS · COMPARE SEATS', 160, 85);
+  x.fillStyle = MUT; x.font = f(500, 18); x.fillText(new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), 160, 113);
+  const cols = m.cols, n = cols.length, lw = 220, nw = 170, cw = Math.min(220, (W - 120 - lw - nw) / n), tx = 60, ty = 145, rh = 58, hh = 72;
+  const tw = lw + n * cw + nw;
+  x.fillStyle = 'rgba(10,20,13,.9)'; x.fillRect(tx, ty, tw, hh + m.rows.length * rh); x.strokeStyle = '#1F2A21'; x.lineWidth = 2; x.strokeRect(tx, ty, tw, hh + m.rows.length * rh);
+  cols.forEach((s, i) => { const cx = tx + lw + i * cw + 18; x.fillStyle = G; x.font = f(800, 26); x.fillText('#' + s.tokenId, cx, ty + 38); x.fillStyle = s.ours ? GOLD : DIM; x.font = f(600, 13); x.fillText(s.ours ? 'TREASURY' : (s.agentId ? 'AGENT ' + s.agentId : 'SEAT'), cx, ty + 58); });
+  const nx = tx + lw + n * cw; x.setLineDash([6, 6]); x.strokeStyle = '#2B8F50'; x.beginPath(); x.moveTo(nx, ty); x.lineTo(nx, ty + hh + m.rows.length * rh); x.stroke(); x.setLineDash([]);
+  x.fillStyle = GOLD; x.font = f(700, 14); x.fillText('NETWORK', nx + 18, ty + 34); x.fillText('AVERAGE', nx + 18, ty + 54);
+  m.rows.forEach((r, ri) => { const y = ty + hh + ri * rh; x.strokeStyle = '#1F2A21'; x.beginPath(); x.moveTo(tx, y); x.lineTo(tx + tw, y); x.stroke();
+    x.fillStyle = DIM; x.font = f(700, 14); x.fillText(r.label.toUpperCase(), tx + 20, y + rh / 2 + 5);
+    r.vals.forEach((v, i) => { const cx = tx + lw + i * cw; if (r.top[i]) { x.fillStyle = 'rgba(67,224,125,.16)'; x.fillRect(cx + 1, y + 1, cw - 2, rh - 2); x.fillStyle = G; x.fillRect(cx + 1, y + 1, 4, rh - 2); }
+      x.fillStyle = r.top[i] ? G : '#E8F5EC'; x.font = f(800, 24); x.fillText(String(v), cx + 18, y + rh / 2 + 8); });
+    x.fillStyle = DIM; x.font = f(500, 18); x.fillText(String(r.net || ''), nx + 18, y + rh / 2 + 6); });
+  x.fillStyle = MUT; x.font = f(500, 16); x.fillText(`Network average covers ${fmt(m.active)} seats with work. Highlighted: best of the seats compared.`, 60, H - 40);
+  x.fillStyle = INK; x.font = f(700, 20); x.textAlign = 'right'; x.fillText('www.imdtools.fun', W - 60, H - 40); x.textAlign = 'left';
+  return c;
+}
+
+/* ---------- keyboard: / jump to a seat or page, ? shortcuts, g + letter to go ---------- */
+const GO_KEYS = { h: ['home', 'Home'], o: ['overview', 'Overview'], e: ['ecosystem', 'Ecosystem'], a: ['agents', 'Agents'], s: ['seats', 'Seats'], c: ['compare', 'Compare seats'], k: ['check', 'Check a seat'], t: ['treasury', 'Treasury'], n: ['tokenomics', 'Tokenomics'], w: ['wallet', 'My wallet'] };
+function closeQuick() { document.querySelectorAll('.qj, .qj-scrim').forEach((n) => n.remove()); }
+function openQuick(help = false) {
+  closeQuick(); closeDrawer();
+  const pages = NAV.flatMap(([, i]) => i);
+  const scrim = document.createElement('div'); scrim.className = 'qj-scrim'; scrim.addEventListener('click', closeQuick);
+  const d = document.createElement('div'); d.className = 'qj'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', 'Quick jump');
+  d.innerHTML = `<form class="qj-f"><span class="qj-p">&gt;</span><input id="qj-in" type="text" autocomplete="off" spellcheck="false" placeholder="Seat number, or a page (treasury, agents…)" aria-label="Seat number or page"><kbd>esc</kbd></form>
+    <div class="qj-list" id="qj-list"></div>
+    <div class="qj-keys"><span><kbd>/</kbd> jump</span>${Object.entries(GO_KEYS).map(([k, [, l]]) => `<span><kbd>g</kbd><kbd>${k}</kbd> ${l}</span>`).join('')}<span><kbd>?</kbd> this list</span></div>`;
+  document.body.append(scrim, d);
+  const inp = d.querySelector('#qj-in'), list = d.querySelector('#qj-list');
+  let items = []; let sel = 0;
+  const paint = () => {
+    const q = inp.value.trim().toLowerCase().replace(/^#/, '');
+    items = [];
+    if (/^\d{1,5}$/.test(q)) items.push([`seat/${q}`, `Open seat #${q}`], [`check/${q}`, `Check seat #${q}`], [`compare/${[q, ...TREASURY_SEATS.filter((x) => x !== q)].slice(0, 4).join(',')}`, `Compare #${q} with the treasury seats`]);
+    else items = pages.filter(([r, l]) => !q || l.toLowerCase().includes(q) || r.includes(q)).slice(0, 7).map(([r, l]) => [r, l]);
+    sel = Math.min(sel, Math.max(0, items.length - 1));
+    list.innerHTML = items.length ? items.map(([h, l], i) => `<a href="#${h}" class="${i === sel ? 'on' : ''}">${esc(l)}<span>#${esc(h)}</span></a>`).join('') : '<p class="muted">Nothing matches. Type a seat number or a page name.</p>';
+  };
+  inp.addEventListener('input', () => { sel = 0; paint(); });
+  inp.addEventListener('keydown', (e) => { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % Math.max(1, items.length); paint(); } });
+  d.querySelector('form').addEventListener('submit', (e) => { e.preventDefault(); const it = items[sel]; if (it) { closeQuick(); location.hash = it[0]; } });
+  list.addEventListener('click', (e) => { if (e.target.closest('a')) closeQuick(); });
+  d.classList.toggle('help', help);
+  paint(); inp.focus();
+}
+let goPending = 0;
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.querySelector('.qj')) { closeQuick(); return; }
+  if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest?.('input, textarea, select, [contenteditable="true"]')) return;
+  if (e.key === '/') { e.preventDefault(); openQuick(); return; }
+  if (e.key === '?') { e.preventDefault(); openQuick(true); return; }
+  if (e.key === 'g') { goPending = Date.now(); return; }
+  if (goPending && Date.now() - goPending < 1200 && GO_KEYS[e.key]) { e.preventDefault(); goPending = 0; closeDrawer(); location.hash = GO_KEYS[e.key][0]; return; }
+  goPending = 0;
+});
+document.addEventListener('click', (e) => { if (e.target.closest('[data-quick]')) { e.preventDefault(); openQuick(); } });
+
 /* IMD Tools: $IMDT tokenomics and the treasury.
    The treasury receives the token's trading tax and uses it to buy IMD seats. */
 'use strict';
@@ -3309,7 +3560,7 @@ async function treasuryLive(limit) {
     ${note}<section class="seats-sec">
       <div class="seats-head"><div><span class="cap">Treasury seats</span><h2>${fmt(m.seats.length)} Identity.MD seat${m.seats.length === 1 ? '' : 's'} owned</h2>
         <div class="fleet">${(() => { const c = { working: 0, online: 0, offline: 0 }; m.seats.forEach((x) => { c[seatState(x)[0]]++; }); return `<span class="f-working"><i></i>${c.working} working</span><span class="f-online"><i></i>${c.online} online</span><span class="f-offline"><i></i>${c.offline} offline</span>`; })()}</div></div>
-        <span class="links">${limit ? '' : shareCardButton()}${hasTreasury() ? extLink(`https://etherscan.io/token/${SEAT_COLLECTION}?a=${CONFIG.treasury}`, 'Seat purchases') : ''}${limit && m.seats.length > seats.length ? `<a href="#treasury">All ${fmt(m.seats.length)} seats →</a>` : limit ? '<a href="#treasury">Open the treasury →</a>' : ''}</span></div>
+        <span class="links">${limit ? '' : shareCardButton()}${m.seats.length > 1 ? `<a href="#compare/${m.seats.map((x) => x.tokenId).join(',')}">Compare seats →</a>` : ''}${hasTreasury() ? extLink(`https://etherscan.io/token/${SEAT_COLLECTION}?a=${CONFIG.treasury}`, 'Seat purchases') : ''}${limit && m.seats.length > seats.length ? `<a href="#treasury">All ${fmt(m.seats.length)} seats →</a>` : limit ? '<a href="#treasury">Open the treasury →</a>' : ''}</span></div>
       ${seatCards(seats, slots)}
     </section>
     ${updateBanner(m.seats)}
@@ -3350,7 +3601,7 @@ async function viewTokenomics(el) {
   el.innerHTML = `
     ${head('Tokenomics', `${esc(TICKER())} is the ${esc(CONFIG.tokenName)} token. Its ${esc(CONFIG.taxPercent)}% trading tax funds the treasury, and holders receive the IMD its seats earn.`)}
     <div class="grid g-2">
-      <section class="panel"><div class="panel-head"><h2>${esc(TICKER())} at a glance</h2>${buyButton('btn small accent')}</div><div class="panel-body" style="display:flex;flex-direction:column;gap:18px">${tokenomicsGrid()}<div class="tok-screen">${taxSplit()}</div>${contractRow()}</div></section>
+      <section class="panel"><div class="panel-head"><h2>${esc(TICKER())} at a glance</h2><span class="links-btns">${walletButtons()}${buyButton('btn small accent')}</span></div><div class="panel-body" style="display:flex;flex-direction:column;gap:18px">${tokenomicsGrid()}<div class="tok-screen">${taxSplit()}</div>${contractRow()}</div></section>
       <section class="panel"><div class="panel-head"><h2>Token details</h2><a href="#treasury">Where the tax goes →</a></div><div class="panel-body">${tokenFacts()}</div></section>
     </div>
     <div id="tk-calc"></div>
@@ -3931,15 +4182,15 @@ async function viewBuild(el) {
 
 const NAV = [
   ['Network', [['overview', 'Overview'], ['ecosystem', 'Ecosystem'], ['agents', 'Agents'], ['tasks', 'Tasks'], ['releases', 'Releases'], ['launches', 'Launches'], ['showcase', 'Showcase'], ['oracle', 'Oracle']]],
-  ['Seats', [['seats', 'Seats'], ['check', 'Check a seat'], ['run', 'Run an agent'], ['holders', 'Holders'], ['wallet', 'My wallet']]],
+  ['Seats', [['seats', 'Seats'], ['check', 'Check a seat'], ['compare', 'Compare seats'], ['run', 'Run an agent'], ['holders', 'Holders'], ['wallet', 'My wallet']]],
   ['$IMDT', [['tokenomics', 'Tokenomics'], ['treasury', 'Treasury']]],
   ['Create', [['build', 'Launch']]],
 ];
 const VIEWS = {
   overview: viewOverview, ecosystem: viewEcosystem, agents: viewAgents, tasks: viewTasks, releases: viewReleases, launches: viewLaunches, showcase: viewShowcase,
-  oracle: viewOracle, seats: viewSeats, check: viewCheck, run: viewRun, holders: viewHolders, wallet: viewWallet, build: viewBuild, treasury: viewTreasury, tokenomics: viewTokenomics,
+  oracle: viewOracle, seats: viewSeats, check: viewCheck, compare: viewCompare, seat: viewSeatLink, run: viewRun, holders: viewHolders, wallet: viewWallet, build: viewBuild, treasury: viewTreasury, tokenomics: viewTokenomics,
 };
-const TITLES = { ...Object.fromEntries(NAV.flatMap(([, items]) => items)), ecosystem: 'Top ecosystem projects' };
+const TITLES = { ...Object.fromEntries(NAV.flatMap(([, items]) => items)), ecosystem: 'Top ecosystem projects', seat: 'Seat' };
 
 function shell(route) {
   return `<div class="app">
@@ -3953,6 +4204,7 @@ function shell(route) {
       <header class="topbar">
         <div class="left"><span class="mobile-brand">${brand('#home')}</span><span class="source">${sourceChip()}${Data.live ? `<span class="muted" id="upd">updated ${esc(ago(Data.at))}</span>` : ''}</span></div>
         <div class="right">
+          <button type="button" class="icon-btn qj-btn" data-quick aria-label="Jump to a seat or page" title="Jump to a seat or page (press /)">${ICON.search}<kbd>/</kbd></button>
           ${Data.live ? `<button type="button" class="icon-btn" id="refresh" aria-label="Refresh data" title="Refresh">${ICON.refresh}</button>` : ''}
           <span class="social-top">${socialButtons('icon-btn')}</span>
           ${Theme.button()}
@@ -3978,7 +4230,7 @@ async function route() {
     try { await renderLanding(root); } catch (e) { console.error(e); root.innerHTML = `<div class="wrap" style="padding-block:40px">${errorBox(e)}</div>`; }
     return;
   }
-  root.innerHTML = shell(r);
+  root.innerHTML = shell(r === 'seat' ? 'seats' : r);
   root.querySelector('#refresh')?.addEventListener('click', () => { Data.refresh(); refreshView(true); });
   const page = root.querySelector('#page');
   lastRun[r] = Date.now();
