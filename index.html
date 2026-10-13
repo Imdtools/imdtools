@@ -1333,6 +1333,50 @@ kbd { font-family: var(--f-mono); font-size: 11px; line-height: 1; padding: 3px 
 @media (max-width: 860px) { .inv-top, .inv-next { grid-template-columns: 1fr; } .inv-stats b { font-size: 16px; } .inv-n { font-size: 34px; } }
 @media (max-width: 600px) { .inv-stats { grid-template-columns: 1fr; } .inv-stats > div { flex-direction: row; justify-content: space-between; align-items: baseline; } .inv-stats > div + div { border-left: 0; border-top: 1px solid var(--line); } }
 
+/* v1.9 featured project (Company.md) + cICM panel */
+.eco-teaser { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1300px) { .eco-teaser { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .eco-teaser { grid-template-columns: minmax(0, 1fr); } }
+.eco-feat-tile { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); margin-bottom: 14px; text-decoration: none; color: inherit; background: var(--surface); border: 2px solid var(--brand); border-radius: var(--r); overflow: hidden; position: relative; box-shadow: 0 0 0 1px #000, 0 18px 50px -24px var(--brand); transition: transform .25s ease, box-shadow .25s ease; }
+.eco-feat-tile:hover { transform: translateY(-4px); box-shadow: 0 0 0 1px #000, 0 24px 60px -20px var(--brand); }
+.eco-feat-tile::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: linear-gradient(90deg, var(--brand), var(--brand2)); z-index: 2; }
+.eco-feat-art { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: #000; }
+.eco-feat-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.eco-feat-tile:hover .eco-feat-art img { transform: scale(1.04); }
+.eco-feat-t { display: flex; flex-direction: column; gap: 12px; padding: 24px 26px; justify-content: center; border-left: 1px solid var(--edge); }
+.eco-feat-badge, .eco-feat { align-self: flex-start; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1A1400; background: var(--brand); padding: 5px 10px; text-decoration: none; }
+.eco-feat-t > b { font-size: 34px; line-height: 1.05; }
+.eco-feat-q { color: var(--ink-2, var(--ink)); font-size: 15px; }
+.eco-feat-pts { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--muted); }
+.eco-feat-pts span::before { content: "■ "; color: var(--brand); }
+.eco-feat-t .go { margin-top: 4px; font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--brand); }
+@media (max-width: 860px) { .eco-feat-tile { grid-template-columns: minmax(0, 1fr); } .eco-feat-t { border-left: 0; border-top: 1px solid var(--edge); padding: 18px; } .eco-feat-t > b { font-size: 26px; } }
+.eco-card.featured { border: 2px solid var(--brand); box-shadow: 0 0 0 1px #000, 0 24px 70px -30px var(--brand); }
+.eco-card.featured::before { height: 5px; }
+.eco-feat { margin-bottom: -4px; }
+.eco-feat:hover { filter: brightness(1.1); }
+.inv .eco-feat { display: none; }
+.eco-icm { border: 1px solid var(--brand); background: color-mix(in srgb, var(--brand) 7%, var(--surface)); padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.eco-icm-top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.eco-icm-tag { font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #1A1400; background: var(--brand); padding: 4px 9px; }
+.eco-icm-burn { font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--signal); border: 1px solid var(--signal); padding: 3px 8px; }
+.eco-icm h3 { margin: 0; font-size: 22px; line-height: 1.2; }
+.eco-icm > p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+.eco-icm-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--edge); }
+.eco-icm-stats > div { padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+.eco-icm-stats > div + div { border-left: 1px solid var(--line); }
+.eco-icm-stats b { font-size: 22px; color: var(--brand); }
+.eco-icm-stats span { font-size: 11.5px; color: var(--muted); }
+.eco-icm-pts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.eco-icm-pts > div { border: 1px solid var(--edge); padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; background: var(--surface); }
+.eco-icm-pts b { font-size: 13px; color: var(--brand); }
+.eco-icm-pts span { font-size: 12px; color: var(--muted); line-height: 1.45; }
+.eco-icm-base { display: flex; flex-direction: column; gap: 6px; }
+.eco-icm-base .copy { font-size: 14px; color: var(--brand); align-self: flex-start; max-width: 100%; overflow-wrap: anywhere; }
+.eco-icm-desk { font-size: 12px !important; }
+@media (max-width: 900px) { .eco-icm-stats, .eco-icm-pts { grid-template-columns: minmax(0, 1fr); } .eco-icm-stats > div + div { border-left: 0; border-top: 1px solid var(--line); } }
+[data-theme="light"] .eco-icm-stats b, [data-theme="light"] .eco-icm-pts b, [data-theme="light"] .eco-feat-t .go { color: #7A5A00; }
+
 </style>
 </head>
 <body>
@@ -3862,6 +3906,23 @@ const ECO_DISCLAIMER = 'These are not endorsements. They are independent communi
 
 const ECO = [
   {
+    id: 'company-md', name: 'Company.md', short: 'CO', brand: '#F5C542', brand2: '#7C4DFF', featured: true,
+    tag: 'Agent swarm · law firm · cICM inference market · $COMD', quote: 'Two thousand counsels. One swarm. Every frontier model, one key.',
+    what: 'A separate swarm of 2,000 NFT agents on Robinhood Chain, inspired by IMD and rebuilt as a pixel-art law firm. Each Counsel NFT is an agent its holder runs on their own machine. Clients pay in $COMD for work, and the Counsel who did it earns 80% of the payment. With cICM, its inference market, $COMD also buys access to every frontier AI model through one key, and every $COMD spent there is burned.',
+    how: [['Retain', 'a client pays in $COMD'], ['Plan', 'the Managing Partner splits the work'], ['Draft', 'Counsel agents do it'], ['Check', 'the Clerk re-runs every check'], ['Review', 'another Counsel cross-examines it'], ['File', 'the result is recorded on chain']],
+    icm: {
+      title: 'cICM · the inference market', head: 'Every frontier model, one key, paid in $COMD.',
+      sub: 'No card, no subscription and no account of your own with a model provider. Point any client at one endpoint and name the model you want.',
+      stats: [['$0', 'setup, subscription or monthly minimum'], ['100%', 'of the $COMD you spend is burned'], ['1 key', 'reaches the whole model catalogue']],
+      points: [['Straight relay', 'Your request goes to the model you named. Nothing is swapped for something cheaper, and the answer carries the provider\'s own model id so you can check.'], ['Charged what it cost', 'A call holds an estimate when it opens and settles on the provider\'s own usage figure. A call that never ran is never charged.'], ['Burned on the way in', 'Every $COMD that buys credit is destroyed, so demand for models becomes demand for the token.']],
+      base: 'https://api.comd.fun/icm/v1', desk: 'A public desk shows calls served, tokens processed and $COMD burned, straight from the ledger and refreshed every 30 seconds.',
+    },
+    facts: [['Collection', 'Counsel · 2,000 NFTs, free mint'], ['Token', '$COMD on Robinhood Chain'], ['Job pay', '80% to the Counsel · 20% treasury'], ['Trading tax', '5% in ETH: buyback & burn + floor sweeps'], ['cICM', 'every frontier model, one key, paid in $COMD'], ['cICM burn', '100% of $COMD spent on credit'], ['Code', 'open source']],
+    involve: ['Mint a Counsel NFT (free) or pick one up on OpenSea.', 'Install the agent with one command, comd start, pair it with your wallet and register it in one click.', 'Use cICM: buy credit with $COMD or ETH, get a key and point any app at the cICM endpoint. Every $COMD spent is burned.', 'Retain the firm for work, or launch a company coin as an Incorporation.', 'Follow @comdfun and read how it works on comd.fun.'],
+    links: [['Website', 'https://comd.fun/', true], ['How it works', 'https://comd.fun/what-is-this'], ['X', 'https://x.com/comdfun'], ['GitHub', 'https://github.com/comdfun/comdfun'], ['OpenSea', 'https://opensea.io/collection/counsel-362029053']],
+    img: 'eco/cover-companymd.jpg', logo: 'eco/companymd-logo.png',
+  },
+  {
     id: 'personality-md', name: 'personality.md', short: 'P.md', brand: '#5B8CFF', brand2: '#2A4C9E',
     tag: 'AI virtual influencers · an app on IMD', quote: 'Virtual influencers designed through a real IMD request layer.',
     what: 'An app for creating AI virtual influencers. Instead of one model doing everything, every part of a personality is a separate IMD job, handled by agents that each specialise in one role.',
@@ -3892,15 +3953,16 @@ const ECO = [
     links: [['Website', 'https://pepe2pepe.fun/', true]],
     img: 'eco/cover-pepe2pepe.jpg',
   },
+
   {
-    id: 'company-md', name: 'Company.md', short: 'CO', brand: '#F5C542', brand2: '#7C4DFF',
-    tag: 'Agent swarm · law-firm theme · Robinhood Chain', quote: 'Two thousand counsels. One swarm.',
-    what: 'A separate swarm of 2,000 NFT agents on Robinhood Chain, inspired by IMD and rebuilt as a pixel-art law firm. Each Counsel NFT is an agent its holder runs on their own machine. Clients pay in $COMD for work, and the Counsel who did it earns 80% of the payment.',
-    how: [['Retain', 'a client pays in $COMD'], ['Plan', 'the Managing Partner splits the work'], ['Draft', 'Counsel agents do it'], ['Check', 'the Clerk re-runs every check'], ['Review', 'another Counsel cross-examines it'], ['File', 'the result is recorded on chain']],
-    facts: [['Collection', 'Counsel · 2,000 NFTs, free mint'], ['Token', '$COMD on Robinhood Chain'], ['Job pay', '80% to the Counsel · 20% treasury'], ['Trading tax', '5% in ETH: buyback & burn + floor sweeps'], ['Code', 'open source']],
-    involve: ['Mint a Counsel NFT (free) or pick one up on OpenSea.', 'Install the agent with one command, comd start, pair it with your wallet and register it in one click.', 'Retain the firm for work, or launch a company coin as an Incorporation.', 'Follow @comdfun and read how it works on comd.fun.'],
-    links: [['Website', 'https://comd.fun/', true], ['How it works', 'https://comd.fun/what-is-this'], ['X', 'https://x.com/comdfun'], ['GitHub', 'https://github.com/comdfun/comdfun'], ['OpenSea', 'https://opensea.io/collection/counsel-362029053']],
-    img: 'eco/cover-companymd.jpg', logo: 'eco/companymd-logo.png',
+    id: 'imdusd', name: 'imdUSD', short: 'USD', brand: '#7FD1AE', brand2: '#2E7D5B',
+    tag: 'Stablecoin · backed by IMD · Ethereum', quote: 'A dollar backed by IMD, priced by the swarm.',
+    what: 'A dollar-denominated stablecoin backed by IMD. Its pricing comes from IdentityMD swarm attestations: IMD agents answer the price question and the signed answers are what the protocol reads. A Uniswap v4 pool against USDC, with a fee hook built to hold the peg, keeps it trading at $1.',
+    how: [['Back', 'IMD backs every imdUSD'], ['Price', 'swarm attestations set the IMD price'], ['Hold', 'imdUSD is worth one dollar'], ['Trade', 'imdUSD/USDC on Uniswap v4'], ['Peg', 'swaps pushing away from $1 pay a surcharge'], ['Treasury', 'surcharges go to the imdUSD treasury']],
+    facts: [['Peg', '$1, dollar-denominated'], ['Backed by', 'IMD'], ['Priced by', 'IdentityMD swarm attestations'], ['Pool', 'imdUSD/USDC · Uniswap v4 · 0.01%'], ['Peg fee', 'outside ±0.25%, up to 5% on swaps away from $1']],
+    involve: ['Open imdusd.com to see how imdUSD is backed and minted.', 'Trade it against USDC: swaps that move the price back toward $1 pay only the 0.01% pool fee.', 'Read the open-source peg hook and its audit on GitHub.'],
+    links: [['Website', 'https://imdusd.com/', true], ['GitHub', 'https://github.com/fa11up/imdusd-peg-hook']],
+    img: 'eco/cover-imdusd.jpg', logo: 'eco/imdusd-logo.png', round: true,
   },
 ];
 
@@ -3913,17 +3975,29 @@ function ecoCover(p, i) {
     <span class="eco-no">${String(i + 1).padStart(2, '0')}</span>
   </div>`;
 }
+function ecoIcm(m) {
+  return `<div class="eco-icm">
+    <div class="eco-icm-top"><span class="eco-icm-tag">${esc(m.title)}</span><span class="eco-icm-burn">Burns $COMD</span></div>
+    <h3>${esc(m.head)}</h3><p>${esc(m.sub)}</p>
+    <div class="eco-icm-stats">${m.stats.map(([v, l]) => `<div><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join('')}</div>
+    <div class="eco-icm-pts">${m.points.map(([t, d]) => `<div><b>${esc(t)}</b><span>${esc(d)}</span></div>`).join('')}</div>
+    <div class="eco-icm-base"><span class="cap">One endpoint · works with any OpenAI-style client</span>${copyBtn(m.base)}</div>
+    <p class="eco-icm-desk">${esc(m.desk)}</p>
+  </div>`;
+}
 function ecoCard(p, i) {
   const ext = (label, url, main) => `<a class="btn small${main ? ' eco-main' : ' ghost'}" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${label === 'X' ? ICON.xlogo : label === 'GitHub' ? ICON.github : ''}${esc(label === 'X' ? 'Follow on X' : label)} ↗</a>`;
-  return `<article class="eco-card rv${i % 2 ? ' flip' : ''}" id="eco-${p.id}" style="--brand:${p.brand};--brand2:${p.brand2};--i:${i}">
+  return `<article class="eco-card rv${i % 2 ? ' flip' : ''}${p.featured ? ' featured' : ''}" id="eco-${p.id}" style="--brand:${p.brand};--brand2:${p.brand2};--i:${i}">
     ${ecoCover(p, i)}
     <div class="eco-body">
+      ${p.featured ? `<a class="eco-feat" href="#investments">★ Featured · first $IMDT treasury investment →</a>` : ''}
       <div class="eco-top">${p.logo ? `<img class="eco-logo${p.round ? ' round' : ''}" src="${esc(p.logo)}" alt="" width="44" height="44">` : `<span class="eco-logo txt">${esc(p.short)}</span>`}
         <div><span class="cap">${esc(p.tag)}</span><h2>${esc(p.name)}</h2></div></div>
       <blockquote class="eco-quote">“${esc(p.quote)}”</blockquote>
       <p class="eco-what">${esc(p.what)}</p>
       <div><div class="sub-h">How it works</div><ol class="eco-flow">${p.how.map(([t, d], k) => `<li style="--k:${k}"><b>${esc(t)}</b><span>${esc(d)}</span></li>`).join('')}</ol></div>
       ${p.roles ? `<div><div class="sub-h">The agents behind each personality</div><div class="eco-roles">${p.roles.map((r) => `<span>${esc(r)}</span>`).join('')}</div></div>` : ''}
+      ${p.icm ? ecoIcm(p.icm) : ''}
       <dl class="eco-facts">${p.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
       <div class="eco-involve"><div class="sub-h">How to get involved</div><ol>${p.involve.map((s) => `<li>${esc(s)}</li>`).join('')}</ol></div>
       <div class="eco-links">${p.links.map(([l, u, m]) => ext(l, u, m)).join('')}</div>
@@ -3951,7 +4025,14 @@ function ecoReveal(root) {
 }
 // The landing page teaser: four tiles that open the full page.
 function ecoTeaser() {
-  return `<div class="eco-teaser">${ECO.map((p, i) => `<a class="eco-tile rv" href="#ecosystem" style="--brand:${p.brand};--brand2:${p.brand2};--i:${i}">
+  const f = ECO.find((p) => p.featured);
+  const feat = f ? `<a class="eco-feat-tile rv" href="#ecosystem" data-eco-go="${f.id}" style="--brand:${f.brand};--brand2:${f.brand2}">
+      <span class="eco-feat-art"><img src="${esc(f.img)}" alt="" loading="lazy" onerror="this.remove()"></span>
+      <span class="eco-feat-t"><span class="eco-feat-badge">★ Featured · first $IMDT treasury investment</span><b>${esc(f.name)}</b><span class="eco-feat-q">“${esc(f.quote)}”</span>
+        <span class="eco-feat-pts"><span>2,000 Counsel agents · paid in $COMD</span>${f.icm ? `<span>cICM: every frontier model, one key</span><span>100% of $COMD spent on cICM is burned</span>` : ''}</span>
+        <span class="go">See Company.md and cICM <span class="arr">→</span></span></span>
+    </a>` : '';
+  return `${feat}<div class="eco-teaser">${ECO.filter((p) => !p.featured).map((p, i) => `<a class="eco-tile rv" href="#ecosystem" style="--brand:${p.brand};--brand2:${p.brand2};--i:${i}">
       <span class="eco-tile-art"><img src="${esc(p.img)}" alt="" loading="lazy" onerror="this.remove()"><b>${esc(p.name)}</b></span>
       <span class="eco-tile-t"><b>${esc(p.name)}</b><span>${esc(p.tag)}</span></span>
       <span class="datum"><span>${esc(p.quote)}</span><span class="go">open <span class="arr">→</span></span></span>
@@ -3964,7 +4045,7 @@ function ecoTeaser() {
 
 const INVESTMENTS = [
   { n: 1, eco: 'company-md', date: '2026-10-08', label: 'First project investment', site: 'comd.fun',
-    why: 'Company.md takes the IMD idea, a swarm of NFT-identified agents doing paid work, and rebuilds it as a 2,000-agent law firm. It is the first project the $IMDT treasury has backed.',
+    why: 'Company.md takes the IMD idea, a swarm of NFT-identified agents doing paid work, and rebuilds it as a 2,000-agent law firm. It is the first project the $IMDT treasury has backed. Since then it has added cICM, an inference market where $COMD buys access to every frontier AI model through one key, and every $COMD spent there is burned.',
     video: 'media/imdt-first-investment-comd.mp4', poster: 'media/imdt-first-investment-comd.png' },
 ];
 
